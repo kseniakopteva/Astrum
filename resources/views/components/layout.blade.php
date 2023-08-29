@@ -14,7 +14,7 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="/css/reset.css">
-    @vite ('resources/sass/main.scss')
+    @vite (['resources/sass/main.scss', 'resources/sass/starshop.scss'])
 
     <!-- Icons -->
     <script src="https://kit.fontawesome.com/b3479de9e5.js" crossorigin="anonymous"></script>

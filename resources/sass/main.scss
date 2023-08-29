@@ -16,6 +16,21 @@ a {
     }
 }
 
+.large-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.medium-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.small-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
 .border-bottom {
     border-bottom: 1px #eee solid;
 }
@@ -50,21 +65,6 @@ a {
     max-width: 1400px;
     margin: auto;
     margin-top: 2rem;
-}
-
-.large-title {
-    font-size: 1.8rem;
-    font-weight: 600;
-}
-
-.medium-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-}
-
-.small-title {
-    font-size: 1.2rem;
-    font-weight: 600;
 }
 
 .posts {
@@ -105,130 +105,6 @@ a {
     padding: 0.5rem;
     i {
         margin-right: 0.2rem;
-    }
-}
-
-.shop-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.shop {
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-}
-
-.tab {
-    cursor: pointer;
-    padding: 10px 20px;
-    margin: 0px 2px;
-    background: #eee;
-    display: inline-block;
-    color: #333;
-    border-radius: 5px 5px 0px 0px;
-    border: 1px #eee solid;
-}
-
-.panels {
-    background: #fff;
-    min-height: 200px;
-    width: 100%;
-    border-radius: 3px;
-    overflow: hidden;
-    padding: 20px;
-}
-
-.panel {
-    display: none;
-    animation: fadein 0.8s;
-}
-
-@keyframes fadein {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-.radio {
-    display: none;
-}
-
-#one:checked ~ .panels #one-panel,
-#two:checked ~ .panels #two-panel {
-    display: block;
-}
-
-#one:checked ~ .tabs #one-tab,
-#two:checked ~ .tabs #two-tab {
-    background: #fffffff6;
-    color: #000;
-    border-bottom: none;
-}
-
-.wallpapers {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-    flex-wrap: wrap;
-    > * {
-        width: 32%;
-    }
-}
-
-.wallpaper {
-    padding: 1rem;
-    border: 1px #eee solid;
-    border-radius: 5px;
-}
-
-.wallpaper-description {
-    margin: 0.5rem 0;
-}
-
-.wallpaper-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-    span {
-        white-space: nowrap;
-    }
-}
-
-.frames {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-    flex-wrap: wrap;
-    > * {
-        width: 18%;
-    }
-}
-
-.frame {
-    padding: 1rem;
-    border: 1px #eee solid;
-    border-radius: 5px;
-    img {
-        width: 100%;
-    }
-}
-
-.frame-description {
-    margin: 0.5rem 0;
-}
-
-.frame-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-    span {
-        white-space: nowrap;
     }
 }
 
