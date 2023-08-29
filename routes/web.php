@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +16,24 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('posts', ['posts' => Post::all()]);
+});
+
+Route::get('posts/{post:slug}', function (Post $post) {
+    return view('post', ['post' => $post]);
+});
+
+Route::get('tags/{tag:slug}', function (Tag $tag) {
+    return view('posts', ['posts' => $tag->posts]);
+});
+
+
+Route::get('starshop', function () {
+    return view('starshop');
+});
+Route::get('profile', function () {
+    return view('profile');
+});
+Route::get('help', function () {
+    return view('help');
 });
