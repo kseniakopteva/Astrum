@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
     margin: 0;
     background-color: #fff;
@@ -14,6 +18,10 @@ a {
     :hover {
         color: #337754;
     }
+}
+
+.title {
+    margin-bottom: 0.6rem;
 }
 
 .large-title {
@@ -69,9 +77,10 @@ a {
 
 .posts {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
-    * {
-        width: 33%;
+    > * {
+        width: 32%;
     }
 }
 
@@ -84,6 +93,13 @@ a {
     .post-content {
         margin: 1.5rem;
     }
+}
+
+.post-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
 }
 
 .tags {
@@ -114,4 +130,32 @@ a {
     padding: 0.3rem;
     bottom: 0;
     right: 0;
+}
+
+.main-search-form {
+    width: 50%;
+    margin: auto;
+    position: relative;
+
+    .input {
+        width: 100%;
+        border: 1px #eee solid;
+        padding: 1rem;
+        border-radius: 1rem;
+        &::-webkit-search-cancel-button {
+            -webkit-appearance: none;
+            pointer-events: none;
+        }
+    }
+
+    .icon-button {
+        position: absolute;
+        padding: 1rem;
+        right: 0;
+        cursor: pointer;
+
+        &:hover {
+            color: red;
+        }
+    }
 }

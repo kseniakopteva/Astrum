@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .shop-header {
     display: flex;
     justify-content: space-between;
@@ -84,7 +88,7 @@
 .wallpaper-footer {
     display: flex;
     justify-content: space-between;
-    align-items: end;
+    align-items: flex-end;
     span {
         white-space: nowrap;
     }
@@ -116,7 +120,7 @@
 .frame-footer {
     display: flex;
     justify-content: space-between;
-    align-items: end;
+    align-items: flex-end;
     span {
         white-space: nowrap;
     }

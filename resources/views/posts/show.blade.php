@@ -3,6 +3,8 @@
         <h1 class="large-title">
             <a href="/post">{{ $post->title }}</a>
         </h1>
+        <p>by <a href="/u/{{ $post->author->username }}">{{ $post->author->username }}</a></p>
+        <img src="https://placehold.co/900x400" alt="">
         <div class="post-content">
             <p>{{ $post->body }}</p>
         </div>

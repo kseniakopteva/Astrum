@@ -14,7 +14,7 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="/css/reset.css">
-    @vite (['resources/sass/main.scss', 'resources/sass/starshop.scss'])
+    @vite (['resources/sass/main.scss', 'resources/sass/starshop.scss', 'resources/sass/profile.scss'])
 
     <!-- Icons -->
     <script src="https://kit.fontawesome.com/b3479de9e5.js" crossorigin="anonymous"></script>
@@ -29,10 +29,10 @@
                 <a href="/" class="logo">Astrum</a>
                 <ul>
                     <li><a href="/">Feed</a></li>
-                    <li><a href="/">Explore</a></li>
-                    <li><a href="starshop">StarShop</a></li>
-                    <li><a href="help">Help</a></li>
-                    <li><a href="profile">Profile</a></li>
+                    <li><a href="/explore">Explore</a></li>
+                    <li><a href="/starshop">StarShop</a></li>
+                    <li><a href="/help">Help</a></li>
+                    <li><a href="/profile">Profile</a></li>
                 </ul>
             </nav>
         </div>
