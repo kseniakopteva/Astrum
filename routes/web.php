@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TagController;
 use App\Models\Note;
 use App\Models\Post;
 use App\Models\Tag;
@@ -39,12 +40,14 @@ require __DIR__ . '/auth.php';
 
 
 Route::get('/', function () {
-    return view('posts', [
+    return view('feed', [
         'posts' => Post::latest()->get()
     ]);
 })->name('feed');
 
 Route::get('/posts/{post:slug}', [PostController::class, 'show']);
+
+Route::post('/post/store', [PostController::class, 'store'])->name('post.store');
 
 Route::get(
     '/notes/{note:slug}',
@@ -55,11 +58,7 @@ Route::get(
     }
 );
 
-Route::get('/tags/{tag:slug}', function (Tag $tag) {
-    return view('posts', [
-        'posts' => $tag->posts
-    ]);
-});
+Route::get('/tags/{tag:slug}', [TagController::class, 'index']);
 
 Route::get('/u/{author:username}', function (User $author) {
     return view('profile', [

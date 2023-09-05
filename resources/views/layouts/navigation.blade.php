@@ -1,4 +1,5 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+<nav x-data="{ open: false }"
+    class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 py-2 px-4 shadow-sm">
     <!-- Primary Navigation Menu -->
     <div class="px-4 sm:px-6 lg:px-0">
         {{-- <div class="flex justify-between"> --}}
@@ -6,7 +7,7 @@
         <!-- Settings Dropdown -->
         <div class="hidden sm:flex sm:items-center main-nav sm:justify-between">
             <a href="/" class="logo">Astrum</a>
-            <ul>
+            <ul class="space-x-2">
                 <li><a href="/">Feed</a></li>
                 <li><a href="/explore">Explore</a></li>
                 <li><a href="/starshop">StarShop</a></li>

@@ -1,4 +1,4 @@
-<x-layout>
+<x-main-layout>
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
 
         <!-- Page Heading -->
@@ -15,4 +15,4 @@
             {{ $slot }}
         </main>
     </div>
-</x-layout>
+</x-main-layout>

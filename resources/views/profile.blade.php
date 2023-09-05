@@ -1,5 +1,4 @@
-<x-layout>
-
+<x-main-layout>
     <header class="profile-header">
         <img src="https://placehold.co/100x100" alt="" class="profile-picture">
         <div>
@@ -16,22 +15,37 @@
     <div class="grid-wrapper">
         <div class="grid-column">
             <h2 class="medium-title">Posts</h2>
-            @foreach ($user->posts as $post)
-                <a href="/posts/{{ $post->slug }}">
-                    <article class="post">
-                        <h1 class="medium-title title">
-                            {{ $post->title }}
-                        </h1>
-                        <img src="https://placehold.co/900x400" alt="">
-                        <div class="post-excerpt">
-                            <p>{{ $post->excerpt . '...' }}</p>
-                        </div>
-                        <footer class="post-footer">
-                            <span>{{ $post->created_at->diffForHumans() }}</span>
-                        </footer>
-                </a>
-                </article>
-            @endforeach
+            @if (auth()->id() === $user->id)
+                <h2 class="medium-title">New Post</h2>
+                <form method="POST" action="{{ route('post.store') }}" enctype="multipart/form-data">
+                    @csrf
+                    <input class="block" type="text" name="title" id="title" placeholder="Title">
+                    <x-input-error :messages="$errors->get('title')" class="mt-2" />
+                    <input type="file" name="image" id="inputImage">
+                    <x-input-error :messages="$errors->get('image')" class="mt-2" />
+                    <textarea type="text" name="body" id="body" placeholder="Post text..."></textarea>
+                    <x-input-error :messages="$errors->get('body')" class="mt-2" />
+                    <button type="submit">Submit</button>
+                </form>
+            @endif
+            <div class="posts">
+                @foreach ($user->posts()->latest()->get() as $post)
+                    <a href="/posts/{{ $post->slug }}">
+                        <article class="post">
+                            <h1 class="medium-title title">
+                                {{ $post->title }}
+                            </h1>
+                            <img src="/images/{{ $post->image }}" alt="">
+                            <div class="post-excerpt">
+                                <p>{{ $post->excerpt . '...' }}</p>
+                            </div>
+                            <footer class="post-footer">
+                                <span>{{ $post->created_at->diffForHumans() }}</span>
+                            </footer>
+                        </article>
+                    </a>
+                @endforeach
+            </div>
         </div>
         <div class="grid-column">
             <h2 class="medium-title">Notes</h2>
@@ -47,4 +61,4 @@
             @endforeach
         </div>
     </div>
-</x-layout>
+</x-main-layout>

@@ -1,4 +1,4 @@
-<x-layout>
+<x-main-layout>
     <article class="note">
         {{ $note->body }}
         <div class="note-footer">
@@ -6,4 +6,4 @@
             {{ $note->created_at->diffForHumans() }}
         </div>
     </article>
-</x-layout>
+</x-main-layout>

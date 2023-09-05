@@ -1,4 +1,4 @@
-<x-layout>
+<x-main-layout>
     <div class="shop-header">
         <h1 class="large-title">Star Shop</h1>
         <span>Your stars: 100<i class="fa-solid fa-star"></i></span>
@@ -54,4 +54,4 @@
         </div>
     </div>
 
-</x-layout>
+</x-main-layout>

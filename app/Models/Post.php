@@ -10,6 +10,7 @@ class Post extends Model
     use HasFactory;
 
     protected $with = ['tags', 'author'];
+    protected $guarded = [];
 
     public function scopeFilter($query, array $filters)
     {

@@ -29,6 +29,7 @@ class PostFactory extends Factory
             'slug' => $slug,
             'excerpt' => $sentence,
             'body' => $body,
+            'image' => 'placeholder.jpg'
         ];
     }
 }
