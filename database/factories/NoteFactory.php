@@ -25,7 +25,7 @@ class NoteFactory extends Factory
         return [
             'user_id' => User::factory(),
             'slug' => $slug,
-            'body' => $body,
+            'notebody' => $body,
         ];
     }
 }

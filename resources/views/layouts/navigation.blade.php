@@ -1,5 +1,5 @@
 <nav x-data="{ open: false }"
-    class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 py-2 px-4 shadow-sm">
+    class="bg-white dark:bg-neutral-800 border-b border-neutral-100 dark:border-neutral-700 py-2 px-4 shadow-sm">
     <!-- Primary Navigation Menu -->
     <div class="px-4 sm:px-6 lg:px-0">
         {{-- <div class="flex justify-between"> --}}
@@ -7,7 +7,7 @@
         <!-- Settings Dropdown -->
         <div class="hidden sm:flex sm:items-center main-nav sm:justify-between">
             <a href="/" class="logo">Astrum</a>
-            <ul class="space-x-2">
+            <ul class="space-x-2 flex list-none">
                 <li><a href="/">Feed</a></li>
                 <li><a href="/explore">Explore</a></li>
                 <li><a href="/starshop">StarShop</a></li>
@@ -16,17 +16,10 @@
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button
-                                class="inline-flex items-center text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                                class="inline-flex items-center text-neutral-500 dark:text-neutral-400 bg-white dark:bg-neutral-800 hover:text-neutral-700 dark:hover:text-neutral-300 focus:outline-none transition ease-in-out duration-150">
                                 <div>{{ Auth::user()->username }}</div>
 
-                                <div class="">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 25 25">
-                                        <path fill-rule="evenodd"
-                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </div>
+                                <x-arrow-svg class="h-4 w-4"></x-arrow-svg>
                             </button>
                         </x-slot>
 
@@ -60,7 +53,7 @@
         <!-- Hamburger -->
         <div class="-mr-2 flex items-center sm:hidden">
             <button @click="open = ! open"
-                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
+                class="inline-flex items-center justify-center p-2 rounded-md text-neutral-400 dark:text-neutral-500 hover:text-neutral-500 dark:hover:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-900 focus:text-neutral-500 dark:focus:text-neutral-400 transition duration-150 ease-in-out">
                 <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                     <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -96,13 +89,13 @@
 
         <!-- Responsive Settings Options -->
         @if (auth()->check())
-            <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
+            <div class="pt-4 pb-1 border-t border-neutral-200 dark:border-neutral-600">
                 <x-responsive-nav-link :href="route('profile')" :active="request()->routeIs('profile')">
                     <div>
-                        <div class="font-medium text-base text-gray-800 dark:text-gray-200">
+                        <div class="font-medium text-base text-neutral-800 dark:text-neutral-200">
                             {{ Auth::user()->username }}
                         </div>
-                        <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                        <div class="font-medium text-sm text-neutral-500">{{ Auth::user()->email }}</div>
                     </div>
                 </x-responsive-nav-link>
 
@@ -124,7 +117,7 @@
                 </div>
             </div>
         @else
-            <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
+            <div class="pt-4 pb-1 border-t border-neutral-200 dark:border-neutral-600">
 
                 <div class="mt-3 space-y-1">
                     <x-responsive-nav-link :href="route('login')" :active="request()->routeIs('login')">

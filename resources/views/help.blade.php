@@ -1,3 +1,5 @@
 <x-main-layout>
-    <h1 class="large-title">Help</h1>
+    <div class="wrapper">
+        <h1 class="large-title">Help</h1>
+    </div>
 </x-main-layout>

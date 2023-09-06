@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TagController;
@@ -45,9 +46,10 @@ Route::get('/', function () {
     ]);
 })->name('feed');
 
-Route::get('/posts/{post:slug}', [PostController::class, 'show']);
+Route::get('/{user:username}/posts/{post:slug}', [PostController::class, 'show']);
 
 Route::post('/post/store', [PostController::class, 'store'])->name('post.store');
+Route::post('/note/store', [NoteController::class, 'store'])->name('note.store');
 
 Route::get(
     '/notes/{note:slug}',

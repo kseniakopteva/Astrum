@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->string('slug')->unique();
-            $table->text('body');
+            $table->text('notebody');
             $table->timestamps();
         });
     }

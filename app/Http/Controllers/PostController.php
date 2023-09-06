@@ -3,18 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
     public function index()
     {
-        return view('posts.index', [
+        return view('explore', [
             'posts' =>  Post::latest()->filter(request(['search']))->paginate(10)->withQueryString()
         ]);
     }
 
-    public function show(Post $post)
+    public function show(User $user, Post $post)
     {
         return view('posts.show', [
             'post' => $post
@@ -24,19 +25,44 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $attributes = $request->validate([
-            'title' => '',
+            'title' => 'required|max:100',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'body' => '',
+            'body' => 'max:4000',
+            'alt' => 'max:200'
         ]);
-        // if ($attributes->fails()) {
-        //     return back()->withErrors($attributes);
-        // }
-        // dd($attributes);
+
         $attributes['user_id'] = auth()->user()->id;
-        $attributes['slug'] = preg_replace("#[[:punct:]]#", "", str_replace(" ", "-", $attributes['title']));
+
+        $slug = strtolower(
+            implode(
+                '-',
+                array_slice(
+                    explode(
+                        '-',
+                        preg_replace(
+                            '/[^a-zA-Z0-9-]/',
+                            '-',
+                            $attributes['title']
+                        )
+                    ),
+                    0,
+                    7
+                )
+            )
+        );
+
+        if (strlen($slug) > 50) {
+            $slug = substr($slug, 0, -50);
+        }
+        $slug = $slug  . '-' . time();
+        $slug = trim(preg_replace('/-+/', '-', $slug), '-');
+
+        $attributes['slug'] = $slug;
+
+
         $attributes['excerpt'] = preg_replace('/(.*?[?!.](?=\s|$)).*/', '\\1',  $attributes['body']);
 
-        $imageName = $request->user()->username . '.' . time() . '.' . $request->image->extension();
+        $imageName = strtolower($request->user()->username) . '_' . time() . '.' . $request->image->extension();
 
         $attributes['image'] = $imageName;
 
@@ -50,6 +76,6 @@ class PostController extends Controller
         Post::create($attributes);
 
         return back()
-            ->with('success', 'You have successfully upload image.');
+            ->with('success', 'You have successfully created a post!');
     }
 }

@@ -1,18 +1,22 @@
 <x-main-layout>
-    <article class="post">
-        <h1 class="large-title">
-            <a href="/post">{{ $post->title }}</a>
-        </h1>
-        <p>by <a href="/u/{{ $post->author->username }}">{{ $post->author->username }}</a></p>
-        <img src="/images/{{ $post->image }}" alt="">
-        <div class="post-content">
-            <p>{{ $post->body }}</p>
-        </div>
-        <ul class="tags">
-            @foreach ($post->tags as $tag)
-                <li><a href="/tags/{{ $tag->slug }}">{{ $tag->name }}</a></li>
-            @endforeach
-        </ul>
-        <a href="/explore" class="go-back-link"><i class="fa-solid fa-arrow-left"></i>Go back</a>
-    </article>
+    <div class="wrapper">
+        <article class="border border-neutral-200 rounded-md shadow-sm p-4">
+            <h1 class="large-title">
+                {{ $post->title }}
+            </h1>
+            <p><a href="/u/{{ $post->author->username }}">{{ $post->author->username }}</a></p>
+            <img class="max-w-lg my-4" src="/images/{{ $post->image }}" alt="">
+            <div class="text-lg">
+                <p>{{ $post->body }}</p>
+            </div>
+            <ul class="flex">
+                @foreach ($post->tags as $tag)
+                    <li class="mr-1"><a class="px-2 py-0.5 rounded-md bg-neutral-100 inline-block"
+                            href="/tags/{{ $tag->slug }}">{{ $tag->name }}</a></li>
+                @endforeach
+            </ul>
+            <a href="{{ url()->previous() }}" class="inline-block mt-4 p-2"><i
+                    class="mr-1 fa-solid fa-arrow-left"></i>Go back</a>
+        </article>
+    </div>
 </x-main-layout>
