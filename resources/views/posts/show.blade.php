@@ -1,6 +1,6 @@
 <x-main-layout>
     <div class="wrapper">
-        <article class="border border-neutral-200 rounded-md shadow-sm p-4">
+        <article class="border border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-md shadow-sm p-4">
             <h1 class="large-title">
                 {{ $post->title }}
             </h1>
@@ -11,7 +11,8 @@
             </div>
             <ul class="flex">
                 @foreach ($post->tags as $tag)
-                    <li class="mr-1"><a class="px-2 py-0.5 rounded-md bg-neutral-100 inline-block"
+                    <li class="mr-1"><a
+                            class="px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-600 dark:text-neutral-400 inline-block"
                             href="/tags/{{ $tag->slug }}">{{ $tag->name }}</a></li>
                 @endforeach
             </ul>

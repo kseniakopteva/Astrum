@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 body {
-    color: #636b6f;
     font-family: "Nunito", sans-serif;
     font-size: 13px;
     font-weight: 600;
@@ -11,11 +10,17 @@ body {
 }
 
 a {
-    color: #293f4a;
+    // color: #293f4a;
     text-decoration: none;
 
     &:hover {
-        color: #337754;
+        color: rgb(77 124 15); // bg-lime-700
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    a:hover {
+        color: rgb(101 163 13); // bg-lime-600
     }
 }
 
@@ -62,9 +67,6 @@ a {
 
     .input {
         width: 100%;
-        border: 1px #eee solid;
-        padding: 1rem;
-        border-radius: 1rem;
         &::-webkit-search-cancel-button {
             -webkit-appearance: none;
             pointer-events: none;
@@ -73,30 +75,29 @@ a {
 
     .icon-button {
         position: absolute;
-        padding: 1rem;
+        padding: 0.77rem;
         right: 0;
         cursor: pointer;
 
         &:hover {
-            color: red;
+            color: rgb(101 163 13);
         }
     }
 }
 
 .flash-success {
-    position: fixed;
-    top: 2rem;
-    width: 200px;
-    left: calc(50% - 100px);
-    background-color: #fff3c8;
-    border: 1px #ffe37f solid;
-    border-radius: 0.8rem;
-    padding: 1rem;
-    text-align: center;
+    left: calc(50% - 120px);
 }
 
 .wrapper {
     max-width: 1400px;
+    margin: auto;
+    margin-top: 2rem;
+    padding: 1rem;
+}
+
+.note-wrapper {
+    max-width: 600px;
     margin: auto;
     margin-top: 2rem;
     padding: 1rem;

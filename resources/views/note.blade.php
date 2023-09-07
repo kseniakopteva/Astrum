@@ -1,10 +1,10 @@
 <x-main-layout>
-    <div class="wrapper">
-        <article class="border border-neutral-200 rounded-md shadow-sm p-4">
+    <div class="note-wrapper">
+        <article class="border border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-md shadow-sm p-4">
             <div class="text-lg mb-4">
                 <p>{{ $note->notebody }}</p>
             </div>
-            <div class="note-footer">
+            <div class="">
                 by <a href="/u/{{ $note->author->username }}">{{ $note->author->username }}</a>
                 {{ $note->created_at->diffForHumans() }}
             </div>

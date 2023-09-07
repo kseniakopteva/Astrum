@@ -46,7 +46,7 @@ Route::get('/', function () {
     ]);
 })->name('feed');
 
-Route::get('/{user:username}/posts/{post:slug}', [PostController::class, 'show']);
+Route::get('/u/{user:username}/posts/{post:slug}', [PostController::class, 'show']);
 
 Route::post('/post/store', [PostController::class, 'store'])->name('post.store');
 Route::post('/note/store', [NoteController::class, 'store'])->name('note.store');

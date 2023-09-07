@@ -9,16 +9,22 @@
                 @if ($user->name)
                     <h2 class="small-title inline-block mr-2">{{ $user->name }}</h2>
                 @endif
-                <span style="background-color: #ecf1ff" class="rounded-md py-1 px-2">Drawer</span>
+                <span class="rounded-md py-1 px-2 bg-lime-50 dark:bg-lime-950 dark:text-neutral-400">Drawer</span>
 
-                <div class="max-w-lg mt-4" x-data="{ open: false, maxLength: 150, fullText: '', slicedText: '' }" x-init="fullText = $el.firstElementChild.textContent.trim();
-                slicedText = fullText.slice(0, maxLength) + '...'">
-                    <div class="inline" x-text="open ? fullText : slicedText" x-transition>
+                @if ($user->bio && strlen($user->bio) >= 150)
+                    <div class="max-w-lg mt-4" x-data="{ open: false, maxLength: 150, fullText: '', slicedText: '' }" x-init="fullText = $el.firstElementChild.textContent.trim();
+                    slicedText = fullText.slice(0, maxLength) + '...'">
+                        <div class="inline" x-text="open ? fullText : slicedText" x-transition>
+                            {{ $user->bio }}
+                        </div>
+                        <button class="text-lime-700" @click="open = ! open"
+                            x-text="open ? 'Show less' : 'Show more'"></button>
+                    </div>
+                @else
+                    <div class="max-w-lg mt-4">
                         {{ $user->bio }}
                     </div>
-                    <button class="text-lime-700" @click="open = ! open"
-                        x-text="open ? 'Show less' : 'Show more'"></button>
-                </div>
+                @endif
 
             </div>
         </header>
@@ -42,7 +48,7 @@
 
                         <x-secondary-button class="ml-4" x-on:click="open = ! open">New Post</x-secondary-button>
 
-                        <div class="fixed top-0 right-1/4 w-1/2 mt-4 shadow-lg border bg-neutral-100 border-neutral-200 p-4 rounded-md overflow-hidden"
+                        <div class="fixed top-0 right-1/4 w-1/2 mt-4 shadow-lg border bg-neutral-100 border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 p-4 rounded-md overflow-hidden"
                             @click.away="open = false" style="display:none" x-show="open"
                             x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
                             x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-75"
@@ -109,9 +115,9 @@
                         <form method="POST" action="{{ route('note.store') }}">
                             @csrf
                             <div class="flex-grow">
-                                <x-textarea class="h-auto" rows="4" id="notebody" class="block mt-1 w-full"
+                                <x-textarea class="h-auto" rows="6" id="notebody" class="block mt-1 w-full"
                                     type="text" name="notebody" placeholder="Note text"
-                                    value="{{ old('notebody') }}" />
+                                    value="{{ old('notebody') }}" required />
                                 <x-input-error :messages="$errors->get('notebody')" class="mt-2" />
                             </div>
                             <div class="mt-1 flex justify-between">
@@ -125,7 +131,7 @@
             @endif
         </div>
         <div class="space-y-4">
-            @foreach ($user->notes as $note)
+            @foreach ($user->notes()->latest()->get() as $note)
                 <x-feed-note :note=$note></x-feed-note>
             @endforeach
         </div>

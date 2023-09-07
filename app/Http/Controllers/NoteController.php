@@ -13,7 +13,7 @@ class NoteController extends Controller
         // dd($request);
 
         $attributes = $request->validate([
-            'notebody' => 'max:600',
+            'notebody' => 'max:600|required',
         ]);
 
         $attributes['user_id'] = auth()->user()->id;

@@ -25,7 +25,7 @@
 
 </head>
 
-<body class="flex flex-col min-h-screen">
+<body class="flex flex-col min-h-screen dark:bg-neutral-900 text-neutral-600 dark:text-neutral-300">
 
     <header class="main-header">
         @include('layouts.navigation')
@@ -35,13 +35,16 @@
         {{ $slot }}
     </main>
 
-    <footer class="h-36 bg-neutral-400 dark:bg-neutral-800 text-white pt-4 px-4 flex items-center justify-between">
+    <footer
+        class="h-24 bg-neutral-400 dark:bg-neutral-800 text-white dark:text-neutral-500 pt-2 px-4 flex items-center justify-between">
         <span>Copyright bla-bla-bla</span>
         <span class="version">Version 0.0.1</span>
     </footer>
 
     @if (session()->has('success'))
-        <div class="flash-success" x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show" x-transition>
+        <div class="flash-success
+    fixed top-8 w-60 text-lg rounded-lg p-4 text-center bg-amber-100 border border-amber-300 shadow-md outline outline-2 outline-white"
+            x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show" x-transition>
             <p>{{ session('success') }}</p>
         </div>
     @endif

@@ -1,5 +1,5 @@
 <x-main-layout>
-    <div class="flex flex-col sm:justify-center items-center pt-6 sm:pt-0  dark:bg-neutral-900 mt-8">
+    <div class="flex flex-col sm:justify-center items-center pt-14 dark:bg-neutral-900">
 
         <div>
             <a href="/">
@@ -8,7 +8,7 @@
         </div>
 
         <div
-            class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-neutral-800 shadow-md overflow-hidden sm:rounded-lg  border border-neutral-200">
+            class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-neutral-800 shadow-md overflow-hidden sm:rounded-lg dark:border-neutral-700 border border-neutral-200">
             {{ $slot }}
         </div>
     </div>

@@ -27,7 +27,7 @@
         <div>
             <x-input-label for="name" :value="__('Name')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)"
-                required autofocus autocomplete="name" />
+                autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
@@ -43,7 +43,7 @@
                         {{ __('Your email address is unverified.') }}
 
                         <button form="send-verification"
-                            class="underline text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-neutral-800">
+                            class="underline text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 dark:focus:ring-offset-neutral-800">
                             {{ __('Click here to re-send the verification email.') }}
                         </button>
                     </p>
@@ -55,6 +55,13 @@
                     @endif
                 </div>
             @endif
+        </div>
+
+        <div>
+            <x-input-label for="bio" :value="__('Bio')" />
+            <x-textarea id="bio" name="bio" type="text" class="mt-1 block w-full" rows="7"
+                autofocus>{{ old('bio', $user->bio) }}</x-textarea>
+            <x-input-error class="mt-2" :messages="$errors->get('bio')" />
         </div>
 
         <div class="flex items-center gap-4">
