@@ -43,7 +43,9 @@
 
     @if (session()->has('success'))
         <div class="flash-success
-    fixed top-8 w-60 text-lg rounded-lg p-4 text-center bg-amber-100 border border-amber-300 shadow-md outline outline-2 outline-white"
+    fixed top-8 w-60 text-lg rounded-lg p-4 text-center bg-amber-100 border border-amber-300 shadow-md outline outline-2 outline-white
+    dark:bg-amber-900 dark:border-amber-700 dark:outline-neutral-900 dark:text-white dark:shadow-neutral-700
+    "
             x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show" x-transition>
             <p>{{ session('success') }}</p>
         </div>

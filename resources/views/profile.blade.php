@@ -1,8 +1,8 @@
 <x-main-layout>
     <div class="wrapper">
         <header class="sm:flex mb-10">
-            <img class="rounded-full w-32 h-32 sm:w-44 sm:h-44" src="https://placehold.co/100x100" alt=""
-                class="profile-picture">
+            <img class="rounded-full w-32 h-32 sm:w-44 sm:h-44" src="https://i.pravatar.cc/100?u={{ $user->id }}"
+                alt="" class="profile-picture" width="100" height="100">
             <div class="ml-12 mt-4">
 
                 <h1 class="large-title">{{ $user->username }}</h1>
@@ -107,7 +107,7 @@
 
                     <x-secondary-button class="ml-4" x-on:click="open = ! open">New Note</x-secondary-button>
 
-                    <div class="fixed top-0 right-1/4 w-1/2 mt-4 shadow-lg border bg-neutral-100 border-neutral-200 p-4 rounded-md overflow-hidden"
+                    <div class="fixed top-0 right-1/4 w-1/2 mt-4 shadow-lg border bg-neutral-100 border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 p-4 rounded-md overflow-hidden"
                         @click.away="open = false" style="display:none" x-show="open"
                         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
                         x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-75"

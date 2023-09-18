@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Comment;
 use App\Models\Note;
 use App\Models\Post;
 use App\Models\Tag;
@@ -39,5 +40,12 @@ class DatabaseSeeder extends Seeder
                 $posts->random(rand(1, 5))->pluck('id')->toArray()
             );
         });
+
+        for ($i = 1; $i <= 20; $i++) {
+            Comment::factory(5)->create([
+                'user_id' => rand(1, 10),
+                'post_id' => $i
+            ]);
+        }
     }
 }

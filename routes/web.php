@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TagController;
@@ -45,6 +46,8 @@ Route::get('/', function () {
         'posts' => Post::latest()->get()
     ]);
 })->name('feed');
+
+Route::post('posts/{post:slug}/comments', [PostCommentController::class, 'store']);
 
 Route::get('/u/{user:username}/posts/{post:slug}', [PostController::class, 'show']);
 
