@@ -9,7 +9,9 @@
                 @if ($user->name)
                     <h2 class="small-title inline-block mr-2">{{ $user->name }}</h2>
                 @endif
-                <span class="rounded-md py-1 px-2 bg-lime-50 dark:bg-lime-950 dark:text-neutral-400">Drawer</span>
+                <span
+                    class="rounded-md py-1 px-2 bg-{{ $user->badge->lightcolor }} dark:bg-{{ $user->badge->darkcolor }} dark:text-neutral-400">
+                    {{ ucfirst($user->badge->name) }}</span>
 
                 @if ($user->bio && strlen($user->bio) >= 150)
                     <div class="max-w-lg mt-4" x-data="{ open: false, maxLength: 150, fullText: '', slicedText: '' }" x-init="fullText = $el.firstElementChild.textContent.trim();

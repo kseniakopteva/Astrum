@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Badge;
 use App\Models\Comment;
 use App\Models\Note;
 use App\Models\Post;
@@ -19,6 +20,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // \App\Models\User::factory(10)->create();
+
+        Badge::factory(6)->create();
 
         Tag::factory(10)->create();
         User::factory(10)->create()->each(function ($u) {
