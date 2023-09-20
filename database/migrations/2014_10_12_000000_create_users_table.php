@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->text('bio')->nullable();
             $table->foreignId('badge_id');
+            $table->string('image');
             $table->rememberToken();
             $table->timestamps();
         });

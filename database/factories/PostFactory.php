@@ -20,7 +20,7 @@ class PostFactory extends Factory
         $body = $this->faker->paragraph;
         $sentence = preg_replace('/(.*?[?!.](?=\s|$)).*/', '\\1', $body); // first sentence
 
-        $title = ucfirst($this->faker->words(rand(1, 7), true));
+        $title = ucfirst($this->faker->words(rand(1, 5), true));
         $slug = str_replace(" ", "-", $title);
 
         return [

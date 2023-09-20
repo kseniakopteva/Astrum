@@ -13,9 +13,9 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="space-y-6">
-        <div class="md:grid md:grid-cols-2 md:gap-4">
-            <div class="space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="space-y-6" enctype="multipart/form-data">
+        <div class="md:grid md:grid-cols-4 md:gap-4">
+            <div class="space-y-6 col-span-2">
                 @csrf
                 @method('patch')
 
@@ -84,22 +84,96 @@
                             class="rounded-md py-1 px-2 bg-{{ $badge->lightcolor }} dark:bg-{{ $badge->darkcolor }} dark:text-neutral-300 ml-2 font-medium text-sm text-neutral-700">{{ ucfirst($badge->name) }}</label>
                     </div>
                 @endforeach
+            </div>
+
+            <div class="space-y-4 mt-6 ">
+                {{-- <div class="flex flex-col h-full justify-between"> --}}
+                <div>
+                    <span class="block font-medium text-sm text-neutral-700 dark:text-neutral-300">Profile
+                        Image</span>
+
+
+                    <div>
+                        <div class="md:h-40 md:w-40 lg:h-52 lg:w-52 h-52 xl:h-60 xl:w-60" x-data="previewImage()">
+                            <label for="image" class="relative cursor-pointer">
+                                <div
+                                    class=" flex justify-center items-center overflow-hidden md:h-40 md:w-40 lg:h-52 lg:w-52 h-52 xl:h-60 xl:w-60 mt-1 flex-col bg-neutral-300 border border-neutral-400 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 rounded-md">
+
+                                    <img id="imagePreview" x-show="imageUrl" :src="imageUrl"
+                                        class="object-cover w-full h-full">
+                                    <div id="imagePlaceholder" x-show="!imageUrl"
+                                        class="text-neutral-300 flex flex-col items-center w-full h-full"
+                                        style="background-image: url('/images/{{ auth()->user()->image }}'); background-size: cover; background-position: center center;">
+                                    </div>
+
+                                </div>
+                                <div class="w-full h-full absolute bottom-0 flex items-end pb-4 justify-center">
+                                    <input style="display: none" class="" type="file" name="image"
+                                        id="image" @change="fileChosen">
+
+                                    <input
+                                        class="inline-flex items-center px-4 py-2 cursor-pointer
+                                        bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-500 rounded-md font-semibold text-xs text-neutral-700 dark:text-neutral-300 uppercase tracking-widest shadow-sm hover:bg-neutral-50 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-800 disabled:opacity-25 transition ease-in-out duration-150"
+                                        type="button" value="Change..."
+                                        onclick="document.getElementById('image').click();" />
+                                </div>
+                            </label>
 
 
 
+                        </div>
+                    </div>
+                    <script>
+                        function previewImage() {
+                            return {
+                                imageUrl: "",
+
+                                fileChosen(event) {
+                                    this.fileToDataUrl(event, (src) => (this.imageUrl = src));
+                                },
+
+                                fileToDataUrl(event, callback) {
+                                    if (!event.target.files.length) return;
+
+                                    let file = event.target.files[0],
+                                        reader = new FileReader();
+
+                                    reader.readAsDataURL(file);
+                                    reader.onload = (e) => callback(e.target.result);
 
 
+                                },
+                            };
+                        }
+                    </script>
 
+
+                    <x-input-error :messages="$errors->get('image')" class="mt-2" />
+
+                    {{-- </div> --}}
+                    {{-- <x-danger-button class="mt-6" type="button">Remove Image</x-danger-button> --}}
+                    <a href="/settings/remove"
+                        class="cursor-pointer mt-6 inline-flex
+                         items-center px-4 py-2 hover:text-white
+                          bg-red-600 border border-transparent rounded-md
+                          font-semibold text-xs text-white uppercase
+                          tracking-widest hover:bg-red-500 active:bg-red-700
+                          focus:outline-none focus:ring-2 focus:ring-red-500
+                          focus:ring-offset-2 dark:focus:ring-offset-neutral-800
+                           transition ease-in-out duration-150">Remove
+                        Image</a>
+
+                </div>
             </div>
         </div>
 
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
-
+        <div class="flex items-center gap-4 justify-end">
             @if (session('status') === 'profile-updated')
                 <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
                     class="text-sm text-neutral-600 dark:text-neutral-400">{{ __('Saved.') }}</p>
             @endif
+            <x-primary-button class="w-60 justify-center">{{ __('Save') }}</x-primary-button>
+
         </div>
     </form>
 </section>

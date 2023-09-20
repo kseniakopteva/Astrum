@@ -1,8 +1,9 @@
 <x-main-layout>
     <div class="wrapper">
         <header class="sm:flex mb-10">
-            <img class="rounded-full w-32 h-32 sm:w-44 sm:h-44" src="https://i.pravatar.cc/100?u={{ $user->id }}"
-                alt="" class="profile-picture" width="100" height="100">
+            {{-- <img class="rounded-full w-32 h-32 sm:w-44 sm:h-44" src="https://i.pravatar.cc/100?u={{ $user->id }}" --}}
+            <img class="rounded-full w-32 h-32 sm:w-44 sm:h-44" src="/images/{{ $user->image }}" alt=""
+                class="profile-picture" width="100" height="100">
             <div class="ml-12 mt-4">
 
                 <h1 class="large-title">{{ $user->username }}</h1>
@@ -64,7 +65,7 @@
                                 </div>
                                 <div class="">
                                     <div>
-                                        <x-image-upload class="mr-1"></x-image-upload>
+                                        <x-image-upload class="mr-1 h-80 w-full"></x-image-upload>
                                         <x-input-error :messages="$errors->get('image')" class="mt-2" />
                                     </div>
                                     <div>

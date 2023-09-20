@@ -34,6 +34,7 @@ Route::get('/profile', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/settings', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/settings/remove', [ProfileController::class, 'removeImage']);
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
