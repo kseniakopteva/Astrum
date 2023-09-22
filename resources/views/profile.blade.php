@@ -1,12 +1,22 @@
 <x-main-layout>
-    <div class="wrapper">
-        <header class="sm:flex mb-10">
+    <div class="max-w-7xl m-auto mt-16 p-4">
+        <header
+            class="flex flex-col sm:flex-row mt-8 mb-10 pb-8 bg-white/50 dark:bg-neutral-800/50 rounded-md backdrop-blur-sm">
             {{-- <img class="rounded-full w-32 h-32 sm:w-44 sm:h-44" src="https://i.pravatar.cc/100?u={{ $user->id }}" --}}
-            <img class="rounded-full w-32 h-32 sm:w-44 sm:h-44" src="/images/{{ $user->image }}" alt=""
-                class="profile-picture" width="100" height="100">
+            <img class="-mt-16 ml-8 rounded-full w-32 h-32 sm:w-44 sm:h-44 shadow-md" src="/images/{{ $user->image }}"
+                alt="" class="profile-picture" width="100" height="100"
+                style=" pointer-events: none; user-select: none;">
             <div class="ml-12 mt-4">
 
-                <h1 class="large-title">{{ $user->username }}</h1>
+                <div class="flex gap-8">
+
+                    <h1 class="large-title">{{ $user->username }}</h1>
+                    @if ($user !== auth()->user())
+                        <x-secondary-button>Follow</x-secondary-button>
+                    @endif
+
+                </div>
+
                 @if ($user->name)
                     <h2 class="small-title inline-block mr-2">{{ $user->name }}</h2>
                 @endif
@@ -15,12 +25,12 @@
                     {{ ucfirst($user->badge->name) }}</span>
 
                 @if ($user->bio && strlen($user->bio) >= 150)
-                    <div class="max-w-lg mt-4" x-data="{ open: false, maxLength: 150, fullText: '', slicedText: '' }" x-init="fullText = $el.firstElementChild.textContent.trim();
+                    <div class="max-w-lg mt-4 pr-4" x-data="{ open: false, maxLength: 150, fullText: '', slicedText: '' }" x-init="fullText = $el.firstElementChild.textContent.trim();
                     slicedText = fullText.slice(0, maxLength) + '...'">
                         <div class="inline" x-text="open ? fullText : slicedText" x-transition>
                             {{ $user->bio }}
                         </div>
-                        <button class="text-lime-700" @click="open = ! open"
+                        <button class="text-lime-500" @click="open = ! open"
                             x-text="open ? 'Show less' : 'Show more'"></button>
                     </div>
                 @else
@@ -34,7 +44,7 @@
         <div class="grid grid-cols-3 gap-8">
             <div class="col-span-3 md:col-span-2">
                 <div class="flex">
-                    <h2 class="medium-title mb-4">Posts</h2>
+                    <h2 class="medium-title mb-4 text-white">Posts</h2>
                     @if (auth()->id() === $user->id)
                         @php
                             // $errors = collect($errors->getMessages())->except(['notebody']);
@@ -92,15 +102,20 @@
                 @endif
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
-                @foreach ($user->posts()->latest()->get() as $post)
+            {{-- <div class="grid grid-cols-2 gap-4"> --}}
+            <div class="columns lg:columns-2 overflow-hidden">
+                @foreach ($posts as $post)
                     <x-feed-post class="cols-1" :post=$post></x-feed-post>
                 @endforeach
+            </div>
+
+            <div class="mt-8">
+                {{ $posts->links() }}
             </div>
         </div>
         <div class="hidden md:block">
             <div class="flex">
-                <h2 class="medium-title mb-4">Notes</h2>
+                <h2 class="medium-title mb-4 text-white">Notes</h2>
                 @if (auth()->id() === $user->id)
                     @if ($errors->getBag('default')->has('notebody'))
                         <div x-data="{ open: true }">
@@ -134,29 +149,25 @@
             @endif
         </div>
         <div class="space-y-4">
-            @foreach ($user->notes()->latest()->get() as $note)
+            @foreach ($user->notes()->latest()->get()->take(20) as $note)
                 <x-feed-note :note=$note></x-feed-note>
             @endforeach
+            @if ($user->notes->count() > 20)
+                <x-secondary-button>View all notes</x-secondary-button>
+            @endif
         </div>
     </div>
     </div>
     </div>
     <script>
         function deletePreview() {
-            console.log('Hello?');
-
             let preview = document.querySelector('#imagePreview');
-            // preview.removeAttribute('src');
-            // let place = document.querySelector('#imagePlaceholder');
-
 
             if (preview.hasAttribute('src')) {
                 preview.removeAttribute('src');
-                // place.removeAttribute('style');
             } else {
                 place.style.display = 'none';
                 preview.removeAttribute('src');
-                // place.style.display = 'none';
             }
         }
     </script>

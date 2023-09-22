@@ -14,9 +14,10 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
         </form>
-        <div class="grid sm:grid-cols-2 sm:gap-3 sm:px-3 lg:grid-cols-3 xl:grid-cols-4">
+        {{-- <div class="grid sm:grid-cols-2 sm:gap-3 sm:px-3 lg:grid-cols-3 xl:grid-cols-4"> --}}
+        <div class="columns-2 md:columns-3 lg:columns-4 overflow-hidden">
             @foreach ($posts as $post)
-                <x-feed-post class="grid-item" :post=$post data-macy-complete="1"></x-feed-post>
+                <x-feed-post :post=$post></x-feed-post>
             @endforeach
         </div>
         <div class="mt-8">

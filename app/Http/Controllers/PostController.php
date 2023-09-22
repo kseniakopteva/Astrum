@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
 
 class PostController extends Controller
 {
     public function index()
     {
         return view('explore', [
-            'posts' =>  Post::latest()->filter(request(['search']))->paginate(10)->withQueryString()
+            'posts' =>  Post::inRandomOrder()->latest()->filter(request(['search']))->paginate(50)->withQueryString()
         ]);
     }
 
@@ -26,7 +27,7 @@ class PostController extends Controller
     {
         $attributes = $request->validate([
             'title' => 'required|max:100',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
             'body' => 'max:4000',
             'alt' => 'max:200'
         ]);
@@ -64,9 +65,17 @@ class PostController extends Controller
 
         $imageName = strtolower($request->user()->username) . '_' . time() . '.' . $request->image->extension();
 
-        $attributes['image'] = $imageName;
+        /////
+        $image = $request->file('image');
+        $filePath = public_path('images');
 
+        $attributes['image'] = $imageName;
         $request->image->move(public_path('images'), $imageName);
+
+        $img = Image::make(public_path('images') . '\\' . $imageName)->resize(1000, null, function ($constraint) {
+            $constraint->aspectRatio();
+        })->save($filePath . '\\' . $imageName);
+        /////
 
         /*
             Write Code Here for

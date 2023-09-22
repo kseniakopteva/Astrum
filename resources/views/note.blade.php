@@ -1,6 +1,7 @@
 <x-main-layout>
     <div class="note-wrapper">
-        <article class="border border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-md shadow-sm p-4">
+        <article
+            class="border border-neutral-200 bg-white dark:bg-neutral-800 dark:border-neutral-700 rounded-md shadow-sm p-4">
             <div class="text-lg mb-4">
                 <p>{{ $note->notebody }}</p>
             </div>

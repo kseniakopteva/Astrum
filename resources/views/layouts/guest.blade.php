@@ -1,5 +1,5 @@
 <x-main-layout>
-    <div class="flex flex-col sm:justify-center items-center pt-14 dark:bg-neutral-900">
+    <div class="flex flex-col sm:justify-center items-center pt-14">
 
         <div>
             <a href="/">

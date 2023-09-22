@@ -1,24 +1,36 @@
 <x-main-layout>
     <div class="wrapper">
         <article
-            class="border border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-md shadow-sm p-4 mb-8">
-            <h1 class="large-title">
-                {{ $post->title }}
-            </h1>
-            <p><a href="/u/{{ $post->author->username }}">{{ $post->author->username }}</a></p>
-            <img class="max-w-lg my-4" src="/images/{{ $post->image }}" alt="">
-            <div class="text-lg">
-                <p>{{ $post->body }}</p>
+            class="grid grid-cols-4 gap-8 border border-neutral-200 bg-white dark:bg-neutral-800 dark:border-neutral-700 rounded-md shadow-sm p-4 mb-6">
+            <div class="col-span-3 h-[calc(100vh-10rem)] w-full flex justify-center bg-neutral-950">
+                <img class=" h-full object-contain" src="<?php if (!strncmp('https', $post->image, 5)) {
+                    echo '';
+                } else {
+                    echo '/images/';
+                } ?>{{ $post->image }}" alt="">
             </div>
-            <ul class="flex">
-                @foreach ($post->tags as $tag)
-                    <li class="mr-1"><a
-                            class="px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-600 dark:text-neutral-400 inline-block"
-                            href="/tags/{{ $tag->slug }}">{{ $tag->name }}</a></li>
-                @endforeach
-            </ul>
-            <a href="{{ url()->previous() }}" class="inline-block mt-4 p-2"><i
-                    class="mr-1 fa-solid fa-arrow-left"></i>Go back</a>
+            <div class="pt-12 h-full flex flex-col">
+                <div>
+                    <h1 class="large-title">
+                        {{ $post->title }}
+                    </h1>
+                    <p><a href="/u/{{ $post->author->username }}">{{ $post->author->username }}</a></p>
+
+
+                    <div class="text-lg my-8">
+                        <p>{{ $post->body }}</p>
+                    </div>
+                    <ul class="flex">
+                        @foreach ($post->tags as $tag)
+                            <li class="mr-1"><a
+                                    class="px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-600 dark:text-neutral-400 inline-block"
+                                    href="/tags/{{ $tag->slug }}">{{ $tag->name }}</a></li>
+                        @endforeach
+                    </ul>
+                </div>
+                <a href="{{ url()->previous() }}" class="inline-block p-2 mt-auto"><i
+                        class="mr-1 fa-solid fa-arrow-left"></i>Go back</a>
+            </div>
         </article>
 
         <section class="space-y-4 max-w-3xl m-auto">

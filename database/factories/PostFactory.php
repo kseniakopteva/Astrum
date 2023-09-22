@@ -29,7 +29,7 @@ class PostFactory extends Factory
             'slug' => $slug,
             'excerpt' => $sentence,
             'body' => $body,
-            'image' => 'placeholder.jpg'
+            'image' => 'https://source.unsplash.com/random/' . rand(1, 100)
         ];
     }
 }

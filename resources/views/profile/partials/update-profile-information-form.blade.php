@@ -67,37 +67,35 @@
                 </div>
 
             </div>
-            <div class="space-y-4 mt-6 ml-10">
-                <span class="block font-medium text-sm text-neutral-700 dark:text-neutral-300">Badge</span>
-                @foreach ($badges as $badge)
-                    <div class="flex items-center">
-                        <input
-                            class="
+            <div class="col-span-2 grid grid-cols-2 gap-6 w-full">
+                <div class="space-y-4 mt-6 md:ml-10">
+                    <span class="block font-medium text-sm text-neutral-700 dark:text-neutral-300">Badge</span>
+                    @foreach ($badges as $badge)
+                        <div class="flex items-center">
+                            <input
+                                class="
                          text-lime-500 dark:text-lime-600 bg-neutral-100 border-neutral-300
                           focus:ring-lime-500 dark:focus:ring-lime-600 dark:ring-offset-neutral-800
                            focus:ring-2 dark:bg-neutral-700 dark:border-neutral-600"
-                            <?php if ($badge->id === $user->badge->id) {
-                                echo 'checked';
-                            } ?> type="radio" name="badge_id" id="{{ $badge->id }}"
-                            value="{{ $badge->id }}">
-                        <label for="{{ $badge->id }}"
-                            class="rounded-md py-1 px-2 bg-{{ $badge->lightcolor }} dark:bg-{{ $badge->darkcolor }} dark:text-neutral-300 ml-2 font-medium text-sm text-neutral-700">{{ ucfirst($badge->name) }}</label>
-                    </div>
-                @endforeach
-            </div>
+                                <?php if ($badge->id === $user->badge->id) {
+                                    echo 'checked';
+                                } ?> type="radio" name="badge_id" id="{{ $badge->id }}"
+                                value="{{ $badge->id }}">
+                            <label for="{{ $badge->id }}"
+                                class="rounded-md py-1 px-2 bg-{{ $badge->lightcolor }} dark:bg-{{ $badge->darkcolor }} dark:text-neutral-300 ml-2 font-medium text-sm text-neutral-700">{{ ucfirst($badge->name) }}</label>
+                        </div>
+                    @endforeach
+                </div>
 
-            <div class="space-y-4 mt-6 ">
-                {{-- <div class="flex flex-col h-full justify-between"> --}}
-                <div>
-                    <span class="block font-medium text-sm text-neutral-700 dark:text-neutral-300">Profile
-                        Image</span>
-
-
+                <div class="space-y-4 mt-6 ">
                     <div>
-                        <div class="md:h-40 md:w-40 lg:h-52 lg:w-52 h-52 xl:h-60 xl:w-60" x-data="previewImage()">
+                        <span class="block font-medium text-sm text-neutral-700 dark:text-neutral-300">Profile
+                            Image</span>
+
+                        <div class="h-40 w-40 md:h-40 md:w-40 lg:h-52 lg:w-52 xl:h-60 xl:w-60" x-data="previewImage()">
                             <label for="image" class="relative cursor-pointer">
                                 <div
-                                    class=" flex justify-center items-center overflow-hidden md:h-40 md:w-40 lg:h-52 lg:w-52 h-52 xl:h-60 xl:w-60 mt-1 flex-col bg-neutral-300 border border-neutral-400 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 rounded-md">
+                                    class=" flex justify-center items-center overflow-hidden h-40 w-40 md:h-40 md:w-40 lg:h-52 lg:w-52 xl:h-60 xl:w-60 mt-1 flex-col bg-neutral-300 border border-neutral-400 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 rounded-md">
 
                                     <img id="imagePreview" x-show="imageUrl" :src="imageUrl"
                                         class="object-cover w-full h-full">
@@ -118,42 +116,38 @@
                                         onclick="document.getElementById('image').click();" />
                                 </div>
                             </label>
-
-
-
                         </div>
-                    </div>
-                    <script>
-                        function previewImage() {
-                            return {
-                                imageUrl: "",
+                        <script>
+                            function previewImage() {
+                                return {
+                                    imageUrl: "",
 
-                                fileChosen(event) {
-                                    this.fileToDataUrl(event, (src) => (this.imageUrl = src));
-                                },
+                                    fileChosen(event) {
+                                        this.fileToDataUrl(event, (src) => (this.imageUrl = src));
+                                    },
 
-                                fileToDataUrl(event, callback) {
-                                    if (!event.target.files.length) return;
+                                    fileToDataUrl(event, callback) {
+                                        if (!event.target.files.length) return;
 
-                                    let file = event.target.files[0],
-                                        reader = new FileReader();
+                                        let file = event.target.files[0],
+                                            reader = new FileReader();
 
-                                    reader.readAsDataURL(file);
-                                    reader.onload = (e) => callback(e.target.result);
-
-
-                                },
-                            };
-                        }
-                    </script>
+                                        reader.readAsDataURL(file);
+                                        reader.onload = (e) => callback(e.target.result);
 
 
-                    <x-input-error :messages="$errors->get('image')" class="mt-2" />
+                                    },
+                                };
+                            }
+                        </script>
 
-                    {{-- </div> --}}
-                    {{-- <x-danger-button class="mt-6" type="button">Remove Image</x-danger-button> --}}
-                    <a href="/settings/remove"
-                        class="cursor-pointer mt-6 inline-flex
+
+                        <x-input-error :messages="$errors->get('image')" class="mt-2" />
+
+                        {{-- </div> --}}
+                        {{-- <x-danger-button class="mt-6" type="button">Remove Image</x-danger-button> --}}
+                        <a href="/settings/remove"
+                            class="cursor-pointer mt-6 inline-flex
                          items-center px-4 py-2 hover:text-white
                           bg-red-600 border border-transparent rounded-md
                           font-semibold text-xs text-white uppercase
@@ -161,8 +155,9 @@
                           focus:outline-none focus:ring-2 focus:ring-red-500
                           focus:ring-offset-2 dark:focus:ring-offset-neutral-800
                            transition ease-in-out duration-150">Remove
-                        Image</a>
+                            Image</a>
 
+                    </div>
                 </div>
             </div>
         </div>

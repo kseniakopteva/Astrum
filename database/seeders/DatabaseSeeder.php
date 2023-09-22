@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
         Tag::factory(10)->create();
         User::factory(10)->create()->each(function ($u) {
 
-            Post::factory(2)->create([
+            Post::factory(5)->create([
                 'user_id' => $u->id,
             ]);
 
