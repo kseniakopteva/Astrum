@@ -9,27 +9,41 @@
                     echo '/images/';
                 } ?>{{ $post->image }}" alt="">
             </div>
-            <div class="pt-12 h-full flex flex-col">
-                <div>
-                    <h1 class="large-title">
-                        {{ $post->title }}
-                    </h1>
-                    <p><a href="/u/{{ $post->author->username }}">{{ $post->author->username }}</a></p>
-
-
-                    <div class="text-lg my-8">
-                        <p>{{ $post->body }}</p>
-                    </div>
-                    <ul class="flex">
-                        @foreach ($post->tags as $tag)
-                            <li class="mr-1"><a
-                                    class="px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-600 dark:text-neutral-400 inline-block"
-                                    href="/tags/{{ $tag->slug }}">{{ $tag->name }}</a></li>
-                        @endforeach
-                    </ul>
+            <div class="">
+                <div class="text-right">
+                    @if ($post->author->id === auth()->user()->id)
+                        <form action="{{ route('post.delete', $post) }}" method="POST">
+                            {{-- @method('delete') --}}
+                            @csrf
+                            <input type="hidden" name="id" value="{{ $post->id }}">
+                            <x-danger-button href="/post/delete">Delete Post</x-danger-button>
+                        </form>
+                    @endif
                 </div>
-                <a href="{{ url()->previous() }}" class="inline-block p-2 mt-auto"><i
-                        class="mr-1 fa-solid fa-arrow-left"></i>Go back</a>
+                <div class="pt-12  flex flex-col">
+                    <div>
+
+
+                        <h1 class="large-title">
+                            {{ $post->title }}
+                        </h1>
+                        <p><a href="/u/{{ $post->author->username }}">{{ $post->author->username }}</a></p>
+
+
+                        <div class="text-lg my-8">
+                            <p>{{ $post->body }}</p>
+                        </div>
+                        <ul class="flex">
+                            @foreach ($post->tags as $tag)
+                                <li class="mr-1"><a
+                                        class="px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-600 dark:text-neutral-400 inline-block"
+                                        href="/tags/{{ $tag->slug }}">{{ $tag->name }}</a></li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <a href="{{ url()->previous() }}" class="inline-block p-2 mt-auto"><i
+                            class="mr-1 fa-solid fa-arrow-left"></i>Go back</a>
+                </div>
             </div>
         </article>
 

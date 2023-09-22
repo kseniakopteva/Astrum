@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 
 class PostController extends Controller
@@ -86,5 +87,16 @@ class PostController extends Controller
 
         return back()
             ->with('success', 'You have successfully created a post!');
+    }
+
+    public function destroy(Request $request)
+    {
+        $post = Post::find($request->id);
+        if (Auth::user()->id === $post->author->id) {
+            $post->delete();
+            return redirect('/profile');
+        } else {
+            return redirect()->route('explore');
+        }
     }
 }

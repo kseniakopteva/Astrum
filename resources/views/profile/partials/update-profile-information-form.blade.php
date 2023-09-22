@@ -144,19 +144,7 @@
 
                         <x-input-error :messages="$errors->get('image')" class="mt-2" />
 
-                        {{-- </div> --}}
-                        {{-- <x-danger-button class="mt-6" type="button">Remove Image</x-danger-button> --}}
-                        <a href="/settings/remove"
-                            class="cursor-pointer mt-6 inline-flex
-                         items-center px-4 py-2 hover:text-white
-                          bg-red-600 border border-transparent rounded-md
-                          font-semibold text-xs text-white uppercase
-                          tracking-widest hover:bg-red-500 active:bg-red-700
-                          focus:outline-none focus:ring-2 focus:ring-red-500
-                          focus:ring-offset-2 dark:focus:ring-offset-neutral-800
-                           transition ease-in-out duration-150">Remove
-                            Image</a>
-
+                        <x-danger-link href="/settings/remove" class="mt-6">Remove Image</x-danger-link>
                     </div>
                 </div>
             </div>

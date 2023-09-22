@@ -56,6 +56,9 @@ Route::get('/u/{user:username}/posts/{post:slug}', [PostController::class, 'show
 Route::post('/post/store', [PostController::class, 'store'])->name('post.store');
 Route::post('/note/store', [NoteController::class, 'store'])->name('note.store');
 
+Route::post('/post/delete', [PostController::class, 'destroy'])->name('post.delete');
+Route::post('/note/delete', [NoteController::class, 'destroy'])->name('note.delete');
+
 Route::get(
     '/notes/{note:slug}',
     function (Note $note) {
