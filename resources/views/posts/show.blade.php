@@ -11,9 +11,8 @@
             </div>
             <div class="">
                 <div class="text-right">
-                    @if ($post->author->id === auth()->user()->id)
-                        <form action="{{ route('post.delete', $post) }}" method="POST">
-                            {{-- @method('delete') --}}
+                    @if (auth()->check() && $post->author->id === auth()->user()->id)
+                        <form action="{{ route('post.delete') }}" method="POST">
                             @csrf
                             <input type="hidden" name="id" value="{{ $post->id }}">
                             <x-danger-button href="/post/delete">Delete Post</x-danger-button>

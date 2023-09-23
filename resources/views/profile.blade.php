@@ -11,8 +11,21 @@
                 <div class="flex gap-8">
 
                     <h1 class="large-title">{{ $user->username }}</h1>
-                    @if ($user !== auth()->user())
-                        <x-secondary-button>Follow</x-secondary-button>
+                    @if (auth()->check() && $user !== auth()->user())
+                        @if (!auth()->user()->isFollowing($user))
+                            <form method="POST" action="{{ route('user.follow') }}">
+                                @csrf
+                                <input type="hidden" name="id" value="{{ $user->id }}">
+                                <x-secondary-button type="submit">Follow</x-secondary-button>
+                            </form>
+                        @else
+                            <form method="POST" action="{{ route('user.unfollow') }}">
+                                @csrf
+                                <input type="hidden" name="id" value="{{ $user->id }}">
+                                <x-secondary-button type="submit">Unfollow</x-secondary-button>
+                            </form>
+                        @endif
+
                     @endif
 
                 </div>

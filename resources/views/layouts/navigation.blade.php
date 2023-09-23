@@ -17,7 +17,7 @@
                         <x-slot name="trigger">
                             <button
                                 class="inline-flex items-center text-neutral-500 dark:text-neutral-400 bg-white dark:bg-neutral-800 hover:text-neutral-700 dark:hover:text-neutral-300 focus:outline-none transition ease-in-out duration-150">
-                                <div>{{ Auth::user()->username }}</div>
+                                <div class="normal-case">{{ Auth::user()->username }}</div>
 
                                 <x-arrow-svg class="h-4 w-4"></x-arrow-svg>
                             </button>

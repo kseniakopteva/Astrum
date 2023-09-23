@@ -8,7 +8,7 @@
             <div class="flex items-center justify-between">
                 <span> by <a href="/u/{{ $note->author->username }}">{{ $note->author->username }}</a>
                     {{ $note->created_at->diffForHumans() }}</span>
-                @if ($note->author->id === auth()->user()->id)
+                @if (auth()->check() && $note->author->id === auth()->user()->id)
                     <form action="{{ route('note.delete', $note) }}" method="POST">
                         {{-- @method('delete') --}}
                         @csrf

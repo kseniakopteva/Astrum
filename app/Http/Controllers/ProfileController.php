@@ -31,7 +31,7 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        if ($request->image && $request->image->isValid() && !fnmatch(auth()->user()->image, 'default*.png')) {
+        if ($request->image && $request->image->isValid() && fnmatch(auth()->user()->image, 'default[1234567].png')) {
             File::delete(public_path('images') . '\\' . auth()->user()->image);
         }
 
@@ -95,8 +95,7 @@ class ProfileController extends Controller
     public function removeImage()
     {
         $user =  User::find(Auth::id());
-        // dd($user->image, !fnmatch($user->image, 'default[12345].png'));
-        if (fnmatch($user->image, 'default[12345].png'))
+        if (!fnmatch('default[1234567].png', $user->image))
             File::delete(public_path('images') . '\\' . $user->image);
 
         $user->image = 'default' . rand(1, 7) . '.png';
