@@ -21,7 +21,13 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        Badge::factory(6)->create();
+        Badge::factory()->create(['name' => 'drawer']);
+        Badge::factory()->create(['name' => 'writer']);
+        Badge::factory()->create(['name' => 'crafter']);
+        Badge::factory()->create(['name' => 'painter']);
+        Badge::factory()->create(['name' => 'poet']);
+        Badge::factory()->create(['name' => 'illustrator']);
+        Badge::factory()->create(['name' => 'cartoonist']);
 
         Tag::factory(10)->create();
         User::factory(10)->create()->each(function ($u) {

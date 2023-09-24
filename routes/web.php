@@ -31,7 +31,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/profile', function () {
     return view('profile', [
         'user' => auth()->user(),
-        'posts' => Post::latest()->whereHas('author', fn ($q) => $q->where('user_id', auth()->user()->id))->paginate(20)
+        'posts' => Post::latest()->whereHas('author', fn ($q) => $q->where('user_id', auth()->user()->id))->paginate(20),
+        'followers' => auth()->user()->followers,
+        'following' => auth()->user()->following,
     ]);
 })->middleware(['auth'])->name('profile');
 
@@ -81,7 +83,9 @@ Route::get('/tags/{tag:slug}', [TagController::class, 'index']);
 Route::get('/u/{author:username}', function (User $author) {
     return view('profile', [
         'user' => $author,
-        'posts' => Post::latest()->whereHas('author', fn ($q) => $q->where('user_id', $author->id))->paginate(20)
+        'posts' => Post::latest()->whereHas('author', fn ($q) => $q->where('user_id', $author->id))->paginate(20),
+        'followers' => $author->followers,
+        'following' => $author->following,
     ]);
 });
 

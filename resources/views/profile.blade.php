@@ -1,57 +1,83 @@
 <x-main-layout>
-    <div class="max-w-7xl m-auto mt-16 p-4">
+    <div class="mt-16 p-4">
         <header
-            class="flex flex-col sm:flex-row mt-8 mb-10 pb-8 bg-white/50 dark:bg-neutral-800/50 rounded-md backdrop-blur-sm">
-            {{-- <img class="rounded-full w-32 h-32 sm:w-44 sm:h-44" src="https://i.pravatar.cc/100?u={{ $user->id }}" --}}
-            <img class="-mt-16 ml-8 rounded-full w-32 h-32 sm:w-44 sm:h-44 shadow-md" src="/images/{{ $user->image }}"
-                alt="" class="profile-picture" width="100" height="100"
-                style=" pointer-events: none; user-select: none;">
-            <div class="ml-12 mt-4">
+            class=" mt-4 mb-10 px-8 pb-8 bg-white/50 dark:bg-neutral-800/50 rounded-md backdrop-blur-sm max-w-7xl m-auto ">
+            <div class="flex flex-col sm:flex-row">
+                <img class="-mt-12 mr-12 rounded-full w-32 h-32 sm:w-44 sm:h-44 shadow-md"
+                    src="/images/{{ $user->image }}" alt="" class="profile-picture" width="100" height="100"
+                    style=" pointer-events: none; user-select: none;">
+                <div class="mt-4 flex-grow {{-- flex flex-col sm:flex-row items-start --}} grid grid-cols-6">
+                    <div class="flex-grow col-span-6 md:col-span-5">
+                        <h1 class="large-title">{{ $user->username }}</h1>
 
-                <div class="flex gap-8">
-
-                    <h1 class="large-title">{{ $user->username }}</h1>
-                    @if (auth()->check() && $user !== auth()->user())
-                        @if (!auth()->user()->isFollowing($user))
-                            <form method="POST" action="{{ route('user.follow') }}">
-                                @csrf
-                                <input type="hidden" name="id" value="{{ $user->id }}">
-                                <x-secondary-button type="submit">Follow</x-secondary-button>
-                            </form>
-                        @else
-                            <form method="POST" action="{{ route('user.unfollow') }}">
-                                @csrf
-                                <input type="hidden" name="id" value="{{ $user->id }}">
-                                <x-secondary-button type="submit">Unfollow</x-secondary-button>
-                            </form>
+                        @if ($user->name)
+                            <h2 class="small-title inline-block mr-2">{{ $user->name }}</h2>
                         @endif
+                        <span
+                            class="rounded-md py-1 px-2 bg-{{ $user->badge->lightcolor }} dark:bg-{{ $user->badge->darkcolor }} dark:text-neutral-400">
+                            {{ ucfirst($user->badge->name) }}</span>
 
-                    @endif
+                        @if ($user->bio && strlen($user->bio) >= 150)
+                            <div class="max-w-lg mt-4 pr-4" x-data="{ open: false, maxLength: 150, fullText: '', slicedText: '' }" x-init="fullText = $el.firstElementChild.textContent.trim();
+                            slicedText = fullText.slice(0, maxLength) + '...'">
+                                <div class="inline" x-text="open ? fullText : slicedText" x-transition>
+                                    {{ $user->bio }}
+                                </div>
+                                <button class="text-lime-500" @click="open = ! open"
+                                    x-text="open ? 'Show less' : 'Show more'"></button>
+                            </div>
+                        @else
+                            <div class="max-w-lg mt-4">
+                                {{ $user->bio }}
+                            </div>
+                        @endif
+                    </div>
+                    <div
+                        class="mt-4 md:mt-0 col-span-6 md:col-span-1 flex flex-row md:flex-col justify-between md:justify-start w-full items-baseline md:items-end">
+                        <div class="flex gap-8 items-center mb-2 justify-between">
+                            @if (auth()->check() && $user !== auth()->user())
+                                <div class="flex">
+                                    @if (!auth()->user()->isFollowing($user))
+                                        <form method="POST" action="{{ route('user.follow') }}">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{ $user->id }}">
+                                            <x-secondary-button type="submit">Follow</x-secondary-button>
+                                        </form>
+                                    @else
+                                        <form method="POST" action="{{ route('user.unfollow') }}">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{ $user->id }}">
+                                            <x-secondary-button type="submit"
+                                                class="bg-white/30 hover:border-neutral-300">Unfollow</x-secondary-button>
+                                        </form>
+                                    @endif
+                                    <x-secondary-button type="submit" class="ml-2"><i
+                                            class="fa-regular fa-envelope"></i></x-secondary-button>
+                                </div>
+                            @else
+                                <a href="/settings"
+                                    class="whitespace-nowrap inline-flex items-center px-4 py-2 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-500 rounded-md font-semibold text-xs text-neutral-700 dark:text-neutral-300 uppercase tracking-widest shadow-sm hover:bg-neutral-50 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-800 disabled:opacity-25 transition ease-in-out duration-150">
+                                    Edit profile
+                                </a>
+                            @endif
+                        </div>
+                        <div
+                            class="flex md:flex-col space-x-2 md:space-x-0 sm:items-start whitespace-nowrap justify-end mt-2 md:space-y-2">
+                            <button class="hover:text-lime-700" x-data=""
+                                x-on:click.prevent="$dispatch('open-modal', 'open-followers')">
+                                <span class="font-black">{{ $user->followers->count() }}</span>
+                                Followers
+                            </button>
+                            <button class="hover:text-lime-700" x-data=""
+                                x-on:click.prevent="$dispatch('open-modal', 'open-following')">
+                                <span class="font-black">{{ $user->following->count() }}</span>
+                                Following
+                            </button>
+
+                        </div>
+                    </div>
 
                 </div>
-
-                @if ($user->name)
-                    <h2 class="small-title inline-block mr-2">{{ $user->name }}</h2>
-                @endif
-                <span
-                    class="rounded-md py-1 px-2 bg-{{ $user->badge->lightcolor }} dark:bg-{{ $user->badge->darkcolor }} dark:text-neutral-400">
-                    {{ ucfirst($user->badge->name) }}</span>
-
-                @if ($user->bio && strlen($user->bio) >= 150)
-                    <div class="max-w-lg mt-4 pr-4" x-data="{ open: false, maxLength: 150, fullText: '', slicedText: '' }" x-init="fullText = $el.firstElementChild.textContent.trim();
-                    slicedText = fullText.slice(0, maxLength) + '...'">
-                        <div class="inline" x-text="open ? fullText : slicedText" x-transition>
-                            {{ $user->bio }}
-                        </div>
-                        <button class="text-lime-500" @click="open = ! open"
-                            x-text="open ? 'Show less' : 'Show more'"></button>
-                    </div>
-                @else
-                    <div class="max-w-lg mt-4">
-                        {{ $user->bio }}
-                    </div>
-                @endif
-
             </div>
         </header>
         <div class="grid grid-cols-3 gap-8">
@@ -184,4 +210,7 @@
             }
         }
     </script>
+    <x-follow-modal name="followers" :users="$followers"></x-follow-modal>
+    <x-follow-modal name="following" :users="$following"></x-follow-modal>
+
 </x-main-layout>
