@@ -10,15 +10,35 @@
                 } ?>{{ $post->image }}" alt="">
             </div>
             <div class="">
-                <div class="text-right">
-                    @if (auth()->check() && $post->author->id === auth()->user()->id)
-                        <form action="{{ route('post.delete') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="id" value="{{ $post->id }}">
-                            <x-danger-button href="/post/delete">Delete Post</x-danger-button>
-                        </form>
-                    @endif
-                </div>
+                @auth
+                    <div class="text-right">
+                        <x-dropdown align="right" width="52">
+                            <x-slot name="trigger">
+                                <x-secondary-button type="submit" class="ml-2 !px-2"><i
+                                        class="fa-solid fa-ellipsis"></i></x-secondary-button>
+                            </x-slot>
+
+                            <x-slot name="content">
+                                @if (auth()->check() && $post->author->id === auth()->user()->id)
+                                    <form action="{{ route('post.delete') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{ $post->id }}">
+                                        <button
+                                            class="block w-full px-4 py-2 text-left text-sm dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-red-400 hover:text-red-600">
+                                            Delete Post
+                                        </button>
+                                    </form>
+                                @elseif (auth()->check() && $post->author->id !== auth()->user()->id)
+                                    <button x-data=""
+                                        x-on:click.prevent="$dispatch('open-modal', 'post-report')"
+                                        class="block w-full px-4 py-2 text-left text-sm dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-red-400 hover:text-red-600">
+                                        {{ __('Report') }}
+                                    </button>
+                                @endif
+                            </x-slot>
+                        </x-dropdown>
+                    </div>
+                @endauth
                 <div class="pt-12  flex flex-col">
                     <div>
 
@@ -91,4 +111,5 @@
         </section>
 
     </div>
+    <x-post-report-modal :post="$post"></x-post-report-modal>
 </x-main-layout>

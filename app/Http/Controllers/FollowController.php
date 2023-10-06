@@ -14,7 +14,10 @@ class FollowController extends Controller
         $userToFollow = User::findOrFail(request('id'));
         auth()->user()->follow($userToFollow);
 
-        // return response()->noContent(200);
+        if ($userToFollow->followers->count() == 30 && $userToFollow->role == 'user') {
+            $userToFollow->role = 'creator';
+            $userToFollow->save();
+        }
 
         return back()->with('success', 'You have followed ' . $userToFollow->username . '!');
     }
@@ -23,8 +26,6 @@ class FollowController extends Controller
     {
         $userToUnfollow = User::findOrFail(request('id'));
         auth()->user()->unfollow($userToUnfollow);
-
-        // return response()->noContent(200);
 
         return back()->with('success', 'You have unfollowed ' . $userToUnfollow->username . '.');
     }

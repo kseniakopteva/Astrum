@@ -10,14 +10,14 @@ use Intervention\Image\Facades\Image;
 
 class PostController extends Controller
 {
-    public function index()
+    public function explore()
     {
         return view('explore', [
             'posts' =>  Post::inRandomOrder()->latest()->filter(request(['search']))->paginate(50)->withQueryString()
         ]);
     }
 
-    public function show(User $user, Post $post)
+    public function show(User $author, Post $post)
     {
         return view('posts.show', [
             'post' => $post

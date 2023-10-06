@@ -21,7 +21,7 @@ class PostFactory extends Factory
         $sentence = preg_replace('/(.*?[?!.](?=\s|$)).*/', '\\1', $body); // first sentence
 
         $title = ucfirst($this->faker->words(rand(1, 5), true));
-        $slug = str_replace(" ", "-", $title);
+        $slug = str_replace(" ", "-", $title) . rand();
 
         return [
             'user_id' => User::factory(),

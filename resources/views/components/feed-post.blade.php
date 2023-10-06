@@ -1,7 +1,7 @@
 @props(['post'])
 
 <article
-    class="flex flex-col justify-between border bg-white border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-lg p-6 pt-4 mb-4 break-inside-avoid">
+    class="post-border first-letter:flex flex-col justify-between border bg-white border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-lg p-4 pt-4 mb-4 break-inside-avoid">
     <div class="">
         <a class="" href="/u/{{ strtolower($post->author->username) }}/posts/{{ $post->slug }}">
             <h1 class="medium-title mb-2">
@@ -27,7 +27,6 @@
         </footer>
     </div>
 </article>
-
 
 {{-- <div
     class="relative mb-4 before:content-[''] before:rounded-md before:absolute before:inset-0 before:bg-black before:bg-opacity-20">

@@ -67,27 +67,33 @@
                 </div>
 
             </div>
+
             <div class="col-span-2 grid grid-cols-2 gap-6 w-full">
-                <div class="space-y-4 mt-6 md:ml-10">
-                    <span class="block font-medium text-sm text-neutral-700 dark:text-neutral-300">Badge</span>
-                    @foreach ($badges as $badge)
-                        <div class="flex items-center">
-                            <input
-                                class="
+                @if ($user->isCreatorOrMore($user))
+                    <div class="space-y-4 mt-6 md:ml-10">
+                        <span class="block font-medium text-sm text-neutral-700 dark:text-neutral-300">Badge</span>
+                        @foreach ($badges as $badge)
+                            <div class="flex items-center">
+                                <input
+                                    class="
                          text-lime-500 dark:text-lime-600 bg-neutral-100 border-neutral-300
                           focus:ring-lime-500 dark:focus:ring-lime-600 dark:ring-offset-neutral-800
                            focus:ring-2 dark:bg-neutral-700 dark:border-neutral-600"
-                                <?php if ($badge->id === $user->badge->id) {
-                                    echo 'checked';
-                                } ?> type="radio" name="badge_id" id="{{ $badge->id }}"
-                                value="{{ $badge->id }}">
-                            <label for="{{ $badge->id }}"
-                                class="rounded-md py-1 px-2 bg-{{ $badge->lightcolor }} dark:bg-{{ $badge->darkcolor }} dark:text-neutral-300 ml-2 font-medium text-sm text-neutral-700">{{ ucfirst($badge->name) }}</label>
-                        </div>
-                    @endforeach
-                </div>
+                                    <?php if ($badge->id === $user->badge->id) {
+                                        echo 'checked';
+                                    } ?> type="radio" name="badge_id" id="{{ $badge->id }}"
+                                    value="{{ $badge->id }}">
+                                <label for="{{ $badge->id }}"
+                                    class="rounded-md py-1 px-2 bg-{{ $badge->lightcolor }} dark:bg-{{ $badge->darkcolor }} dark:text-neutral-300 ml-2 font-medium text-sm text-neutral-700">{{ ucfirst($badge->name) }}</label>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
 
-                <div class="space-y-4 mt-6 ">
+                <div
+                    class="space-y-4 mt-6 m-auto
+                @if (!$user->isCreatorOrMore($user)) col-span-2 @endif
+                ">
                     <div>
                         <span class="block font-medium text-sm text-neutral-700 dark:text-neutral-300">Profile
                             Image</span>

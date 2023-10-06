@@ -3,11 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class NoteController extends Controller
 {
+    public function show(User $author, Note $note)
+    {
+        return view('note', [
+            'note' => $note,
+            'user' => $author
+        ]);
+    }
+
     public function store(Request $request)
     {
         // $request['body'] = $request['notebody'];

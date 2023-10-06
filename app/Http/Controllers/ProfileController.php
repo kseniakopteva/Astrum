@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Badge;
+use App\Models\Note;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,6 +17,63 @@ use Intervention\Image\Facades\Image;
 
 class ProfileController extends Controller
 {
+    public function index(User $author)
+    {
+        return view('profile.index', [
+            'user' => $author,
+            'posts' => Post::latest()->whereHas('author', fn ($q) => $q->where('user_id', $author->id))->paginate(20),
+            'followers' => $author->followers,
+            'following' => $author->following,
+        ]);
+    }
+
+    public function posts(User $author)
+    {
+        return view('profile.posts', [
+            'user' => $author,
+            'posts' =>  Post::latest()->whereHas('author', fn ($q) => $q->where('user_id', $author->id))->paginate(20)->withQueryString(),
+            'followers' => $author->followers,
+            'following' => $author->following,
+        ]);
+    }
+
+    public function notes(User $author)
+    {
+        return view('profile.notes', [
+            'user' => $author,
+            'notes' =>  Note::latest()->whereHas('author', fn ($q) => $q->where('user_id', $author->id))->paginate(20)->withQueryString(),
+            'followers' => $author->followers,
+            'following' => $author->following,
+        ]);
+    }
+
+    public function shop(User $author)
+    {
+        return view('profile.shop', [
+            'user' => $author,
+            'followers' => $author->followers,
+            'following' => $author->following,
+        ]);
+    }
+
+    public function faq(User $author)
+    {
+        return view('profile.faq', [
+            'user' => $author,
+            'followers' => $author->followers,
+            'following' => $author->following,
+        ]);
+    }
+
+    public function about(User $author)
+    {
+        return view('profile.about', [
+            'user' => $author,
+            'followers' => $author->followers,
+            'following' => $author->following,
+        ]);
+    }
+
     /**
      * Display the user's profile form.
      */

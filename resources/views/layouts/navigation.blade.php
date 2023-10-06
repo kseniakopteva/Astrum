@@ -13,7 +13,7 @@
                 <li><a href="/starshop">StarShop</a></li>
                 <li><a href="/help">Help</a></li>
                 @if (auth()->check())
-                    <x-dropdown align="right" width="48">
+                    <x-dropdown align="right" width="52">
                         <x-slot name="trigger">
                             <button
                                 class="inline-flex items-center text-neutral-500 dark:text-neutral-400 bg-white dark:bg-neutral-800 hover:text-neutral-700 dark:hover:text-neutral-300 focus:outline-none transition ease-in-out duration-150">
@@ -27,6 +27,17 @@
                             <x-dropdown-link :href="route('profile')">
                                 {{ __('Profile') }}
                             </x-dropdown-link>
+                            @admin
+                                <x-dropdown-link :href="route('mod.dashboard')">
+                                    {{ __('Mod Dashboard') }}
+                                </x-dropdown-link>
+                            @endadmin
+
+                            @mod
+                                <x-dropdown-link :href="route('mod.dashboard')">
+                                    {{ __('Mod Dashboard') }}
+                                </x-dropdown-link>
+                            @endmod
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Settings') }}
                             </x-dropdown-link>
@@ -100,6 +111,16 @@
                 </x-responsive-nav-link>
 
                 <div class="mt-3 space-y-1">
+                    @admin
+                        <x-responsive-nav-link :href="route('mod.dashboard')">
+                            {{ __('Mod Dashboard') }}
+                        </x-responsive-nav-link>
+                    @endadmin
+                    @mod
+                        <x-responsive-nav-link :href="route('mod.dashboard')">
+                            {{ __('Mod Dashboard') }}
+                        </x-responsive-nav-link>
+                    @endmod
                     <x-responsive-nav-link :href="route('profile.edit')">
                         {{ __('Settings') }}
                     </x-responsive-nav-link>

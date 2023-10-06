@@ -80,4 +80,24 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(User::class, Follow::class, 'following_id', 'id', 'id', 'user_id');
     }
+
+    public function isCreator(User $user)
+    {
+        return $user->role === 'creator';
+    }
+
+    public function isCreatorOrMore(User $user)
+    {
+        return in_array($user->role, ['creator', 'mod', 'admin']);
+    }
+
+    public function isMod(User $user)
+    {
+        return $user->role === 'mod';
+    }
+
+    public function isAdmin(User $user)
+    {
+        return $user->role === 'admin';
+    }
 }

@@ -17,7 +17,7 @@
                             <span>{{ $u->name }}</span>
                         </div>
                     </div>
-                    @if (auth()->user()->id !== $u->id)
+                    @if (auth()->check() && auth()->user()->id !== $u->id)
                         @if (auth()->user()->isFollowing($u))
                             <form method="POST" action="{{ route('user.unfollow') }}">
                                 @csrf
