@@ -6,15 +6,6 @@
                 class="w-full mt-1 h-80 flex flex-col items-center justify-center overflow-hidden bg-neutral-300 border border-neutral-400 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 rounded-md">
 
                 <img id="imagePreview" x-show="imageUrl" :src="imageUrl" class="w-full object-cover">
-                {{-- <div id="imagePlaceholder" x-show="!imageUrl" class="text-neutral-300 flex flex-col items-center"
-                    {{-- style="background-image: url('/images/placeholder.png')">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 " fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                </svg>
-                <div>Image Preview</div>
-            </div> --}}
 
             </div>
             <div class="w-full h-full absolute bottom-0 flex items-end pb-4 justify-center">

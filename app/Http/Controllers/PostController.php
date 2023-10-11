@@ -34,54 +34,17 @@ class PostController extends Controller
         ]);
 
         $attributes['user_id'] = auth()->user()->id;
-
-        $slug = strtolower(
-            implode(
-                '-',
-                array_slice(
-                    explode(
-                        '-',
-                        preg_replace(
-                            '/[^a-zA-Z0-9-]/',
-                            '-',
-                            $attributes['title']
-                        )
-                    ),
-                    0,
-                    7
-                )
-            )
-        );
-
-        if (strlen($slug) > 50) {
-            $slug = substr($slug, 0, -50);
-        }
-        $slug = $slug  . '-' . time();
-        $slug = trim(preg_replace('/-+/', '-', $slug), '-');
-
-        $attributes['slug'] = $slug;
-
-
+        $attributes['slug'] = $this->make_slug($attributes['title']);
         $attributes['excerpt'] = preg_replace('/(.*?[?!.](?=\s|$)).*/', '\\1',  $attributes['body']);
 
+        $path = storage_path('app\public\images\\posts');
         $imageName = strtolower($request->user()->username) . '_' . time() . '.' . $request->image->extension();
-
-        /////
-        $image = $request->file('image');
-        $filePath = public_path('images');
-
         $attributes['image'] = $imageName;
-        $request->image->move(public_path('images'), $imageName);
+        $request->image->move($path, $imageName);
 
-        $img = Image::make(public_path('images') . '\\' . $imageName)->resize(1000, null, function ($constraint) {
+        Image::make($path . '\\' . $imageName)->resize(1000, null, function ($constraint) {
             $constraint->aspectRatio();
-        })->save($filePath . '\\' . $imageName);
-        /////
-
-        /*
-            Write Code Here for
-            Store $imageName name in DATABASE from HERE
-        */
+        })->save($path . '\\' . $imageName);
 
         Post::create($attributes);
 
@@ -98,5 +61,34 @@ class PostController extends Controller
         } else {
             return redirect()->route('explore');
         }
+    }
+
+    static public function make_slug(string $title)
+    {
+        $slug = strtolower(
+            implode(
+                '-',
+                array_slice(
+                    explode(
+                        '-',
+                        preg_replace(
+                            '/[^a-zA-Z0-9-]/',
+                            '-',
+                            $title
+                        )
+                    ),
+                    0,
+                    7
+                )
+            )
+        );
+
+        if (strlen($slug) > 50) {
+            $slug = substr($slug, 0, -50);
+        }
+        $slug = $slug  . '-' . time();
+        $slug = trim(preg_replace('/-+/', '-', $slug), '-');
+
+        return $slug;
     }
 }

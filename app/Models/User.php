@@ -48,6 +48,15 @@ class User extends Authenticatable
         return $this->belongsTo(Badge::class);
     }
 
+    public function profilePictureFrames()
+    {
+        return $this->belongsToMany(ProfilePictureFrame::class);
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(FAQuestion::class);
+    }
 
 
     public function follow(User $user)

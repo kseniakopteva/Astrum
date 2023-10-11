@@ -1,33 +1,17 @@
 <?php
 
+use App\Http\Controllers\FAQuestionController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\NoteCommentController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StarshopController;
 use App\Http\Controllers\TagController;
-use App\Models\Note;
 use App\Models\Post;
-use App\Models\Tag;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 
 /* -------------------------------------------------------------------------- */
 /*                              Auth User Profile                             */
@@ -88,11 +72,37 @@ Route::post('/note/delete', [NoteController::class, 'destroy'])->name('note.dele
 Route::get('/tags/{tag:slug}', [TagController::class, 'index']);
 
 
+Route::post('/u/{user:id}/faq', [FAQuestionController::class, 'store']);
+
+
 
 Route::get('/explore', [PostController::class, 'explore'])->name('explore');
-Route::get('/starshop', function () {
-    return view('starshop');
-})->name('starshop');
+
+/* -------------------------------------------------------------------------- */
+/*                                  StarShop                                  */
+/* -------------------------------------------------------------------------- */
+
+Route::middleware('creator')->group(function () {
+    Route::get('/starshop/wallpapers/create', [StarshopController::class, 'wallpapers_create'])->name('starshop.wallpapers.create');
+    Route::get('/starshop/profile-picture-frames/create', [StarshopController::class, 'profile_picture_frames_create'])->name('starshop.profile-picture-frames.create');
+    Route::get('/starshop/post-frames/create', [StarshopController::class, 'post_frames_create'])->name('starshop.post-frames.create');
+});
+
+Route::get('/starshop', [StarshopController::class, 'redirect'])->name('starshop')->middleware('guest');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/starshop', [StarshopController::class, 'index'])->name('starshop');
+
+    Route::get('/starshop/wallpapers', [StarshopController::class, 'wallpapers_index'])->name('starshop.wallpapers');
+    Route::post('/starshop/wallpapers/store', [StarshopController::class, 'wallpapers_store'])->name('starshop.wallpapers.store');
+
+    Route::get('/starshop/profile-picture-frames', [StarshopController::class, 'profile_picture_frames_index'])->name('starshop.profile-picture-frames');
+    Route::post('/starshop/profile-picture-frames/store', [StarshopController::class, 'profile_picture_frames_store'])->name('starshop.profile-picture-frames.store');
+
+    Route::get('/starshop/post-frames', [StarshopController::class, 'post_frames_index'])->name('starshop.post-frames');
+    Route::post('/starshop/post-frames/store', [StarshopController::class, 'post_frames_store'])->name('starshop.post-frames.store');
+});
+
 Route::get('/help', function () {
     return view('help');
 })->name('help');

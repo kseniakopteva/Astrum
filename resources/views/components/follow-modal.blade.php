@@ -10,7 +10,8 @@
             @foreach ($users as $u)
                 <li class="flex justify-between w-full p-2 rounded-sm">
                     <div class="flex-grow flex items-center space-x-4">
-                        <img class="w-10 h-10 rounded-full" src="/images/{{ $u->image }}" alt="" width="50"
+                        <img class="w-10 h-10 rounded-full"
+                            src="{{ asset('storage/images/profile-pictures/' . $u->image) }}" alt="" width="50"
                             height="50">
                         <div>
                             <a href="/u/{{ $u->username }}">{{ $u->username }}</a><br>

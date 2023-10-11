@@ -2,14 +2,16 @@
 
 <x-main-layout>
     <div class="max-w-7xl m-auto px-4">
-        <header class="mb-10 p-8 pb-4 bg-white rounded-b-md {{-- bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm --}}  max-w-4xl m-auto ">
+        <header
+            class="mb-10 p-8 pb-4 bg-white dark:bg-neutral-800 rounded-b-md {{-- bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm --}}  max-w-4xl m-auto ">
             <div class="grid grid-cols-5">
 
                 {{-- Profile Image --}}
                 <div
                     class=" col-span-2 sm:col-span-1 order-1 sm:order-1 profile-image-container mr-10 w-32 h-32 sm:w-full sm:h-auto">
-                    <img class="profile-image rounded-full shadow-md w-full h-auto" src="/images/{{ $user->image }}"
-                        alt="" class="profile-picture" width="100" height="100"
+                    <img class="profile-image rounded-full shadow-md w-full h-auto"
+                        src="{{ asset('storage/images/profile-pictures/' . $user->image) }}" alt=""
+                        class="profile-picture" width="100" height="100"
                         style=" pointer-events: none; user-select: none;">
                     {{-- <img class="profile-image-overlay" src="/images/profile_border.png" alt=""> --}}
 
@@ -25,7 +27,7 @@
 
                         @if ($user->isCreatorOrMore($user))
                             <span
-                                class="rounded-md py-1 px-2 bg-{{ $user->badge->lightcolor }} dark:bg-{{ $user->badge->darkcolor }} dark:text-neutral-400">
+                                class="rounded-md py-1 text-black px-2 bg-{{ $user->badge->lightcolor }} dark:bg-{{ $user->badge->darkcolor }} dark:text-white">
                                 {{ ucfirst($user->badge->name) }}</span>
                         @endif
 
@@ -90,12 +92,12 @@
                                         <x-slot name="content">
                                             <button x-data=""
                                                 x-on:click.prevent="$dispatch('open-modal', 'report')"
-                                                class="block w-full px-4 py-2 text-left text-sm dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-red-400 hover:text-red-600">
+                                                class="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-red-400 hover:text-red-600">
                                                 {{ __('Report') }}
                                             </button>
                                             <button x-data=""
                                                 x-on:click.prevent="$dispatch('open-modal', 'block')"
-                                                class="block w-full px-4 py-2 text-left text-sm dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-red-400 hover:text-red-600">
+                                                class="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-red-400 hover:text-red-600">
                                                 {{ __('Block') }}
                                             </button>
                                             @if (in_array(auth()->user()->role, ['mod', 'admin']))
@@ -110,7 +112,7 @@
                                                             @csrf
                                                             <input type="hidden" name="id" value="{{ $user->id }}">
                                                             <button type="submit"
-                                                                class="block w-full px-4 py-2 text-left text-sm dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-green-600">
+                                                                class="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-green-600">
                                                                 Make Creator</button>
                                                         </form>
                                                     @elseif ($user->isCreator($user))
@@ -118,7 +120,7 @@
                                                             @csrf
                                                             <input type="hidden" name="id" value="{{ $user->id }}">
                                                             <button type="submit"
-                                                                class="block w-full px-4 py-2 text-left text-sm dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-green-600">
+                                                                class="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-green-600">
                                                                 Make Moderator</button>
                                                         </form>
                                                     @elseif ($user->isMod($user))

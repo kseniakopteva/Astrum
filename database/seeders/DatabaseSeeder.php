@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Badge;
+use App\Models\FAQuestion;
 use App\Models\PostComment;
 use App\Models\Note;
 use App\Models\Post;
@@ -30,13 +31,17 @@ class DatabaseSeeder extends Seeder
         Badge::factory()->create(['name' => 'cartoonist']);
 
         Tag::factory(10)->create();
-        User::factory(20)->create()->each(function ($u) {
+        User::factory(20)->create(['role' => 'creator'])->each(function ($u) {
 
             Post::factory(10)->create([
                 'user_id' => $u->id,
             ]);
 
             Note::factory(15)->create([
+                'user_id' => $u->id,
+            ]);
+
+            FAQuestion::factory(5)->create([
                 'user_id' => $u->id,
             ]);
         });

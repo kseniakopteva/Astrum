@@ -108,13 +108,13 @@ class ProfileController extends Controller
         if ($request->image && $request->image->isValid()) {
 
             $imageName = strtolower($request->user()->username) . '_profile' . '.' . $request->image->extension();
-            $image = $request->file('image');
-            $filePath = public_path('images');
+            // $image = $request->file('image');
+            $filePath = storage_path('app/public/images/profile-pictures');
 
             $request->user()->image = $imageName;
-            $request->image->move(public_path('images'), $imageName);
+            $request->image->move($filePath, $imageName);
 
-            $img = Image::make(public_path('images') . '\\' . $imageName)->fit(500)->save($filePath . '\\' . $imageName);
+            Image::make($filePath . '\\' . $imageName)->fit(500)->save($filePath . '\\' . $imageName);
 
             // $image->move($filePath, $imageName);
         }

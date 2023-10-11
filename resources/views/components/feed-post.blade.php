@@ -8,10 +8,10 @@
                 {{ $post->title }}
             </h1>
             <img class="w-full max-w-lg" src="<?php if (!strncmp('https', $post->image, 5)) {
-                echo '';
+                echo $post->image;
             } else {
-                echo '/images/';
-            } ?>{{ $post->image }}" alt="{{ $post->alt }}">
+                echo asset('storage/images/posts/' . $post->image);
+            } ?>" alt="{{ $post->alt }}">
         </a>
         @if ($post->body)
             <div>

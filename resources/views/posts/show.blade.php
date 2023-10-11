@@ -4,10 +4,10 @@
             class="grid grid-cols-4 gap-8 border border-neutral-200 bg-white dark:bg-neutral-800 dark:border-neutral-700 rounded-md shadow-sm p-4 mb-6">
             <div class="col-span-3 h-[calc(100vh-10rem)] w-full flex justify-center bg-neutral-950">
                 <img class=" h-full object-contain" src="<?php if (!strncmp('https', $post->image, 5)) {
-                    echo '';
+                    echo $post->image;
                 } else {
-                    echo '/images/';
-                } ?>{{ $post->image }}" alt="">
+                    echo asset('storage/images/posts/' . $post->image);
+                } ?>" alt="">
             </div>
             <div class="">
                 @auth
@@ -72,8 +72,8 @@
                     class="bg-neutral-100 border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-700 p-4 rounded-md">
                     @csrf
                     <header class="flex items-center">
-                        <img src="/images/{{ auth()->user()->image }}" alt="" width="40" height="40"
-                            class="rounded-full">
+                        <img src="{{ asset('storage/images/profile-pictures/' . auth()->user()->image) }}" alt=""
+                            width="40" height="40" class="rounded-full">
                         <h2 class="ml-4">Join the discussion...</h2>
                     </header>
                     <div class="mt-6">
@@ -92,8 +92,8 @@
                     class="flex max-w-3xl m-auto bg-neutral-100 border border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 p-4 rounded-md
             space-x-4">
                     <div class="flex-shrink-0">
-                        <img src="/images/{{ $comment->author->image }}" alt="" width="60" height="60"
-                            class="rounded-full">
+                        <img src="{{ asset('storage/images/profile-pictures/' . $comment->author->image) }}"
+                            alt="" width="60" height="60" class="rounded-full">
                     </div>
                     <div>
                         <header class="mb-4">

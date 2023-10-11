@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\MustBeAdministrator;
+use App\Http\Middleware\MustBeCreator;
 use App\Http\Middleware\MustBeModerator;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -58,6 +59,7 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'admin' => MustBeAdministrator::class,
         'mod' => MustBeModerator::class,
+        'creator' => MustBeCreator::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,

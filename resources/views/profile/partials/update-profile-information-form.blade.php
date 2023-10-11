@@ -107,7 +107,7 @@
                                         class="object-cover w-full h-full">
                                     <div id="imagePlaceholder" x-show="!imageUrl"
                                         class="text-neutral-300 flex flex-col items-center w-full h-full"
-                                        style="background-image: url('/images/{{ auth()->user()->image }}'); background-size: cover; background-position: center center;">
+                                        style="background-image: url('{{ asset('storage/images/profile-pictures/' . auth()->user()->image) }}'); background-size: cover; background-position: center center;">
                                     </div>
 
                                 </div>
