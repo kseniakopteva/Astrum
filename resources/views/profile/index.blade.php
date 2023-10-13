@@ -1,4 +1,4 @@
-<x-profile-layout :user="$user" :posts="$posts" :followers="$followers" :following="$following">
+<x-profile-layout :user="$user" :followers="$followers" :following="$following">
     <div class="grid grid-cols-3 gap-8">
         <div class="col-span-3 md:col-span-2">
             <div class="flex">
@@ -103,8 +103,8 @@
         </div>
         @endif
     </div>
-    <div class="space-y-4">
-        @foreach ($user->notes()->latest()->get()->take(20) as $note)
+    <div class="space-y-4 mb-4">
+        @foreach ($notes as $note)
             <x-feed-note :note=$note :user=$user></x-feed-note>
         @endforeach
         @if ($user->notes->count() > 20)

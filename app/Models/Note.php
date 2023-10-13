@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
 
 class Note extends Model
 {
     use HasFactory;
+    use HasRecursiveRelationships;
 
     public function author()
     {
@@ -21,6 +23,6 @@ class Note extends Model
 
     public function comments()
     {
-        return $this->hasMany(NoteComment::class);
+        return $this->hasMany(self::class, 'parent_id', 'id');
     }
 }

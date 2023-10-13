@@ -2,13 +2,13 @@
 
 use App\Http\Controllers\FAQuestionController;
 use App\Http\Controllers\FollowController;
-use App\Http\Controllers\NoteCommentController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StarshopController;
 use App\Http\Controllers\TagController;
+use App\Models\Note;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -17,16 +17,20 @@ use Illuminate\Support\Facades\Route;
 /*                              Auth User Profile                             */
 /* -------------------------------------------------------------------------- */
 
-Route::get('/profile', function () {
-    return view('profile.index', [
-        'user' => auth()->user(),
-        'posts' => Post::latest()->whereHas('author', fn ($q) => $q->where('user_id', auth()->user()->id))->paginate(20),
-        'followers' => auth()->user()->followers,
-        'following' => auth()->user()->following,
-    ]);
-})->middleware(['auth'])->name('profile');
-
 Route::middleware('auth')->group(function () {
+
+    Route::get('/profile', function () {
+        return view('profile.index', [
+            'user' => auth()->user(),
+            'posts' => Post::latest()->whereHas('author', fn ($q) => $q->where('user_id', auth()->user()->id))->paginate(20),
+            'notes' => Note::latest()->where('removed', '=', 0)->whereHas('author', fn ($q) => $q->where('user_id', auth()->user()->id))->get()->take(20),
+            // 'notes' => auth()->user()->notes()->latest()->get()->take(20),
+            // 'notes' => ['note1', 'note2'],
+            'followers' => auth()->user()->followers,
+            'following' => auth()->user()->following,
+        ]);
+    })->name('profile');
+
     Route::get('/settings', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/settings/remove', [ProfileController::class, 'removeImage']);
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -49,6 +53,7 @@ Route::get('/u/{author:username}', [ProfileController::class, 'index']);
 Route::get('/u/{author:username}/posts', [ProfileController::class, 'posts']);
 Route::get('/u/{author:username}/posts/{post:slug}', [PostController::class, 'show']);
 Route::get('/u/{author:username}/notes', [ProfileController::class, 'notes']);
+Route::get('/u/{author:username}/notes/{note:slug}#current', [NoteController::class, 'show'])->name('note.show');
 Route::get('/u/{author:username}/notes/{note:slug}', [NoteController::class, 'show']);
 Route::get('/u/{author:username}/shop', [ProfileController::class, 'shop']);
 Route::get('/u/{author:username}/faq', [ProfileController::class, 'faq']);
@@ -62,9 +67,9 @@ Route::get('/', function () {
 
 
 Route::post('/posts/{post:slug}/comments', [PostCommentController::class, 'store']);
-Route::post('/notes/{note:slug}/comments', [NoteCommentController::class, 'store']);
-Route::post('/post/store', [PostController::class, 'store'])->name('post.store');
-Route::post('/note/store', [NoteController::class, 'store'])->name('note.store');
+Route::post('/posts/store', [PostController::class, 'store'])->name('post.store');
+Route::post('/notes/{note}/comments', [NoteController::class, 'store'])->name('note.comment.store');
+Route::post('/notes/store', [NoteController::class, 'store'])->name('note.store');
 
 Route::post('/post/delete', [PostController::class, 'destroy'])->name('post.delete');
 Route::post('/note/delete', [NoteController::class, 'destroy'])->name('note.delete');

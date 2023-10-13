@@ -46,7 +46,13 @@ class PostController extends Controller
             $constraint->aspectRatio();
         })->save($path . '\\' . $imageName);
 
-        Post::create($attributes);
+        $u = auth()->user();
+        $price = 10;
+        if ($u->stars >= $price) {
+            Post::create($attributes);
+            $u->stars -= $price;
+            $u->save();
+        }
 
         return back()
             ->with('success', 'You have successfully created a post!');

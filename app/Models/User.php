@@ -61,33 +61,38 @@ class User extends Authenticatable
 
     public function follow(User $user)
     {
-        if (!$this->isFollowing($user)) {
+        if (!Follow::where('user_id', auth()->id())->where('following_id', $user->id)->exists()) {
             Follow::create([
                 'user_id' => auth()->id(),
-                'following_id' => $user->id
+                'following_id' => $user->id,
+                'is_currently_following' => true
             ]);
+            $user->stars += 10;
+            $user->save();
+        } else {
+            Follow::where('user_id', auth()->id())->where('following_id', $user->id)->update(['is_currently_following' => true]);
         }
     }
 
     public function unfollow(User $user)
     {
-        Follow::where('user_id', auth()->id())->where('following_id', $user->id)->delete();
+        Follow::where('user_id', auth()->id())->where('following_id', $user->id)->update(['is_currently_following' => false]);
     }
 
     public function isFollowing(User $user)
     {
-        return $this->following()->where('users.id', $user->id)->exists();
+        return $this->following()->where('users.id', $user->id)->where('is_currently_following', '=', 1)->exists();
     }
 
 
     public function following()
     {
-        return $this->hasManyThrough(User::class, Follow::class, 'user_id', 'id', 'id', 'following_id');
+        return $this->hasManyThrough(User::class, Follow::class, 'user_id', 'id', 'id', 'following_id')->where('is_currently_following', '=', 1);
     }
 
     public function followers()
     {
-        return $this->hasManyThrough(User::class, Follow::class, 'following_id', 'id', 'id', 'user_id');
+        return $this->hasManyThrough(User::class, Follow::class, 'following_id', 'id', 'id', 'user_id')->where('is_currently_following', '=', 1);
     }
 
     public function isCreator(User $user)

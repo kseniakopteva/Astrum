@@ -172,6 +172,9 @@
                         </button>
 
                     </div>
+                    <div class="mt-4">
+                        Stars: {{ $user->stars }}<i class="fa-solid fa-star"></i>
+                    </div>
                 </section>
 
             </div>

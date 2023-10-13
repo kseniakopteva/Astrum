@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('bio')->nullable();
             $table->foreignId('badge_id');
             $table->string('image');
+            $table->unsignedInteger('stars')->default('100');
             $table->rememberToken();
             $table->timestamps();
         });

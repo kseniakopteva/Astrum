@@ -1,6 +1,26 @@
 <x-main-layout>
     <div class="note-wrapper">
-        <article
+        <div class="">
+            @foreach ($ancestors as $n)
+                <article
+                    class="border border-neutral-200 bg-white dark:bg-neutral-800 dark:border-neutral-700 rounded-md shadow-sm p-4">
+                    @if (!$n->removed)
+                        <div class="mb-4"><a
+                                href={{ route('note.show', ['author' => $n->author->username, 'note' => $n->slug]) }}>
+                                <p>{{ $n->notebody }}</p>
+                            </a>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span> by <a href="/u/{{ $n->author->username }}">{{ $n->author->username }}</a>
+                                {{ $n->created_at->diffForHumans() }}</span>
+                        @else
+                            <div class="h-6 italic flex items-center justify-center">Note deleted</div>
+                    @endif
+                </article>
+                <div class="relative bottom-0 left-8 border-l-2 border-neutral-600 h-4"></div>
+            @endforeach
+        </div>
+        <article id="current"
             class="border border-neutral-200 bg-white dark:bg-neutral-800 dark:border-neutral-700 rounded-md shadow-sm p-4">
             <div class="text-lg mb-4">
                 <p>{{ $note->notebody }}</p>
@@ -17,7 +37,7 @@
 
                         <x-slot name="content">
                             @if (auth()->check() && $note->author->id === auth()->user()->id)
-                                <form action="{{ route('note.delete', $note) }}" method="POST">
+                                <form action="{{ route('note.delete', $note) }}" method="POST" class="px-1">
                                     @csrf
                                     <input type="hidden" name="id" value="{{ $note->id }}">
                                     <x-danger-button href="/note/delete">Delete Note</x-danger-button>
@@ -32,14 +52,14 @@
                     </x-dropdown>
                 @endauth
             </div>
-            <a href="{{ url()->previous() }}" class="inline-block mt-4 p-2"><i
+            {{-- <a href="{{ url()->previous() }}" class="inline-block mt-4 p-2"><i
                     class="mr-1 fa-solid fa-arrow-left"></i>Go
-                back</a>
+                back</a> --}}
         </article>
 
-        <section class="space-y-4 max-w-3xl m-auto mt-6">
+        <section class="space-y-4 max-w-3xl m-auto mt-6 mb-96">
             @auth
-                <form action="/notes/{{ $note->slug }}/comments" method="post"
+                <form action={{ route('note.comment.store', $note->id) }} method="post"
                     class="bg-neutral-100 border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-700 p-4 rounded-md">
                     @csrf
                     <header class="flex items-center">
@@ -48,9 +68,9 @@
                         <h2 class="ml-4">Join the discussion...</h2>
                     </header>
                     <div class="mt-4">
-                        <x-textarea class="w-full" name="body" rows="3"
+                        <x-textarea class="w-full" name="notebody" rows="3"
                             placeholder="Write something polite and constructive here..." required></x-textarea>
-                        <x-input-error :messages="$errors->get('body')"></x-input-error>
+                        <x-input-error :messages="$errors->get('notebody')"></x-input-error>
                     </div>
                     <div class="flex justify-end"><x-primary-button>Post</x-primary-button></div>
                 </form>
@@ -60,22 +80,30 @@
             @endauth
             @foreach ($note->comments as $comment)
                 <article
-                    class="flex max-w-3xl m-auto bg-neutral-100 border border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 p-4 rounded-md
-            space-x-4">
+                    class="flex max-w-3xl m-auto bg-neutral-100 border border-neutral-200
+                     dark:bg-neutral-800 dark:border-neutral-700 p-4 rounded-md space-x-4">
+
                     <div class="flex-shrink-0">
-                        <img src="{{ asset('storage/images/profile-pictures/' . $comment->author->image) }}" alt=""
-                            width="60" height="60" class="rounded-full">
+                        <img src="{{ asset('storage/images/profile-pictures/' . $comment->author->image) }}"
+                            alt="" width="60" height="60" class="rounded-full">
                     </div>
                     <div>
                         <header class="mb-4">
-                            <h3 class="font-bold"><a
-                                    href="/u/{{ $comment->author->username }}">{{ $comment->author->username }}</a>
+                            <h3 class="font-bold">
+                                <a href="/u/{{ $comment->author->username }}">
+                                    {{ $comment->author->username }}
+                                </a>
                             </h3>
                             <p class="text-xs">
                                 Posted on <time>{{ $comment->created_at->format('M j, Y, H:i') }}</time>
                             </p>
                         </header>
-                        <p>{{ $comment->body }}</p>
+                        <p>
+                            <a
+                                href={{ route('note.show', ['author' => $comment->author->username, 'note' => $comment->slug]) }}>
+                                {{ $comment->notebody }}
+                            </a>
+                        </p>
                     </div>
                 </article>
             @endforeach

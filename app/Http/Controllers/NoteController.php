@@ -13,25 +13,36 @@ class NoteController extends Controller
     {
         return view('note', [
             'note' => $note,
+            'ancestors' => $note->ancestors->reverse(),
             'user' => $author
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Note $note)
     {
-        // $request['body'] = $request['notebody'];
-        // dd($request);
-
         $attributes = $request->validate([
             'notebody' => 'max:600|required',
         ]);
 
+        if (!is_null($note)) {
+            $attributes['parent_id'] = $note->id;
+        } else {
+            $attributes['parent_id'] = NULL;
+        }
+
         $attributes['user_id'] = auth()->user()->id;
         $attributes['slug'] = time();
 
-        Note::create($attributes);
+        $u = auth()->user();
+        $price = 5;
+        if ($u->stars < $price)
+            return back()->with('success', 'Not enough stars!');
 
-        return back()
+        $new_note = Note::create($attributes);
+        $u->stars -= $price;
+        $u->save();
+
+        return redirect()->route('note.show', ['author' => auth()->user()->username, 'note' => $new_note->slug])
             ->with('success', 'You have successfully created a note!');
     }
 
@@ -39,7 +50,7 @@ class NoteController extends Controller
     {
         $note = Note::find($request->id);
         if (Auth::user()->id === $note->author->id) {
-            $note->delete();
+            $note->update(['removed' => 1]);
             return redirect('/profile');
         } else {
             return redirect()->route('explore');
