@@ -14,7 +14,7 @@
                     <div class="text-right">
                         <x-dropdown align="right" width="52">
                             <x-slot name="trigger">
-                                <x-secondary-button type="submit" class="ml-2 !px-2"><i
+                                <x-secondary-button type="submit" class="ml-2 !px-2 h-7 w-7"><i
                                         class="fa-solid fa-ellipsis"></i></x-secondary-button>
                             </x-slot>
 
@@ -60,8 +60,29 @@
                             @endforeach
                         </ul>
                     </div>
-                    <a href="{{ url()->previous() }}" class="inline-block p-2 mt-auto"><i
-                            class="mr-1 fa-solid fa-arrow-left"></i>Go back</a>
+                    <div class="flex justify-between">
+                        <a href="{{ url()->previous() }}" class="inline-block p-2 mt-auto"><i
+                                class="mr-1 fa-solid fa-arrow-left"></i>Go back</a>
+
+                        <div class="flex space-x-1">
+                            <span>{{ $post->likes->count() }}</span>
+                            @if (auth()->check())
+                                <form action="{{ route('post.like', $post->id) }}" method="POST">
+                                    @csrf @method('POST')
+                                    <button type="submit">
+                                        @if ($post->isLiked($post))
+                                            <i class="fa-solid fa-heart"></i>
+                                        @else
+                                            <i class="fa-regular fa-heart"></i>
+                                        @endif
+                                    </button>
+                                </form>
+                            @else
+                                <span>Likes</span>
+                            @endif
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </article>
@@ -95,7 +116,7 @@
                         <img src="{{ asset('storage/images/profile-pictures/' . $comment->author->image) }}"
                             alt="" width="60" height="60" class="rounded-full">
                     </div>
-                    <div>
+                    <div class="w-full">
                         <header class="mb-4">
                             <h3 class="font-bold"><a
                                     href="/u/{{ $comment->author->username }}">{{ $comment->author->username }}</a>
@@ -105,6 +126,26 @@
                             </p>
                         </header>
                         <p>{{ $comment->body }}</p>
+                        <footer class="w-full flex justify-end">
+
+                            <div class="flex space-x-1">
+                                <span>{{ $comment->likes->count() }}</span>
+                                @if (auth()->check())
+                                    <form action="{{ route('postcomment.like', $comment->id) }}" method="POST">
+                                        @csrf @method('POST')
+                                        <button type="submit">
+                                            @if ($comment->isLiked($comment))
+                                                <i class="fa-solid fa-heart"></i>
+                                            @else
+                                                <i class="fa-regular fa-heart"></i>
+                                            @endif
+                                        </button>
+                                    </form>
+                                @else
+                                    <span>Likes</span>
+                                @endif
+                            </div>
+                        </footer>
                     </div>
                 </article>
             @endforeach

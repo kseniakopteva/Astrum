@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\PostLike;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -68,6 +69,39 @@ class PostController extends Controller
             return redirect()->route('explore');
         }
     }
+
+
+
+
+
+    public function toggleLike(Post $post)
+    {
+        // never liked
+        if (!PostLike::where('user_id', auth()->id())->where('post_id', $post->id)->exists()) {
+            PostLike::create([
+                'user_id' => auth()->id(),
+                'post_id' => $post->id,
+                'liked' => 1
+            ]);
+            // if it is not your own post, give money to user
+            if ($post->author->id !== auth()->user()->id) {
+                $post->author->stars += 2;
+                $post->author->save();
+            }
+        } // record exists
+        else {
+            $postLike = PostLike::where('user_id', auth()->id())->where('post_id', $post->id);
+            $isLiked = $post->isLiked($post);
+            if (!$isLiked) {
+                $postLike->update(['liked' => 1]);
+            } else {
+                $postLike->update(['liked' => 0]);
+            }
+        }
+        return back();
+    }
+
+
 
     static public function make_slug(string $title)
     {

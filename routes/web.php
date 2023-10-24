@@ -76,6 +76,12 @@ Route::post('/note/delete', [NoteController::class, 'destroy'])->name('note.dele
 
 Route::get('/tags/{tag:slug}', [TagController::class, 'index']);
 
+Route::middleware('auth')->group(function () {
+    Route::post('/posts/{post}/like', [PostController::class, 'toggleLike'])->name('post.like');
+    Route::post('/comments/{postcomment}/like', [PostCommentController::class, 'toggleLike'])->name('postcomment.like');
+    Route::post('/notes/{note}/like', [NoteController::class, 'toggleLike'])->name('note.like');
+});
+
 
 Route::post('/u/{user:id}/faq', [FAQuestionController::class, 'store']);
 

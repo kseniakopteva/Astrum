@@ -58,6 +58,11 @@ class User extends Authenticatable
         return $this->hasMany(FAQuestion::class);
     }
 
+    public function postLikes()
+    {
+        return $this->belongsToMany(Post::class, 'post_id');
+    }
+
 
     public function follow(User $user)
     {

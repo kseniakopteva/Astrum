@@ -22,12 +22,16 @@
         </div>
         <article id="current"
             class="border border-neutral-200 bg-white dark:bg-neutral-800 dark:border-neutral-700 rounded-md shadow-sm p-4">
-            <div class="text-lg mb-4">
-                <p>{{ $note->notebody }}</p>
-            </div>
-            <div class="flex items-center justify-between">
-                <span> by <a href="/u/{{ $note->author->username }}">{{ $note->author->username }}</a>
-                    {{ $note->created_at->diffForHumans() }}</span>
+            <div class="flex justify-between mb-2 items-center">
+                <p>
+                    <a href="/u/{{ $note->author->username }}"
+                        class="hover:text-white hover:underline hover:decoration-white">
+                        {{ $note->author->name }}</a>
+                    <a href="/u/{{ $note->author->username }}" class="text-neutral-400">
+
+                        &#64;{{ $note->author->username }}
+                    </a>
+                </p>
                 @auth
                     <x-dropdown align="right" width="52">
                         <x-slot name="trigger">
@@ -51,6 +55,32 @@
                         </x-slot>
                     </x-dropdown>
                 @endauth
+            </div>
+            <div class="text-lg mb-4">
+                <p>{{ $note->notebody }}</p>
+            </div>
+            <div class="flex items-center justify-between">
+                <span>{{ $note->created_at->diffForHumans() }}</span>
+                <div class="flex space-x-1">
+                    <span>{{ $note->likes->count() }}</span>
+                    @if (auth()->check())
+                        <form action="{{ route('note.like', $note->id) }}" method="POST">
+                            @csrf @method('POST')
+                            <button type="submit">
+                                @if ($note->isLiked($note))
+                                    <i class="fa-solid fa-heart"></i>
+                                @else
+                                    <i class="fa-regular fa-heart"></i>
+                                @endif
+                            </button>
+                        </form>
+                    @else
+                        <span>Likes</span>
+                    @endif
+                </div>
+
+
+
             </div>
             {{-- <a href="{{ url()->previous() }}" class="inline-block mt-4 p-2"><i
                     class="mr-1 fa-solid fa-arrow-left"></i>Go

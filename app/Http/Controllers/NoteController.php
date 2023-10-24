@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+use App\Models\NoteLike;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -55,5 +56,32 @@ class NoteController extends Controller
         } else {
             return redirect()->route('explore');
         }
+    }
+
+    public function toggleLike(Note $note)
+    {
+        // never liked
+        if (!NoteLike::where('user_id', auth()->id())->where('note_id', $note->id)->exists()) {
+            NoteLike::create([
+                'user_id' => auth()->user()->id,
+                'note_id' => $note->id,
+                'liked' => 1
+            ]);
+            // if it is not your own comment, give money to user
+            if ($note->author->id !== auth()->user()->id) {
+                $note->author->stars++;
+                $note->author->save();
+            }
+        } // record exists
+        else {
+            $noteLike = NoteLike::where('user_id', auth()->id())->where('note_id', $note->id);
+            $isLiked = $note->isLiked($note);
+            if (!$isLiked) {
+                $noteLike->update(['liked' => 1]);
+            } else {
+                $noteLike->update(['liked' => 0]);
+            }
+        }
+        return back();
     }
 }

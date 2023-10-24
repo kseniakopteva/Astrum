@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\PostComment;
+use App\Models\PostCommentLike;
+use App\Models\User;
 
 class PostCommentController extends Controller
 {
@@ -24,6 +27,33 @@ class PostCommentController extends Controller
         }
 
 
+        return back();
+    }
+
+    public function toggleLike(PostComment $postcomment)
+    {
+        // never liked
+        if (!PostCommentLike::where('user_id', auth()->id())->where('post_comment_id', $postcomment->id)->exists()) {
+            PostCommentLike::create([
+                'user_id' => auth()->user()->id,
+                'post_comment_id' => $postcomment->id,
+                'liked' => 1
+            ]);
+            // if it is not your own comment, give money to user
+            if ($postcomment->author->id !== auth()->user()->id) {
+                $postcomment->author->stars++;
+                $postcomment->author->save();
+            }
+        } // record exists
+        else {
+            $postCommentLike = PostCommentLike::where('user_id', auth()->id())->where('post_comment_id', $postcomment->id);
+            $isLiked = $postcomment->isLiked($postcomment);
+            if (!$isLiked) {
+                $postCommentLike->update(['liked' => 1]);
+            } else {
+                $postCommentLike->update(['liked' => 0]);
+            }
+        }
         return back();
     }
 }

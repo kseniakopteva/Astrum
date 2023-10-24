@@ -13,9 +13,26 @@
             <p>{{ $note->notebody }}</p>
         </a>
 
-        <a href={{ route('note.show', ['author' => $note->author->username, 'note' => $note->slug]) }}>
-            <footer class="mt-4">
+        <footer class="mt-4 flex justify-between">
+            <a href={{ route('note.show', ['author' => $note->author->username, 'note' => $note->slug]) }}>
                 <span>{{ $note->created_at->diffForHumans() }}</span>
-            </footer>
-        </a>
+            </a>
+            <div class="flex space-x-1">
+                <span>{{ $note->likes->count() }}</span>
+                @if (auth()->check())
+                    <form action="{{ route('note.like', $note->id) }}" method="POST">
+                        @csrf @method('POST')
+                        <button type="submit">
+                            @if ($note->isLiked($note))
+                                <i class="fa-solid fa-heart"></i>
+                            @else
+                                <i class="fa-regular fa-heart"></i>
+                            @endif
+                        </button>
+                    </form>
+                @else
+                    <span>Likes</span>
+                @endif
+            </div>
+        </footer>
     </article>
