@@ -22,7 +22,7 @@
     <div class="">
         <footer class="flex items-center justify-between mt-4">
             <span><a class="dark:text-neutral-400"
-                    href="/u/{{ $post->author->username }}">{{ $post->author->username }}</a></span>
+                    href="{{ route('profile.index', $post->author->username) }}">{{ $post->author->username }}</a></span>
             <span>{{ $post->created_at->diffForHumans() }}</span>
         </footer>
     </div>

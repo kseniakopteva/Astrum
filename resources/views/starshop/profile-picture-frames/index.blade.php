@@ -13,16 +13,7 @@
     </div>
     <div class="mt-1 grid grid-cols-5 gap-4">
         @foreach ($profile_picture_frames as $frame)
-            <div class="p-4 border border-neutral-200 rounded-md dark:border-neutral-700 ">
-                <img class="w-full" src="{{ asset('storage/public/images/profile-picture-frames/' . $frame->image) }}"
-                    alt="">
-                <h3 class="small-title"><a href="">{{ $frame->name }}</a></h3>
-                <p class="my-2">{{ $frame->description }}</p>
-                <div class="flex justify-between items-end">
-                    <span>Author: <a href="">{{ $frame->author->username }}</a></span>
-                    <span>{{ $frame->price }}<i class="fa-solid fa-star"></i></span>
-                </div>
-            </div>
+            <x-feed-starshop-item slug="profile-picture-frames" :item="$frame"></x-feed-starshop-item>
         @endforeach
     </div>
 </x-starshop-layout>

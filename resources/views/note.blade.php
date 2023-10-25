@@ -11,7 +11,8 @@
                             </a>
                         </div>
                         <div class="flex items-center justify-between">
-                            <span> by <a href="/u/{{ $n->author->username }}">{{ $n->author->username }}</a>
+                            <span> by <a
+                                    href="{{ route('profile.index', $n->author->username) }}">{{ $n->author->username }}</a>
                                 {{ $n->created_at->diffForHumans() }}</span>
                         @else
                             <div class="h-6 italic flex items-center justify-center">Note deleted</div>
@@ -24,10 +25,10 @@
             class="border border-neutral-200 bg-white dark:bg-neutral-800 dark:border-neutral-700 rounded-md shadow-sm p-4">
             <div class="flex justify-between mb-2 items-center">
                 <p>
-                    <a href="/u/{{ $note->author->username }}"
+                    <a href="{{ route('profile.index', $note->author->username) }}"
                         class="hover:text-white hover:underline hover:decoration-white">
                         {{ $note->author->name }}</a>
-                    <a href="/u/{{ $note->author->username }}" class="text-neutral-400">
+                    <a href="{{ route('profile.index', $note->author->username) }}" class="text-neutral-400">
 
                         &#64;{{ $note->author->username }}
                     </a>
@@ -120,7 +121,7 @@
                     <div>
                         <header class="mb-4">
                             <h3 class="font-bold">
-                                <a href="/u/{{ $comment->author->username }}">
+                                <a href="{{ route('profile.index', $comment->author->username) }}">
                                     {{ $comment->author->username }}
                                 </a>
                             </h3>

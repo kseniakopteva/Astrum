@@ -6,7 +6,8 @@
             Report Note <span
                 class="font-bold">[{{ implode(' ', array_slice(explode(' ', $note->notebody), 0, 5)) . '...' }}]</span>
             by
-            <a href="/u/{{ $note->author->username }}"><span class="font-bold">{{ $note->author->username }}</span></a>
+            <a href="{{ route('profile.index', $note->author->username) }}"><span
+                    class="font-bold">{{ $note->author->username }}</span></a>
         </h2>
 
         <form action="{{ route('report', $note->id) }}" method="POST">

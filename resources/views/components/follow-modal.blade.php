@@ -14,7 +14,7 @@
                             src="{{ asset('storage/images/profile-pictures/' . $u->image) }}" alt="" width="50"
                             height="50">
                         <div>
-                            <a href="/u/{{ $u->username }}">{{ $u->username }}</a><br>
+                            <a href="{{ route('profile.index', $u->username) }}">{{ $u->username }}</a><br>
                             <span>{{ $u->name }}</span>
                         </div>
                     </div>

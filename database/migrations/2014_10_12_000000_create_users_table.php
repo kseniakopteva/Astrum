@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('password');
             $table->text('bio')->nullable();
             $table->foreignId('badge_id');
+            $table->foreignId('wallpaper_id')->nullable();
             $table->string('image');
             $table->unsignedInteger('stars')->default('100');
             $table->rememberToken();

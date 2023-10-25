@@ -13,6 +13,12 @@
                 </div>
             </div>
 
+            <div class="p-4 sm:p-8 bg-white dark:bg-neutral-800 shadow sm:rounded-lg" id="customise">
+                <div class="">
+                    @include('profile.partials.customise-form')
+                </div>
+            </div>
+
             <div class="p-4 sm:p-8 bg-white dark:bg-neutral-800 shadow sm:rounded-lg">
                 <div class="max-w-xl">
                     @include('profile.partials.update-password-form')

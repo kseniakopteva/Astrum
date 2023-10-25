@@ -1,3 +1,5 @@
+@props(['user'])
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -25,7 +27,13 @@
 
 </head>
 
-<body class="flex flex-col min-h-screen bg-lime-900 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-300">
+<body class="flex flex-col min-h-screen bg-lime-900 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-300"
+    style="
+@if (Request::segment(1) == 'profile') <?php $wallpaper = $user->currentWallpaper; ?>
+@if (isset($wallpaper) && !is_null($wallpaper)) {{ 'background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(' . asset('storage/images/wallpapers/' . $wallpaper->image) . ');' }} @endif
+background-size: repeat;
+@endif
+">
 
     <header class="main-header">
         @include('layouts.navigation')
@@ -36,7 +44,7 @@
     </main>
 
     <footer
-        class="h-24 {{-- bg-neutral-400 --}} bg-lime-800 dark:bg-neutral-800 text-white dark:text-neutral-500 pt-2 px-4 flex items-center justify-between">
+        class="h-24 {{-- bg-neutral-400 --}} bg-lime-800 dark:bg-neutral-900 text-white dark:text-neutral-500 pt-2 px-4 flex items-center justify-between">
         <span>Copyright bla-bla-bla</span>
         <span class="version">Version 0.0.1</span>
     </footer>

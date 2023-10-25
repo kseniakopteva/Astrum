@@ -63,6 +63,23 @@ class User extends Authenticatable
         return $this->belongsToMany(Post::class, 'post_id');
     }
 
+    public function ownedWallpapers()
+    {
+        return $this->belongsToMany(Wallpaper::class, 'user_wallpaper');
+    }
+    public function createdWallpapers()
+    {
+        return $this->hasMany(Wallpaper::class, 'wallpaper_id');
+    }
+    public function currentWallpaper()
+    {
+        return $this->belongsTo(Wallpaper::class, 'wallpaper_id');
+    }
+
+    public function hasWallpaper($id)
+    {
+        return $this->ownedWallpapers()->where('wallpaper_id', $id)->exists();
+    }
 
     public function follow(User $user)
     {

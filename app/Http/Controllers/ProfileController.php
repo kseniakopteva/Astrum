@@ -163,4 +163,16 @@ class ProfileController extends Controller
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
+
+    public function setCurrentWallpaper(Request $request)
+    {
+        if (!auth()->check())
+            return redirect('/explore');
+
+        $user = User::where('id', auth()->user()->id)->first();
+        $user->wallpaper_id = $request->id;
+        $user->save();
+
+        return redirect('/settings#customise')->with('success', 'You have changed the current wallpaper!');
+    }
 }

@@ -46,7 +46,9 @@
                         <h1 class="large-title">
                             {{ $post->title }}
                         </h1>
-                        <p><a href="/u/{{ $post->author->username }}">{{ $post->author->username }}</a></p>
+                        <p><a
+                                href="{{ route('profile.index', $post->author->username) }}">{{ $post->author->username }}</a>
+                        </p>
 
 
                         <div class="text-lg my-8">
@@ -119,7 +121,7 @@
                     <div class="w-full">
                         <header class="mb-4">
                             <h3 class="font-bold"><a
-                                    href="/u/{{ $comment->author->username }}">{{ $comment->author->username }}</a>
+                                    href="{{ route('profile.index', $comment->author->username) }}">{{ $comment->author->username }}</a>
                             </h3>
                             <p class="text-xs">
                                 Posted on <time>{{ $comment->created_at->format('M j, Y, H:i') }}</time>

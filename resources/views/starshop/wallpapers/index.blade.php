@@ -13,17 +13,7 @@
     </div>
     <div class="mt-4 grid grid-cols-3 gap-4">
         @foreach ($wallpapers as $wallpaper)
-            <div class="p-4 border border-neutral-200 dark:border-neutral-700 rounded-md">
-                <img src="{{ asset('storage/images/wallpapers/' . $wallpaper->image) }}" alt="">
-                <a href="">
-                    <h3 class="small-title">{{ $wallpaper->name }}</h3>
-                </a>
-                <p class="my-2">{{ $wallpaper->description }}</p>
-                <div class="flex justify-between items-end">
-                    <span>Author: <a href="">{{ $wallpaper->author->username }}</a></span>
-                    <span>{{ $wallpaper->price }}<i class="fa-solid fa-star"></i></span>
-                </div>
-            </div>
+            <x-feed-starshop-item slug="wallpapers" :item="$wallpaper"></x-feed-starshop-item>
         @endforeach
     </div>
 </x-starshop-layout>

@@ -1,6 +1,6 @@
 @props(['user', 'posts', 'followers', 'following'])
 
-<x-main-layout>
+<x-main-layout :user="$user">
     <div class="max-w-7xl m-auto px-4">
         <header
             class="mb-10 p-8 pb-4 bg-white dark:bg-neutral-800 rounded-b-md {{-- bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm --}}  max-w-4xl m-auto ">
@@ -182,13 +182,13 @@
             <section class="mt-6 flex justify-center pt-3 border-t border-neutral-300">
                 <nav class="profile-nav">
                     <ul class="flex flex-wrap justify-center gap-1 sm:gap-3 lg:gap-6">
-                        <li><a href="/u/{{ $user->username }}">Home</a></li>
-                        <li><a href="/u/{{ $user->username }}/posts">Posts</a></li>
-                        <li><a href="/u/{{ $user->username }}/notes">Notes</a></li>
+                        <li><a href="{{ route('profile.index', $user->username) }}">Home</a></li>
+                        <li><a href="{{ route('profile.posts', $user->username) }}">Posts</a></li>
+                        <li><a href="{{ route('profile.notes', $user->username) }}">Notes</a></li>
                         @if ($user->isCreatorOrMore($user))
-                            <li><a href="/u/{{ $user->username }}/shop">Shop</a></li>
-                            <li><a href="/u/{{ $user->username }}/faq">FAQ</a></li>
-                            <li><a href="/u/{{ $user->username }}/about">About</a></li>
+                            <li><a href="{{ route('profile.shop', $user->username) }}">Shop</a></li>
+                            <li><a href="{{ route('profile.faq', $user->username) }}">FAQ</a></li>
+                            <li><a href="{{ route('profile.about', $user->username) }}">About</a></li>
                         @endif
                     </ul>
                 </nav>
