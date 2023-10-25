@@ -23,7 +23,7 @@
                                     <form action="{{ route('post.delete') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="id" value="{{ $post->id }}">
-                                        <button
+                                        <button onclick="return confirm('Are you sure you want to delete this?')"
                                             class="block w-full px-4 py-2 text-left text-sm dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-red-400 hover:text-red-600">
                                             Delete Post
                                         </button>

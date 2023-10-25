@@ -48,6 +48,11 @@ class User extends Authenticatable
         return $this->belongsTo(Badge::class);
     }
 
+    public function colour()
+    {
+        return $this->belongsTo(Colour::class);
+    }
+
     public function profilePictureFrames()
     {
         return $this->belongsToMany(ProfilePictureFrame::class);
@@ -63,6 +68,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Post::class, 'post_id');
     }
 
+    /* -------------------------------------------------------------------------- */
+    /*                                 WALLPAPERS                                 */
+    /* -------------------------------------------------------------------------- */
+
     public function ownedWallpapers()
     {
         return $this->belongsToMany(Wallpaper::class, 'user_wallpaper');
@@ -75,10 +84,59 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Wallpaper::class, 'wallpaper_id');
     }
-
     public function hasWallpaper($id)
     {
         return $this->ownedWallpapers()->where('wallpaper_id', $id)->exists();
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                           PROFILE PICTURE FRAMES                           */
+    /* -------------------------------------------------------------------------- */
+
+    public function ownedProfilePictureFrames()
+    {
+        return $this->belongsToMany(ProfilePictureFrame::class, 'user_profile_picture_frame');
+    }
+    public function createdProfilePictureFrames()
+    {
+        return $this->hasMany(ProfilePictureFrame::class, 'profile_picture_frame_id');
+    }
+    public function currentProfilePictureFrame()
+    {
+        return $this->belongsTo(ProfilePictureFrame::class, 'profile_picture_frame_id');
+    }
+    public function hasProfilePictureFrame($id)
+    {
+        return $this->ownedProfilePictureFrames()->where('profile_picture_frame_id', $id)->exists();
+    }
+
+
+    public function ownedColours()
+    {
+        return $this->belongsToMany(Colour::class, 'colour_user');
+    }
+    public function currentColour()
+    {
+        return $this->belongsTo(Colour::class, 'colour_id');
+    }
+    public function hasColour($id)
+    {
+        return $this->ownedColours()->where('colour_id', $id)->exists();
+    }
+
+    public function hasItem($id, $type)
+    {
+        switch ($type) {
+            case 'wallpaper':
+                return $this->ownedWallpapers()->where('wallpaper_id', $id)->exists();
+                break;
+            case 'profile-picture-frame':
+                return $this->ownedProfilePictureFrames()->where('profile_picture_frame_id', $id)->exists();
+                break;
+            default:
+                return null;
+                break;
+        }
     }
 
     public function follow(User $user)

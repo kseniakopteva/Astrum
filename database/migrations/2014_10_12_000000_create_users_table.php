@@ -22,6 +22,8 @@ return new class extends Migration
             $table->text('bio')->nullable();
             $table->foreignId('badge_id');
             $table->foreignId('wallpaper_id')->nullable();
+            $table->foreignId('profile_picture_frame_id')->nullable();
+            $table->foreignId('colour_id')->nullable();
             $table->string('image');
             $table->unsignedInteger('stars')->default('100');
             $table->rememberToken();

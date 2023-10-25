@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ProfilePictureFrame;
 use App\Models\ProfilePictureFrameLike;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 
 class ProfilePictureFrameController extends Controller
@@ -20,7 +21,7 @@ class ProfilePictureFrameController extends Controller
     public function show(ProfilePictureFrame $profile_picture_frame)
     {
         return view('starshop.profile-picture-frames.show', [
-            'profile-picture-frame' => $profile_picture_frame
+            'profile_picture_frame' => $profile_picture_frame
         ]);
     }
 
@@ -53,6 +54,39 @@ class ProfilePictureFrameController extends Controller
         return redirect()->route('starshop.profile-picture-frames.show', ['profile_picture_frame' => $profile_picture_frame->id])
             ->with('success', 'You have successfully created a profile picture frame!');
     }
+
+    public function buy(Request $request)
+    {
+        if (!auth()->check())
+            return back();
+
+        $ppf = ProfilePictureFrame::find($request->id);
+        if (auth()->user()->stars >= $ppf->price) {
+            auth()->user()->ownedProfilePictureFrames()->attach([
+                'profile_picture_frame_id' => $ppf->id,
+                'user_id' => auth()->user()->id
+            ]);
+            auth()->user()->stars -= $ppf->price;
+            auth()->user()->save();
+            return back()
+                ->with('success', 'You have successfully purchased a profile picture frame!');
+        }
+        return back()
+            ->with('success', 'You don\'t have enough money!');
+    }
+
+
+    public function destroy(Request $request)
+    {
+        $ppf = ProfilePictureFrame::find($request->id);
+        if (Auth::user()->id === $ppf->author->id) {
+            $ppf->delete();
+            return redirect('/starshop');
+        } else {
+            return redirect()->route('explore');
+        }
+    }
+
 
     public function toggleLike(ProfilePictureFrame $profile_picture_frame)
     {

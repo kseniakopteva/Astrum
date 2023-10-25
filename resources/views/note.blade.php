@@ -45,7 +45,9 @@
                                 <form action="{{ route('note.delete', $note) }}" method="POST" class="px-1">
                                     @csrf
                                     <input type="hidden" name="id" value="{{ $note->id }}">
-                                    <x-danger-button href="/note/delete">Delete Note</x-danger-button>
+                                    <x-danger-button href="/note/delete"
+                                        onclick="return confirm('Are you sure you want to delete this?')">Delete
+                                        Note</x-danger-button>
                                 </form>
                             @elseif (auth()->check() && $note->author->id !== auth()->user()->id)
                                 <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'note-report')"

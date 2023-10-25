@@ -128,8 +128,10 @@ a {
 }
 .profile-image-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: -7%;
+    left: -7%;
+    min-height: calc(100% + 14%);
+    min-width: calc(100% + 14%);
 }
 
 #current {

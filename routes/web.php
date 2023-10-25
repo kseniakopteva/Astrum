@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ColourController;
 use App\Http\Controllers\FAQuestionController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\NoteController;
@@ -11,8 +12,10 @@ use App\Http\Controllers\ProfilePictureFrameController;
 use App\Http\Controllers\StarshopController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\WallpaperController;
+use App\Models\Colour;
 use App\Models\Note;
 use App\Models\Post;
+use App\Models\ProfilePictureFrame;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +43,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::post('/profile/wallpaper', [ProfileController::class, 'setCurrentWallpaper'])->name('set_current_wallpaper');
+    Route::post('/profile/profile-picture-frame', [ProfileController::class, 'setCurrentProfilePictureFrame'])->name('set_current_profile_picture_frame');
+    Route::post('/profile/colour', [ProfileController::class, 'setCurrentColour'])->name('set_current_colour');
 });
 
 require __DIR__ . '/auth.php';
@@ -117,10 +122,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/starshop/profile-picture-frames/{profile_picture_frame}', [ProfilePictureFrameController::class, 'show'])->name('starshop.profile-picture-frames.show');
     Route::get('/starshop/profile-picture-frames', [ProfilePictureFrameController::class, 'index'])->name('starshop.profile-picture-frames');
     Route::post('/starshop/profile-picture-frames/store', [ProfilePictureFrameController::class, 'store'])->name('starshop.profile-picture-frames.store');
+    Route::post('/starshop/profile-picture-frames/delete', [ProfilePictureFrameController::class, 'destroy'])->name('profile-picture-frame.delete');
 
-    Route::get('/starshop/post-frames/{post_frame}', [PostFrameController::class, 'show'])->name('starshop.post-frames.show');
-    Route::get('/starshop/post-frames', [PostFrameController::class, 'index'])->name('starshop.post-frames');
-    Route::post('/starshop/post-frames/store', [PostFrameController::class, 'store'])->name('starshop.post-frames.store');
+    Route::get('/starshop/colours', [ColourController::class, 'index'])->name('starshop.colours');
+
+    // Route::get('/starshop/post-frames/{post_frame}', [PostFrameController::class, 'show'])->name('starshop.post-frames.show');
+    // Route::get('/starshop/post-frames', [PostFrameController::class, 'index'])->name('starshop.post-frames');
+    // Route::post('/starshop/post-frames/store', [PostFrameController::class, 'store'])->name('starshop.post-frames.store');
 });
 
 Route::middleware('auth')->group(function () {
@@ -131,7 +139,8 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('/starshop/wallpapers/buy', [WallpaperController::class, 'buy'])->name('starshop.wallpapers.buy');
-    // Route::post('/starshop/profile-picture-frames/{profile_picture_frame}/buy', [StarshopController::class, 'profilePictureToggleLike'])->name('profile-picture-frame.like');
+    Route::post('/starshop/profile-picture-frames/buy', [ProfilePictureFrameController::class, 'buy'])->name('starshop.profile-picture-frames.buy');
+    Route::post('/starshop/colours/buy', [ColourController::class, 'buy'])->name('starshop.colours.buy');
     // Route::post('/starshop/post-frames/{post_frame}/buy', [StarshopController::class, 'postFrameToggleLike'])->name('post-frame.like');
 });
 

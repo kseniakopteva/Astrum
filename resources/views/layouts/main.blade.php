@@ -31,7 +31,8 @@
     style="
 @if (Request::segment(1) == 'profile') <?php $wallpaper = $user->currentWallpaper; ?>
 @if (isset($wallpaper) && !is_null($wallpaper)) {{ 'background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(' . asset('storage/images/wallpapers/' . $wallpaper->image) . ');' }} @endif
-background-size: repeat;
+background-attachment: fixed;
+background-position: center center;
 @endif
 ">
 

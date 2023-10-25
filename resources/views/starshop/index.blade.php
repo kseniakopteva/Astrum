@@ -21,12 +21,12 @@
                 'array' => $profile_picture_frames,
                 'cols' => 6,
             ],
-            [
-                'slug' => 'post-frames',
-                'name' => 'Post Frames',
-                'array' => $post_frames,
-                'cols' => 6,
-            ],
+            // [
+            //     'slug' => 'post-frames',
+            //     'name' => 'Post Frames',
+            //     'array' => $post_frames,
+            //     'cols' => 6,
+            // ],
         ];
         ?>
 

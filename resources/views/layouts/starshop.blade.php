@@ -10,7 +10,8 @@
                     <x-starshop-nav-button :href="route('starshop.wallpapers')" :active="request()->routeIs('starshop.wallpapers')">Wallpapers</x-starshop-nav-button>
                     <x-starshop-nav-button :href="route('starshop.profile-picture-frames')" :active="request()->routeIs('starshop.profile-picture-frames')">Profile Picture
                         Frames</x-starshop-nav-button>
-                    <x-starshop-nav-button :href="route('starshop.post-frames')" :active="request()->routeIs('starshop.post-frames')">Post Frames</x-starshop-nav-button>
+                    {{-- <x-starshop-nav-button :href="route('starshop.post-frames')" :active="request()->routeIs('starshop.post-frames')">Post Frames</x-starshop-nav-button> --}}
+                    <x-starshop-nav-button :href="route('starshop.colours')" :active="request()->routeIs('starshop.colours')">Colours</x-starshop-nav-button>
                 </ul>
             </nav>
             <span>Your stars: {{ auth()->user()->stars }}<i class="fa-solid fa-star"></i></span>

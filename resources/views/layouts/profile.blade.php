@@ -13,16 +13,22 @@
                         src="{{ asset('storage/images/profile-pictures/' . $user->image) }}" alt=""
                         class="profile-picture" width="100" height="100"
                         style=" pointer-events: none; user-select: none;">
-                    {{-- <img class="profile-image-overlay" src="/images/profile_border.png" alt=""> --}}
+                    @if (!is_null($user->currentProfilePictureFrame))
+                        <img class="profile-image-overlay"
+                            src="{{ asset('storage/images/profile-picture-frames/' . $user->currentProfilePictureFrame->image) }}">
+                    @endif
 
                 </div>
                 {{-- Personal Info Section --}}
                 <section class="order-3  sm:order-2 col-span-5 sm:col-span-3 mt-4 sm:mt-0 sm:ml-6">
                     <div class="flex space-x-4 items-center">
+
                         @if ($user->name)
                             <h1 class="large-title">{{ $user->name }}</h1>
                         @else
-                            <h1 class="large-title">{{ $user->username }}</h1>
+                            <div @if (!is_null($user->colour)) style="color: #{{ $user->colour->hex }}" @endif>
+                                <h1 class="large-title">{{ $user->username }}</h1>
+                            </div>
                         @endif
 
                         @if ($user->isCreatorOrMore($user))
@@ -33,10 +39,11 @@
 
                     </div>
 
-
-                    @if ($user->name)
-                        <h2 class="small-title inline-block mr-2">{{ $user->username }}</h2>
-                    @endif
+                    <div @if (!is_null($user->colour)) style="color: #{{ $user->colour->hex }}" @endif>
+                        @if ($user->name)
+                            <h2 class="small-title inline-block mr-2">{{ $user->username }}</h2>
+                        @endif
+                    </div>
 
                     @if ($user->isAdmin($user))
                         <span class="small-title text-red-500"><?php echo strtoupper('Admin'); ?></span>

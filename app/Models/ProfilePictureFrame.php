@@ -30,7 +30,7 @@ class ProfilePictureFrame extends Model
             return $this
                 ->belongsToMany(User::class, 'profile_picture_frame_likes')
                 ->where('profile_picture_frame_likes.user_id', '=', auth()->user()->id)
-                ->where('profile_picture_frame_likes.wallpaper_id', '=', $profile_picture_frame->id)
+                ->where('profile_picture_frame_likes.profile_picture_frame_id', '=', $profile_picture_frame->id)
                 ->where('profile_picture_frame_likes.liked', '=', 1)
                 ->exists();
         else return null;

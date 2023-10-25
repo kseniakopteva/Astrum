@@ -175,4 +175,28 @@ class ProfileController extends Controller
 
         return redirect('/settings#customise')->with('success', 'You have changed the current wallpaper!');
     }
+
+    public function setCurrentProfilePictureFrame(Request $request)
+    {
+        if (!auth()->check())
+            return redirect('/explore');
+
+        $user = User::where('id', auth()->user()->id)->first();
+        $user->profile_picture_frame_id = $request->id;
+        $user->save();
+
+        return redirect('/settings#customise')->with('success', 'You have changed the current profile picture frame!');
+    }
+
+    public function setCurrentColour(Request $request)
+    {
+        if (!auth()->check())
+            return redirect('/explore');
+
+        $user = User::where('id', auth()->user()->id)->first();
+        $user->colour_id = $request->id;
+        $user->save();
+
+        return redirect('/settings#customise')->with('success', 'You have changed the current colour!');
+    }
 }
