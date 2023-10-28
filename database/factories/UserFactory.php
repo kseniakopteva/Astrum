@@ -17,7 +17,7 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        $bio = implode(' ', fake()->paragraphs(3));
+        $bio = implode(' ', fake()->paragraphs(2));
         return [
             'name' => fake()->name(),
             'username' => fake()->unique()->username(),

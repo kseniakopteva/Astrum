@@ -25,16 +25,25 @@
     <!-- Alpine -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+
+    @if (Request::segment(1) == 'profile')
+        <?php $wallpaper = $user->currentWallpaper; ?> @if (isset($wallpaper) && !is_null($wallpaper))
+            <style>
+                body {
+
+                    {{ 'background-image: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), url(' . asset('storage/images/wallpapers/' . $wallpaper->image) . ');' }}
+                }
+
+                .dark body {
+
+                    {{ 'background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(' . asset('storage/images/wallpapers/' . $wallpaper->image) . ');' }}
+                }
+            </style>
+        @endif
+    @endif
 </head>
 
-<body class="flex flex-col min-h-screen bg-lime-900 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-300"
-    style="
-@if (Request::segment(1) == 'profile') <?php $wallpaper = $user->currentWallpaper; ?>
-@if (isset($wallpaper) && !is_null($wallpaper)) {{ 'background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(' . asset('storage/images/wallpapers/' . $wallpaper->image) . ');' }} @endif
-background-attachment: fixed;
-background-position: center center;
-@endif
-">
+<body class="flex flex-col min-h-screen bg-lime-900 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-300">
 
     <header class="main-header">
         @include('layouts.navigation')
@@ -45,9 +54,13 @@ background-position: center center;
     </main>
 
     <footer
-        class="h-24 {{-- bg-neutral-400 --}} bg-lime-800 dark:bg-neutral-900 text-white dark:text-neutral-500 pt-2 px-4 flex items-center justify-between">
-        <span>Copyright bla-bla-bla</span>
-        <span class="version">Version 0.0.1</span>
+        class="h-24 bg-lime-950 dark:bg-neutral-900
+        text-white dark:text-neutral-500 pt-2 px-4 flex items-center justify-between">
+        <span>Copyright&copy; 2023, Ksenia Kopteva. All Rights Reserved</span>
+        <button onclick="toggleTheme()" class="px-3 py-2 border border-neutral-300 rounded-md text-white space-x-2">
+            <i class="fa-solid fa-moon" id="moon"></i>
+            <i class="fa-solid fa-sun" id="sun"></i>
+        </button>
     </footer>
 
     @if (session()->has('success'))
@@ -60,6 +73,54 @@ background-position: center center;
         </div>
     @endif
 
+    <script>
+        (addTheme = function() {
+
+            /* ----------------------- this changes original theme ---------------------- */
+
+            if (localStorage.getItem('theme') === null) {
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.getElementsByTagName('html')[0].classList.add('dark')
+                    document.querySelector('#sun').classList.add('opacity-20')
+                    document.querySelector('#moon').classList.remove('opacity-20')
+                }
+                /* ----------------------------------- :) ----------------------------------- */
+            } else if (localStorage.getItem("theme") === 'dark') {
+                // make everything dark
+                document.getElementsByTagName('html')[0].classList.add('dark')
+                document.querySelector('#sun').classList.add('opacity-20')
+                document.querySelector('#moon').classList.remove('opacity-20')
+            } else {
+                // make everything light
+                document.querySelector('#moon').classList.remove('opacity-20')
+                document.querySelector('#sun').classList.add('opacity-20')
+            }
+        })()
+
+        // function isDark() {
+        //     if (localStorage.getItem("theme") === 'dark') {
+        //         return true;
+        //     }
+        // }
+
+        function toggleTheme() {
+            html = document.getElementsByTagName('html')[0];
+            if (html.classList.contains('dark')) {
+                // make everything light
+                html.classList.remove('dark')
+                localStorage.setItem("theme", "light");
+                document.querySelector('#sun').classList.remove('opacity-20')
+                document.querySelector('#moon').classList.add('opacity-20')
+            } else {
+                // make everything dark
+                html.classList.add('dark')
+                localStorage.setItem("theme", "dark");
+                document.querySelector('#sun').classList.add('opacity-20');
+                document.querySelector('#moon').classList.remove('opacity-20')
+            }
+
+        }
+    </script>
 </body>
 
 </html>

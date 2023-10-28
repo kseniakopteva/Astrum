@@ -72,45 +72,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        $colours = [
-            [
-                'name' => 'Cute Purple',
-                'hex' => 'E0BBE4',
-                'price' => 15
-            ],
-            [
-                'name' => 'Pastel Pink',
-                'hex' => 'D291BC',
-                'price' => 15
-            ],
-            [
-                'name' => 'Blush Red',
-                'hex' => 'FD8A8A',
-                'price' => 15
-            ],
-            [
-                'name' => 'Beige Pink',
-                'hex' => 'FFCBCB',
-                'price' => 15
-            ],
-            [
-                'name' => 'Cyan Lagoon',
-                'hex' => 'A8D1D1',
-                'price' => 15
-            ],
-            [
-                'name' => 'Yellow Lemon',
-                'hex' => 'F1F7B5',
-                'price' => 15
-            ]
-        ];
-
-        foreach ($colours as $colour) {
-            Colour::factory()->create([
-                'name' => $colour['name'],
-                'hex' => $colour['hex'],
-                'price' => $colour['price'],
-            ]);
-        }
+        Colour::factory(10)->create();
     }
 }

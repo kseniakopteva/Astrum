@@ -1,6 +1,6 @@
 <x-starshop-layout>
     <div class="flex items-center justify-between">
-        <div>
+        <div class="mr-8">
             <h2 class="medium-title">Profile Wallpapers</h2>
             <p>Stylish wallpapers for your profile that will make your posts shine!</p>
         </div>
@@ -11,7 +11,7 @@
                 Wallpaper</a>
         @endif
     </div>
-    <div class="mt-4 grid grid-cols-3 gap-4">
+    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         @foreach ($wallpapers as $wallpaper)
             <x-feed-starshop-item slug="wallpapers" :item="$wallpaper"></x-feed-starshop-item>
         @endforeach

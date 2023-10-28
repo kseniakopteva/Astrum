@@ -1,6 +1,6 @@
 <x-starshop-layout>
     <div class="flex items-center justify-between">
-        <div>
+        <div class="mr-8">
             <h2 class="medium-title">Profile Picture Frames</h2>
             <p>Frames for your profile picture that will bring out the best out of your picture!</p>
         </div>
@@ -11,7 +11,7 @@
                 Profile Picture Frame</a>
         @endif
     </div>
-    <div class="mt-1 grid grid-cols-5 gap-4">
+    <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         @foreach ($profile_picture_frames as $frame)
             <x-feed-starshop-item slug="profile-picture-frames" :item="$frame"></x-feed-starshop-item>
         @endforeach

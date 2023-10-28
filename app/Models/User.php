@@ -115,10 +115,6 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Colour::class, 'colour_user');
     }
-    public function currentColour()
-    {
-        return $this->belongsTo(Colour::class, 'colour_id');
-    }
     public function hasColour($id)
     {
         return $this->ownedColours()->where('colour_id', $id)->exists();

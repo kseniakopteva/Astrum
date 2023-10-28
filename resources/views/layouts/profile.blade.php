@@ -26,7 +26,8 @@
                         @if ($user->name)
                             <h1 class="large-title">{{ $user->name }}</h1>
                         @else
-                            <div @if (!is_null($user->colour)) style="color: #{{ $user->colour->hex }}" @endif>
+                            <div
+                                @if (!is_null($user->colour)) class="text-{{ $user->colour->lightcolor }} dark:text-{{ $user->colour->darkcolor }}" @endif>
                                 <h1 class="large-title">{{ $user->username }}</h1>
                             </div>
                         @endif
@@ -39,7 +40,8 @@
 
                     </div>
 
-                    <div @if (!is_null($user->colour)) style="color: #{{ $user->colour->hex }}" @endif>
+                    <div
+                        @if (!is_null($user->colour)) class="text-{{ $user->colour->lightcolor }} dark:text-{{ $user->colour->darkcolor }}" @endif>
                         @if ($user->name)
                             <h2 class="small-title inline-block mr-2">{{ $user->username }}</h2>
                         @endif
@@ -72,7 +74,7 @@
                      w-full items-center">
                     <div class="flex gap-8 items-center mb-2 justify-between">
                         @auth
-                            @if ($user !== auth()->user())
+                            @if ($user->id !== auth()->user()->id)
                                 <div class="flex">
                                     @if (!auth()->user()->isFollowing($user))
                                         <form method="POST" action="{{ route('user.follow') }}">
@@ -180,24 +182,26 @@
 
                     </div>
                     <div class="mt-4">
-                        Stars: {{ $user->stars }}<i class="fa-solid fa-star"></i>
+                        Stars: <x-price>{{ $user->stars }}</x-price>
                     </div>
                 </section>
 
             </div>
             {{-- Links Section --}}
-            <section class="mt-6 flex justify-center pt-3 border-t border-neutral-300">
+            <section
+                class="mt-6 flex justify-center pt-3 border-t border-neutral-300
+                @if (!is_null($user->currentColour)) border-{{ $user->colour->lightcolor }} dark:border-{{ $user->colour->darkcolor }}" @endif>
                 <nav class="profile-nav">
-                    <ul class="flex flex-wrap justify-center gap-1 sm:gap-3 lg:gap-6">
-                        <li><a href="{{ route('profile.index', $user->username) }}">Home</a></li>
-                        <li><a href="{{ route('profile.posts', $user->username) }}">Posts</a></li>
-                        <li><a href="{{ route('profile.notes', $user->username) }}">Notes</a></li>
-                        @if ($user->isCreatorOrMore($user))
-                            <li><a href="{{ route('profile.shop', $user->username) }}">Shop</a></li>
-                            <li><a href="{{ route('profile.faq', $user->username) }}">FAQ</a></li>
-                            <li><a href="{{ route('profile.about', $user->username) }}">About</a></li>
-                        @endif
-                    </ul>
+                <ul class="flex flex-wrap justify-center gap-1 sm:gap-3 lg:gap-6">
+                    <li><a href="{{ route('profile.index', $user->username) }}">Home</a></li>
+                    <li><a href="{{ route('profile.posts', $user->username) }}">Posts</a></li>
+                    <li><a href="{{ route('profile.notes', $user->username) }}">Notes</a></li>
+                    @if ($user->isCreatorOrMore($user))
+                        <li><a href="{{ route('profile.shop', $user->username) }}">Shop</a></li>
+                        <li><a href="{{ route('profile.faq', $user->username) }}">FAQ</a></li>
+                        <li><a href="{{ route('profile.about', $user->username) }}">About</a></li>
+                    @endif
+                </ul>
                 </nav>
             </section>
         </header>

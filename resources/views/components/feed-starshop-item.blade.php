@@ -13,7 +13,7 @@
         {{ strlen($item->description) <= 134 ? substr($item->description, 0, 134) : substr($item->description, 0, 134) . '...' }}
     </p>
     <div class="flex justify-between items-end">
-        <span>Author: <a href="">{{ $item->author->username }}</a></span>
-        <span>{{ $item->price }}<i class="fa-solid fa-star"></i></span>
+        <span>Author: <x-colored-username-link size="small" :user="$item->author"></x-colored-username-link></span>
+        <span><x-price>{{ $item->price }}</x-price></span>
     </div>
 </div>

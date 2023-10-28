@@ -10,29 +10,15 @@
         <div class="mt-2 grid grid-cols-4">
             <div class="col-span-3">
                 <div class="flex items-center space-x-2">
-                    <h1 class="large-title">
+                    <h1 class="large-title pb-1 pr-2">
                         {{ $item->name }}
                     </h1>
-                    <div class="flex space-x-1 pt-2">
-                        <span>{{ $item->likes->count() }}</span>
-                        @if (auth()->check())
-                            <form action="{{ route($type . '.like', $item->id) }}" method="POST">
-                                @csrf @method('POST')
-                                <button type="submit">
-                                    @if ($item->isLiked($item))
-                                        <i class="fa-solid fa-heart"></i>
-                                    @else
-                                        <i class="fa-regular fa-heart"></i>
-                                    @endif
-                                </button>
-                            </form>
-                        @else
-                            <span>Likes</span>
-                        @endif
-                    </div>
+
+                    <x-likes :route="$type . '.like', $item->id" :item="$item" :button="true"></x-likes>
+
                 </div>
-                <p><a href="{{ route('profile.index', $item->author->username) }}">added by
-                        {{ $item->author->username }}</a></p>
+                <p><span>added by <x-colored-username-link size="small"
+                            :user="$item->author"></x-colored-username-link></span></p>
 
                 <div class="text-lg my-2">
                     <p>{{ $item->description }}</p>
@@ -77,7 +63,7 @@
                         </x-slot>
                     </x-dropdown>
                     <div class="flex space-x-2 justify-end items-center">
-                        <p class="text-lg">{{ $item->price }} <i class="fa-solid fa-star"></i></p>
+                        <p class="text-lg"><x-price>{{ $item->price }}</x-price></p>
                         @if (!auth()->user()->hasItem($item->id, $type))
                             <form action="{{ route('starshop.' . $type . 's.buy') }}" method="POST">
                                 @csrf

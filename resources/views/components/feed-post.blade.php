@@ -4,10 +4,16 @@
     class="post-border first-letter:flex flex-col justify-between border bg-white border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-lg p-4 pt-4 mb-4 break-inside-avoid">
     <div class="">
         <a class="" href="/u/{{ strtolower($post->author->username) }}/posts/{{ $post->slug }}">
-            <h1 class="medium-title mb-2">
-                {{ $post->title }}
-            </h1>
-            <img class="w-full max-w-lg" src="<?php if (!strncmp('https', $post->image, 5)) {
+            <div class="flex justify-between items-center">
+                <h1 class="medium-title">
+                    {{ $post->title }}
+                </h1>
+                <span>{{ $post->created_at->diffForHumans() }}</span>
+            </div>
+            <h2 class="mb-2">
+                <x-colored-username-link size="small" :user="$post->author"></x-colored-username-link>
+            </h2>
+            <img class="w-full" src="<?php if (!strncmp('https', $post->image, 5)) {
                 echo $post->image;
             } else {
                 echo asset('storage/images/posts/' . $post->image);
@@ -20,10 +26,12 @@
         @endif
     </div>
     <div class="">
-        <footer class="flex items-center justify-between mt-4">
-            <span><a class="dark:text-neutral-400"
-                    href="{{ route('profile.index', $post->author->username) }}">{{ $post->author->username }}</a></span>
-            <span>{{ $post->created_at->diffForHumans() }}</span>
+        <footer class="mt-4 flex justify-between">
+            <a href="{{ route('note.show', ['author' => $post->author, 'note' => $post]) }}"
+                class="space-x-1"><span>{{ $post->comments->count() }}</span><i class="fa-regular fa-comment"></i></a>
+
+
+            <x-likes route="note.like" :item="$post"></x-likes>
         </footer>
     </div>
 </article>

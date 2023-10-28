@@ -121,8 +121,8 @@
                     @csrf
                     <input type="hidden" value="{{ $colour->id }}" name="id">
                     <button type="submit">
-                        <div style="background-color: #{{ $colour->hex }}"
-                            class="rounded-md h-20 w-20
+                        <div
+                            class="rounded-md h-20 w-20 bg-{{ $colour->lightcolor }} dark:bg-{{ $colour->darkcolor }}
                         <?php
                         if (!is_null(auth()->user()->currentColour)) {
                             if ($colour->id === auth()->user()->currentColour->id) {

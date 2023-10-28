@@ -14,7 +14,8 @@
                             src="{{ asset('storage/images/profile-pictures/' . $u->image) }}" alt="" width="50"
                             height="50">
                         <div>
-                            <a href="{{ route('profile.index', $u->username) }}">{{ $u->username }}</a><br>
+                            <x-colored-username-link size="small" :user="$u"></x-colored-username-link>
+                            <br>
                             <span>{{ $u->name }}</span>
                         </div>
                     </div>

@@ -12,10 +12,8 @@ use App\Http\Controllers\ProfilePictureFrameController;
 use App\Http\Controllers\StarshopController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\WallpaperController;
-use App\Models\Colour;
 use App\Models\Note;
 use App\Models\Post;
-use App\Models\ProfilePictureFrame;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -65,18 +63,29 @@ Route::get('/profile/{author:username}/shop', [ProfileController::class, 'shop']
 Route::get('/profile/{author:username}/faq', [ProfileController::class, 'faq'])->name('profile.faq');
 Route::get('/profile/{author:username}/about', [ProfileController::class, 'about'])->name('profile.about');
 
-Route::get('/u/{author:username}/posts/{post:slug}', [PostController::class, 'show']);
+Route::get('/u/{author:username}/posts/{post:slug}', [PostController::class, 'show'])->name('post.show');
 Route::get('/u/{author:username}/notes/{note:slug}#current', [NoteController::class, 'show'])->name('note.show');
 Route::get('/u/{author:username}/notes/{note:slug}', [NoteController::class, 'show']);
 
 Route::get('/', function () {
+    if (!auth()->check())
+        return redirect()->route('explore');
+
+    $userIds = auth()->user()->following()->pluck('follows.following_id');
+    $userIds[] = auth()->user()->id;
+
+    $posts = Post::whereIn('user_id', $userIds)->get();
+    $notes = Note::whereIn('user_id', $userIds)->get();
+
+    $items = $notes->merge($posts)->sortByDesc('created_at');
+
     return view('feed', [
-        'posts' => Post::latest()->get()
+        'items' => $items
     ]);
 })->name('feed');
 
 
-Route::post('/posts/{post:slug}/comments', [PostCommentController::class, 'store']);
+Route::post('/posts/{post}/comments', [PostCommentController::class, 'store'])->name('post.comment.store');
 Route::post('/posts/store', [PostController::class, 'store'])->name('post.store');
 Route::post('/notes/{note}/comments', [NoteController::class, 'store'])->name('note.comment.store');
 Route::post('/notes/store', [NoteController::class, 'store'])->name('note.store');

@@ -12,6 +12,9 @@ class FollowController extends Controller
     {
         // dd('Follow!');
         $userToFollow = User::findOrFail(request('id'));
+        if ($userToFollow->id === auth()->user()->id)
+            return back()->with('success', 'You can\'t follow yourself!');
+
         auth()->user()->follow($userToFollow);
 
         if ($userToFollow->followers->count() == 30 && $userToFollow->role == 'user') {

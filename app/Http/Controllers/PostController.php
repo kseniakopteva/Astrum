@@ -49,13 +49,16 @@ class PostController extends Controller
 
         $u = auth()->user();
         $price = 10;
-        if ($u->stars >= $price) {
-            Post::create($attributes);
-            $u->stars -= $price;
-            $u->save();
+        if ($u->stars < $price) {
+            return back()
+                ->with('success', 'You don\'t have enough money!');
         }
 
-        return back()
+        $new_post = Post::create($attributes);
+        $u->stars -= $price;
+        $u->save();
+
+        return redirect()->route('post.show', ['author' => auth()->user()->username, 'post' => $new_post->slug])
             ->with('success', 'You have successfully created a post!');
     }
 

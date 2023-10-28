@@ -1,17 +1,20 @@
 <x-main-layout>
     <div class="wrapper">
         <article
-            class="grid grid-cols-4 gap-8 border border-neutral-200 bg-white dark:bg-neutral-800 dark:border-neutral-700 rounded-md shadow-sm p-4 mb-6">
-            <div class="col-span-3 h-[calc(100vh-10rem)] w-full flex justify-center bg-neutral-950">
+            class="lg:grid lg:grid-cols-4 gap-4 border border-neutral-200 bg-white dark:bg-neutral-800 dark:border-neutral-700 rounded-md shadow-sm px-4 py-6 mb-6">
+            <div class="col-span-3 h-[calc(100vh-16rem)] w-full flex justify-center bg-neutral-200 dark:bg-neutral-900">
                 <img class=" h-full object-contain" src="<?php if (!strncmp('https', $post->image, 5)) {
                     echo $post->image;
                 } else {
                     echo asset('storage/images/posts/' . $post->image);
                 } ?>" alt="">
             </div>
-            <div class="">
-                @auth
-                    <div class="text-right">
+            <div class="lg:border-s border-neutral-300 dark:border-neutral-700 ps-4 flex flex-col">
+                <div class="flex justify-between items-baseline mt-4 lg:mt-0">
+
+                    <x-colored-username-link size="big" :user="$post->author"></x-colored-username-link>
+
+                    @auth
                         <x-dropdown align="right" width="52">
                             <x-slot name="trigger">
                                 <x-secondary-button type="submit" class="ml-2 !px-2 h-7 w-7"><i
@@ -37,19 +40,14 @@
                                 @endif
                             </x-slot>
                         </x-dropdown>
-                    </div>
-                @endauth
-                <div class="pt-12  flex flex-col">
+                    @endauth
+                </div>
+                <div class=" flex flex-col justify-between flex-grow">
                     <div>
 
-
-                        <h1 class="large-title">
+                        <h1 class="large-title pt-4">
                             {{ $post->title }}
                         </h1>
-                        <p><a
-                                href="{{ route('profile.index', $post->author->username) }}">{{ $post->author->username }}</a>
-                        </p>
-
 
                         <div class="text-lg my-8">
                             <p>{{ $post->body }}</p>
@@ -62,27 +60,12 @@
                             @endforeach
                         </ul>
                     </div>
-                    <div class="flex justify-between">
-                        <a href="{{ url()->previous() }}" class="inline-block p-2 mt-auto"><i
-                                class="mr-1 fa-solid fa-arrow-left"></i>Go back</a>
 
-                        <div class="flex space-x-1">
-                            <span>{{ $post->likes->count() }}</span>
-                            @if (auth()->check())
-                                <form action="{{ route('post.like', $post->id) }}" method="POST">
-                                    @csrf @method('POST')
-                                    <button type="submit">
-                                        @if ($post->isLiked($post))
-                                            <i class="fa-solid fa-heart"></i>
-                                        @else
-                                            <i class="fa-regular fa-heart"></i>
-                                        @endif
-                                    </button>
-                                </form>
-                            @else
-                                <span>Likes</span>
-                            @endif
-                        </div>
+                    <div class="self-end justify-self-end">
+                        {{-- <a href="{{ url()->previous() }}" class="inline-block p-2 mt-auto"><i
+                                class="mr-1 fa-solid fa-arrow-left"></i>Go back</a> --}}
+
+                        <x-likes route="post.like" :item="$post" :button="true"></x-likes>
 
                     </div>
                 </div>
@@ -91,21 +74,7 @@
 
         <section class="space-y-4 max-w-3xl m-auto">
             @auth
-                <form action="/posts/{{ $post->slug }}/comments" method="post"
-                    class="bg-neutral-100 border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-700 p-4 rounded-md">
-                    @csrf
-                    <header class="flex items-center">
-                        <img src="{{ asset('storage/images/profile-pictures/' . auth()->user()->image) }}" alt=""
-                            width="40" height="40" class="rounded-full">
-                        <h2 class="ml-4">Join the discussion...</h2>
-                    </header>
-                    <div class="mt-6">
-                        <x-textarea class="w-full" name="body" rows="5"
-                            placeholder="Write something polite and constructive here..." required></x-textarea>
-                        <x-input-error :messages="$errors->get('body')"></x-input-error>
-                    </div>
-                    <div class="flex justify-end"><x-primary-button>Post</x-primary-button></div>
-                </form>
+                <x-comment-form route="post.comment.store" :item="$post" textarea_name="body"></x-comment-form>
             @else
                 <p><a href="/register" class="underline">Register</a> or <a href="/login" class="underline">log in</a> to
                     leave a comment!</p>
@@ -120,8 +89,8 @@
                     </div>
                     <div class="w-full">
                         <header class="mb-4">
-                            <h3 class="font-bold"><a
-                                    href="{{ route('profile.index', $comment->author->username) }}">{{ $comment->author->username }}</a>
+                            <h3 class="font-bold"><x-colored-username-link size="small"
+                                    :user="$comment->author"></x-colored-username-link>
                             </h3>
                             <p class="text-xs">
                                 Posted on <time>{{ $comment->created_at->format('M j, Y, H:i') }}</time>
@@ -130,23 +99,7 @@
                         <p>{{ $comment->body }}</p>
                         <footer class="w-full flex justify-end">
 
-                            <div class="flex space-x-1">
-                                <span>{{ $comment->likes->count() }}</span>
-                                @if (auth()->check())
-                                    <form action="{{ route('postcomment.like', $comment->id) }}" method="POST">
-                                        @csrf @method('POST')
-                                        <button type="submit">
-                                            @if ($comment->isLiked($comment))
-                                                <i class="fa-solid fa-heart"></i>
-                                            @else
-                                                <i class="fa-regular fa-heart"></i>
-                                            @endif
-                                        </button>
-                                    </form>
-                                @else
-                                    <span>Likes</span>
-                                @endif
-                            </div>
+                            <x-likes route="postcomment.like" :item="$comment"></x-likes>
                         </footer>
                     </div>
                 </article>
