@@ -14,8 +14,7 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
         </form>
-        {{-- <div class="grid sm:grid-cols-2 sm:gap-3 sm:px-3 lg:grid-cols-3 xl:grid-cols-4"> --}}
-        <div class="columns-2 md:columns-3 lg:columns-4 overflow-hidden">
+        <div class="masonry">
             @foreach ($posts as $post)
                 <x-feed-post :post=$post></x-feed-post>
             @endforeach
@@ -25,3 +24,24 @@
         </div>
     </div>
 </x-main-layout>
+
+<script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
+<script>
+    var macy_instance = Macy.init({
+        container: '.masonry',
+        trueOrder: false,
+        waitForImages: true,
+        debug: true,
+        margin: 10,
+        columns: 4,
+        breakAt: {
+            1024: 3,
+            768: 2,
+            640: 1
+        }
+    });
+
+    macy_instance.runOnImageLoad(function() {
+        macy_instance.recalculate(true);
+    }, true);
+</script>

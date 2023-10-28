@@ -1,11 +1,11 @@
 @props(['post'])
 
-<article
-    class="post-border first-letter:flex flex-col justify-between border bg-white border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-lg p-4 pt-4 mb-4 break-inside-avoid">
+<article id="{{ $post->slug }}"
+    {{ $attributes->merge(['class' => 'post-border first-letter:flex flex-col justify-between border bg-white border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-lg p-4 pt-4 mb-4 break-inside-avoid']) }}>
     <div class="">
         <a class="" href="/u/{{ strtolower($post->author->username) }}/posts/{{ $post->slug }}">
             <div class="flex justify-between items-center">
-                <h1 class="medium-title">
+                <h1 class="medium-title mr-2">
                     {{ $post->title }}
                 </h1>
                 <span>{{ $post->created_at->diffForHumans() }}</span>
@@ -27,11 +27,11 @@
     </div>
     <div class="">
         <footer class="mt-4 flex justify-between">
-            <a href="{{ route('note.show', ['author' => $post->author, 'note' => $post]) }}"
+            <a href="{{ route('post.show', ['author' => $post->author, 'post' => $post]) }}"
                 class="space-x-1"><span>{{ $post->comments->count() }}</span><i class="fa-regular fa-comment"></i></a>
 
 
-            <x-likes route="note.like" :item="$post"></x-likes>
+            <x-likes route="post.like" :item="$post"></x-likes>
         </footer>
     </div>
 </article>

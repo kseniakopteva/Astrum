@@ -7,6 +7,8 @@ use App\Models\PostLike;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
 use Intervention\Image\Facades\Image;
 
 class PostController extends Controller
@@ -14,7 +16,8 @@ class PostController extends Controller
     public function explore()
     {
         return view('explore', [
-            'posts' =>  Post::inRandomOrder()->latest()->filter(request(['search']))->paginate(50)->withQueryString()
+            // 'posts' =>  Post::inRandomOrder()->latest()->filter(request(['search']))->paginate(30)->withQueryString()
+            'posts' =>  Post::latest()->filter(request(['search']))->paginate(30)->withQueryString()
         ]);
     }
 
@@ -101,7 +104,8 @@ class PostController extends Controller
                 $postLike->update(['liked' => 0]);
             }
         }
-        return back();
+        // return back();
+        return Redirect::to(URL::previous() . "#" . $post->slug);
     }
 
 

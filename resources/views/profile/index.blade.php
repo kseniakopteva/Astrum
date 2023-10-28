@@ -10,8 +10,7 @@
                 </div>
             </div>
 
-            {{-- <div class="grid grid-cols-2 gap-4"> --}}
-            <div class="columns lg:columns-2 overflow-hidden">
+            <div class="masonry">
                 @foreach ($posts as $post)
                     <x-feed-post class="cols-1" :post=$post></x-feed-post>
                 @endforeach
@@ -38,3 +37,23 @@
             </div>
         </div>
 </x-profile-layout>
+<script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
+<script>
+    var macy_instance = Macy.init({
+        container: '.masonry',
+        trueOrder: false,
+        waitForImages: true,
+        debug: true,
+        margin: 10,
+        columns: 2,
+        breakAt: {
+            1024: 1,
+            768: 2,
+            640: 1
+        }
+    });
+
+    macy_instance.runOnImageLoad(function() {
+        macy_instance.recalculate(true);
+    }, true);
+</script>
