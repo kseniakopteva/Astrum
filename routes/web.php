@@ -69,7 +69,7 @@ Route::get('/u/{author:username}/notes/{note:slug}', [NoteController::class, 'sh
 
 Route::get('/', function () {
     if (!auth()->check())
-        return redirect()->route('explore');
+        return redirect()->route('explore')->with('success', 'Log in to access your feed!');
 
     $userIds = auth()->user()->following()->pluck('follows.following_id');
     $userIds[] = auth()->user()->id;

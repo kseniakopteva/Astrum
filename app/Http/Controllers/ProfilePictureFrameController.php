@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProfilePictureFrame;
 use App\Models\ProfilePictureFrameLike;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
@@ -50,6 +51,13 @@ class ProfilePictureFrameController extends Controller
         Image::make($path . '\\' . $imageName)->fit(2000)->save($path . '\\' . $imageName);
 
         $profile_picture_frame = ProfilePictureFrame::create($attributes);
+
+        $tags = array_map('trim', explode(',', $request['tags']));
+        foreach ($tags as $tag) {
+            Tag::firstOrCreate(['name' => $tag, 'slug' => str_replace(' ', '_', $tag)])->save();
+        }
+        $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
+        $profile_picture_frame->tags()->sync($tags);
 
         return redirect()->route('starshop.profile-picture-frames.show', ['profile_picture_frame' => $profile_picture_frame->id])
             ->with('success', 'You have successfully created a profile picture frame!');

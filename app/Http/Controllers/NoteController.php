@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use App\Models\NoteLike;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,6 +43,13 @@ class NoteController extends Controller
         $new_note = Note::create($attributes);
         $u->stars -= $price;
         $u->save();
+
+        $tags = array_map('trim', explode(',', $request['tags']));
+        foreach ($tags as $tag) {
+            Tag::firstOrCreate(['name' => $tag, 'slug' => str_replace(' ', '_', $tag)])->save();
+        }
+        $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
+        $new_note->tags()->sync($tags);
 
         return redirect()->route('note.show', ['author' => auth()->user()->username, 'note' => $new_note->slug])
             ->with('success', 'You have successfully created a note!');

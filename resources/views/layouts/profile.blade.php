@@ -181,9 +181,11 @@
                         </button>
 
                     </div>
-                    <div class="mt-4">
-                        Stars: <x-price>{{ $user->stars }}</x-price>
-                    </div>
+                    @if ($user->id === auth()->user()->id)
+                        <div class="mt-4">
+                            Stars: <x-price>{{ $user->stars }}</x-price>
+                        </div>
+                    @endif
                 </section>
 
             </div>

@@ -1,7 +1,7 @@
 @props(['user'])
 
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 
 <head>
     <meta charset="utf-8">
@@ -92,6 +92,7 @@
                 document.querySelector('#moon').classList.remove('opacity-20')
             } else {
                 // make everything light
+                document.getElementsByTagName('html')[0].classList.remove('dark')
                 document.querySelector('#moon').classList.remove('opacity-20')
                 document.querySelector('#sun').classList.add('opacity-20')
             }

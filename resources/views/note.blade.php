@@ -63,6 +63,11 @@
             <div class="text-lg mb-4">
                 <p>{{ $note->notebody }}</p>
             </div>
+
+            <ul class="flex mb-4">
+                <x-tags :item="$note"></x-tags>
+            </ul>
+
             <div class="flex items-center justify-between">
                 <span>{{ $note->created_at->diffForHumans() }}</span>
                 <x-likes route="note.like" :item="$note"></x-likes>

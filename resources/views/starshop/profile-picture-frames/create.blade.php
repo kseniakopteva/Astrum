@@ -27,10 +27,12 @@
                 <x-input-error :messages="$errors->get('price')" class="mt-2" />
             </div>
 
-            <br>
-            Tags here
-            {{-- TODO: Tags --}}
-            <br>
+            <div class="pb-2">
+                <x-input-label for="tags">Tags</x-input-label>
+                <x-text-input class="h-auto" id="tags" class="block w-full" type="text" name="tags"
+                    placeholder="Tags (separate with comma)" value="{{ old('tags') }}" />
+                <x-input-error :messages="$errors->get('tags')" class="mt-2" />
+            </div>
 
             <x-primary-button>Submit</x-primary-button>
         </form>

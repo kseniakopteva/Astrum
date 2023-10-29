@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
 use App\Models\Wallpaper;
 use App\Models\WallpaperLike;
 use Illuminate\Http\Request;
@@ -49,6 +50,13 @@ class WallpaperController extends Controller
 
         $wallpaper = Wallpaper::create($attributes);
 
+        $tags = array_map('trim', explode(',', $request['tags']));
+        foreach ($tags as $tag) {
+            Tag::firstOrCreate(['name' => $tag, 'slug' => str_replace(' ', '_', $tag)])->save();
+        }
+        $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
+        $wallpaper->tags()->sync($tags);
+
         return redirect()->route('starshop.wallpapers.show', ['wallpaper' => $wallpaper->id])
             ->with('success', 'You have successfully created a wallpaper!');
     }
@@ -62,7 +70,7 @@ class WallpaperController extends Controller
         if (auth()->user()->stars >= $wallpaper->price) {
             auth()->user()->ownedWallpapers()->attach([
                 'wallpaper_id' => $wallpaper->id,
-                'user_id' => auth()->user()->id 
+                'user_id' => auth()->user()->id
             ]);
             auth()->user()->stars -= $wallpaper->price;
             auth()->user()->save();

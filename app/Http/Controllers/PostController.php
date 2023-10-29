@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\PostLike;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class PostController extends Controller
     {
         return view('explore', [
             // 'posts' =>  Post::inRandomOrder()->latest()->filter(request(['search']))->paginate(30)->withQueryString()
-            'posts' =>  Post::latest()->filter(request(['search']))->paginate(30)->withQueryString()
+            'posts' =>  Post::latest()->filter(request(['search']))->paginate(100)->withQueryString()
         ]);
     }
 
@@ -30,6 +31,13 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
+        $u = auth()->user();
+        $price = 10;
+        if ($u->stars < $price) {
+            return back()
+                ->with('success', 'You don\'t have enough money!');
+        }
+
         $attributes = $request->validate([
             'title' => 'required|max:100',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
@@ -50,16 +58,16 @@ class PostController extends Controller
             $constraint->aspectRatio();
         })->save($path . '\\' . $imageName);
 
-        $u = auth()->user();
-        $price = 10;
-        if ($u->stars < $price) {
-            return back()
-                ->with('success', 'You don\'t have enough money!');
-        }
-
         $new_post = Post::create($attributes);
         $u->stars -= $price;
         $u->save();
+
+        $tags = array_map('trim', explode(',', $request['tags']));
+        foreach ($tags as $tag) {
+            Tag::firstOrCreate(['name' => $tag, 'slug' => str_replace(' ', '_', $tag)])->save();
+        }
+        $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
+        $new_post->tags()->sync($tags);
 
         return redirect()->route('post.show', ['author' => auth()->user()->username, 'post' => $new_post->slug])
             ->with('success', 'You have successfully created a post!');

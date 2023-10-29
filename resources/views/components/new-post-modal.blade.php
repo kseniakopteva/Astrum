@@ -42,6 +42,11 @@
                     name="body" placeholder="Post text" value="{{ old('body') }}" />
                 <x-input-error :messages="$errors->get('body')" class="mt-2" />
             </div>
+            <div class="flex-grow">
+                <x-text-input class="h-auto" id="tags" class="block w-full" type="text" name="tags"
+                    placeholder="Tags (separate with comma)" value="{{ old('tags') }}" />
+                <x-input-error :messages="$errors->get('tags')" class="mt-2" />
+            </div>
             <div class="pt-4 flex justify-between">
                 <x-secondary-button type="reset" onclick="deletePreview()">Clear</x-secondary-button>
                 <x-primary-button class="w-48 justify-center overflow-hidden">Submit</x-primary-button>
