@@ -105,7 +105,7 @@
                     <div
                         class="bg-black bg-opacity-30 grid place-content-center w-full h-full
                     <?php
-                    if (is_null(auth()->user()->currentColour)) {
+                    if (is_null(auth()->user()->colour)) {
                         echo 'border-2 border-lime-400 border-dashed';
                     } else {
                         echo 'border border-neutral-900';
@@ -124,8 +124,8 @@
                         <div
                             class="rounded-md h-20 w-20 bg-{{ $colour->lightcolor }} dark:bg-{{ $colour->darkcolor }}
                         <?php
-                        if (!is_null(auth()->user()->currentColour)) {
-                            if ($colour->id === auth()->user()->currentColour->id) {
+                        if (!is_null(auth()->user()->colour)) {
+                            if ($colour->id === auth()->user()->colour->id) {
                                 echo 'border-2 border-lime-400 border-dashed';
                             } else {
                                 echo 'border border-neutral-900';

@@ -36,4 +36,9 @@ class PostComment extends Model
                 ->exists();
         else return null;
     }
+
+    public function reports(PostComment $pc)
+    {
+        return Report::where('reported_type', 'post-comment')->where('reported_id', $pc->id)->latest()->get();
+    }
 }

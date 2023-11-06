@@ -42,4 +42,8 @@ class Note extends Model
                 ->exists();
         else return null;
     }
+    public function reports(Note $n)
+    {
+        return Report::where('reported_type', 'note')->where('reported_id', $n->id)->latest()->get();
+    }
 }

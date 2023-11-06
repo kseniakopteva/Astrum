@@ -18,7 +18,7 @@ class PostController extends Controller
     {
         return view('explore', [
             // 'posts' =>  Post::inRandomOrder()->latest()->filter(request(['search']))->paginate(30)->withQueryString()
-            'posts' =>  Post::latest()->filter(request(['search']))->paginate(100)->withQueryString()
+            'posts' =>  Post::where('removed', false)->latest()->filter(request(['search']))->paginate(100)->withQueryString()
         ]);
     }
 
@@ -62,7 +62,7 @@ class PostController extends Controller
         $u->stars -= $price;
         $u->save();
 
-        $tags = array_map('trim', explode(',', $request['tags']));
+        $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
         foreach ($tags as $tag) {
             Tag::firstOrCreate(['name' => $tag, 'slug' => str_replace(' ', '_', $tag)])->save();
         }

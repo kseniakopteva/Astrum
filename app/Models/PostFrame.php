@@ -30,4 +30,9 @@ class PostFrame extends Model
                 ->exists();
         else return null;
     }
+
+    public function reports(PostFrame $pf)
+    {
+        return Report::where('reported_type', 'post-frame')->where('reported_id', $pf->id)->latest()->get();
+    }
 }

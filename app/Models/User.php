@@ -186,8 +186,18 @@ class User extends Authenticatable
         return $user->role === 'mod';
     }
 
+    public function isModOrMore(User $user)
+    {
+        return in_array($user->role, ['mod', 'admin']);
+    }
+
     public function isAdmin(User $user)
     {
         return $user->role === 'admin';
+    }
+
+    public function reports(User $u)
+    {
+        return Report::where('reported_type', 'user')->where('reported_id', $u->id)->latest()->get();
     }
 }

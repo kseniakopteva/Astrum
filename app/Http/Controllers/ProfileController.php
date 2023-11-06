@@ -21,8 +21,8 @@ class ProfileController extends Controller
     {
         return view('profile.index', [
             'user' => $author,
-            'posts' => Post::latest()->whereHas('author', fn ($q) => $q->where('user_id', $author->id))->paginate(20),
-            'notes' => Note::latest()->where('removed', '=', 0)->whereHas('author', fn ($q) => $q->where('user_id', $author->id))->get()->take(20),
+            'posts' => Post::where('removed', false)->latest()->whereHas('author', fn ($q) => $q->where('user_id', $author->id))->paginate(20),
+            'notes' => Note::where('removed', false)->latest()->where('removed', '=', 0)->whereHas('author', fn ($q) => $q->where('user_id', $author->id))->get()->take(20),
             'followers' => $author->followers,
             'following' => $author->following,
         ]);
@@ -32,7 +32,7 @@ class ProfileController extends Controller
     {
         return view('profile.posts', [
             'user' => $author,
-            'posts' =>  Post::latest()->whereHas('author', fn ($q) => $q->where('user_id', $author->id))->paginate(20)->withQueryString(),
+            'posts' =>  Post::where('removed', false)->latest()->whereHas('author', fn ($q) => $q->where('user_id', $author->id))->paginate(20)->withQueryString(),
             'followers' => $author->followers,
             'following' => $author->following,
         ]);
@@ -42,7 +42,7 @@ class ProfileController extends Controller
     {
         return view('profile.notes', [
             'user' => $author,
-            'notes' =>  Note::latest()->where('removed', '=', 0)->whereHas('author', fn ($q) => $q->where('user_id', $author->id))->paginate(20)->withQueryString(),
+            'notes' =>  Note::where('removed', false)->latest()->where('removed', '=', 0)->whereHas('author', fn ($q) => $q->where('user_id', $author->id))->paginate(20)->withQueryString(),
             'followers' => $author->followers,
             'following' => $author->following,
         ]);

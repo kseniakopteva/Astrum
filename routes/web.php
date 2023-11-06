@@ -9,11 +9,13 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostFrameController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilePictureFrameController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StarshopController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\WallpaperController;
 use App\Models\Note;
 use App\Models\Post;
+use App\Models\Report;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -26,8 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', function () {
         return view('profile.index', [
             'user' => auth()->user(),
-            'posts' => Post::latest()->whereHas('author', fn ($q) => $q->where('user_id', auth()->user()->id))->paginate(20),
-            'notes' => Note::latest()->where('removed', '=', 0)->whereHas('author', fn ($q) => $q->where('user_id', auth()->user()->id))->get()->take(20),
+            'posts' => Post::where('removed', false)->latest()->whereHas('author', fn ($q) => $q->where('user_id', auth()->user()->id))->paginate(20),
+            'notes' => Note::where('removed', false)->latest()->where('removed', '=', 0)->whereHas('author', fn ($q) => $q->where('user_id', auth()->user()->id))->get()->take(20),
             // 'notes' => auth()->user()->notes()->latest()->get()->take(20),
             // 'notes' => ['note1', 'note2'],
             'followers' => auth()->user()->followers,
@@ -86,6 +88,7 @@ Route::get('/', function () {
 
 
 Route::post('/posts/{post}/comments', [PostCommentController::class, 'store'])->name('post.comment.store');
+Route::delete('/posts/{post}/comment/{comment}/delete', [PostCommentController::class, 'store'])->name('post.comment.delete');
 Route::post('/posts/store', [PostController::class, 'store'])->name('post.store');
 Route::post('/notes/{note}/comments', [NoteController::class, 'store'])->name('note.comment.store');
 Route::post('/notes/store', [NoteController::class, 'store'])->name('note.store');
@@ -161,13 +164,22 @@ Route::get('/help', function () {
 /*                                Admin And Mod                               */
 /* -------------------------------------------------------------------------- */
 
-// Route::get('/admin/dashboard', function () {
-//     return view('admin-dashboard');
-// })->name('admin.dashboard')->middleware('admin');
-
 Route::get('/mod/dashboard', function () {
-    return view('mod-dashboard');
+    return view('mod-dashboard', [
+        'reported_users' => Report::where('reported_type', 'user')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get(),
+        'reported_posts' => Report::where('reported_type', 'post')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get(),
+        'reported_post_comments' => Report::where('reported_type', 'post-comment')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get(),
+        'reported_notes' => Report::where('reported_type', 'note')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get(),
+        'reported_wallpapers' => Report::where('reported_type', 'wallpaper')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get(),
+        'reported_profile_picture_frames' => Report::where('reported_type', 'profile-picture-frame')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get()
+    ]);
 })->name('mod.dashboard')->middleware('mod');
+
+Route::get('/mod/dashboard/{report}', function (Report $report) {
+    return view('report-show', [
+        'report' => $report
+    ]);
+})->name('report.show');
 
 Route::post('/make/creator', function () {
     if (auth()->user()?->role === 'admin') {
@@ -215,12 +227,28 @@ Route::post('/remove/mod', function () {
 
 Route::post('/ban/{user}', function (User $user) {
     // TODO ban
+    // TODO remove all reports if a person gets banned
 })->name('ban');
 
-Route::post('/report/{user}', function (User $user) {
-    // TODO report
-})->name('report');
 
 Route::post('/block/{user}', function (User $user) {
     // TODO block
 })->name('block');
+
+/* -------------------------------------------------------------------------- */
+/*                                   Report                                   */
+/* -------------------------------------------------------------------------- */
+
+
+Route::middleware('auth')->group(function () {
+    Route::post('/report/post/{post:slug}', [ReportController::class, 'store_post'])->name('report.post');
+    Route::post('/report/comment/{comment:slug}', [ReportController::class, 'store_comment'])->name('report.comment');
+    Route::post('/report/note/{note:slug}', [ReportController::class, 'store_note'])->name('report.note');
+    Route::post('/report/starshop/{any?}', [ReportController::class, 'store_starshop'])->name('report.starshop.product');
+    // Route::post('/report/wallpaper/{wallpaper}', [ReportController::class, 'store_wallpaper'])->name('report.wallpaper');
+    // Route::post('/report/ppf/{profile_picture_frame}', [ReportController::class, 'store_profile_picture_frame'])->name('report.profile_picture_frame');
+    Route::post('/report/user/{user:username}', [ReportController::class, 'store_user'])->name('report.user');
+});
+
+Route::post('/report/delete', [ReportController::class, 'destroy'])->name('report.delete')->middleware('mod');
+Route::post('/report/approve', [ReportController::class, 'approve'])->name('report.approve')->middleware('mod');

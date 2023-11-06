@@ -7,11 +7,13 @@
                 href="/u/{{ $post->author->username }}"><span class="font-bold">{{ $post->author->username }}</span></a>
         </h2>
 
-        <form action="{{ route('report', $post->id) }}" method="POST">
-            @csrf
+        <form action="{{ route('report.post', $post->slug) }}" method="POST">
+            @csrf @method('post')
+
+            <input type="hidden" name="reported_id" value="{{ $post->id }}">
 
             <x-input-label for="reason">Report for: </x-input-label>
-            <x-textarea class="w-full mt-2" name="reason" id="reason"></x-textarea>
+            <x-textarea class="w-full mt-2" name="reason" id="reason" required></x-textarea>
 
             <x-danger-button class="mt-4">Report</x-danger-button>
         </form>

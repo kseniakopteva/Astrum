@@ -44,7 +44,7 @@ class NoteController extends Controller
         $u->stars -= $price;
         $u->save();
 
-        $tags = array_map('trim', explode(',', $request['tags']));
+        $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
         foreach ($tags as $tag) {
             Tag::firstOrCreate(['name' => $tag, 'slug' => str_replace(' ', '_', $tag)])->save();
         }

@@ -40,4 +40,9 @@ class ProfilePictureFrame extends Model
                 ->exists();
         else return null;
     }
+
+    public function reports(ProfilePictureFrame $ppf)
+    {
+        return Report::where('reported_type', 'profile-picture-frame')->where('reported_id', $ppf->id)->latest()->get();
+    }
 }

@@ -15,7 +15,7 @@ class ProfilePictureFrameController extends Controller
     public function index()
     {
         return view('starshop.profile-picture-frames.index', [
-            'profile_picture_frames' => ProfilePictureFrame::all(),
+            'profile_picture_frames' => ProfilePictureFrame::where('removed', false)->get(),
         ]);
     }
 
@@ -52,7 +52,7 @@ class ProfilePictureFrameController extends Controller
 
         $profile_picture_frame = ProfilePictureFrame::create($attributes);
 
-        $tags = array_map('trim', explode(',', $request['tags']));
+        $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
         foreach ($tags as $tag) {
             Tag::firstOrCreate(['name' => $tag, 'slug' => str_replace(' ', '_', $tag)])->save();
         }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('excerpt');
             $table->text('body')->nullable();
             $table->string('image');
+            $table->boolean('removed')->default(false);
             $table->text('alt')->nullable();
             $table->timestamps();
         });

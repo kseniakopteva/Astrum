@@ -39,20 +39,20 @@
 
                         <x-slot name="content">
                             @if (auth()->check() && $note->author->id === auth()->user()->id)
-                                <form action="{{ route('note.delete', $note) }}" method="POST" class="px-1">
+                                <form action="{{ route('note.delete', $note) }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="id" value="{{ $note->id }}">
                                     {{-- <x-danger-button href="/note/delete"
                                         onclick="return confirm('Are you sure you want to delete this?')">Delete
                                         Note</x-danger-button> --}}
                                     <button onclick="return confirm('Are you sure you want to delete this?')"
-                                        class="block w-full px-4 py-2 text-left text-sm dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-red-400 hover:text-red-600">
+                                        class="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-red-400 hover:text-red-600">
                                         Delete Note
                                     </button>
                                 </form>
                             @elseif (auth()->check() && $note->author->id !== auth()->user()->id)
                                 <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'note-report')"
-                                    class="block w-full px-4 py-2 text-left text-sm dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-red-400 hover:text-red-600">
+                                    class="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-red-400 hover:text-red-600">
                                     {{ __('Report') }}
                                 </button>
                             @endif
@@ -64,9 +64,11 @@
                 <p>{{ $note->notebody }}</p>
             </div>
 
-            <ul class="flex mb-4">
-                <x-tags :item="$note"></x-tags>
-            </ul>
+            @if (!$note->tags->isEmpty())
+                <ul class="flex mb-4">
+                    <x-tags :item="$note"></x-tags>
+                </ul>
+            @endif
 
             <div class="flex items-center justify-between">
                 <span>{{ $note->created_at->diffForHumans() }}</span>

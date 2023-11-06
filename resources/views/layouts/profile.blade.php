@@ -3,12 +3,12 @@
 <x-main-layout :user="$user">
     <div class="max-w-7xl m-auto px-4">
         <header
-            class="mb-10 p-8 pb-4 bg-white dark:bg-neutral-800 rounded-b-md {{-- bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm --}}  max-w-4xl m-auto ">
+            class="mb-10 p-8 pb-4 bg-white backdrop-blur-md bg-opacity-70 dark:bg-opacity-90 dark:bg-neutral-800 rounded-b-md {{-- bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm --}}  max-w-4xl m-auto ">
             <div class="grid grid-cols-5">
 
                 {{-- Profile Image --}}
                 <div
-                    class=" col-span-2 sm:col-span-1 order-1 sm:order-1 profile-image-container mr-10 w-32 h-32 sm:w-full sm:h-auto">
+                    class=" col-span-2 sm:col-span-1 order-1 sm:order-1 profile-image-container mr-10 w-32 h-32 sm:w-full sm:h-auto self-start">
                     <img class="profile-image rounded-full shadow-md w-full h-auto"
                         src="{{ asset('storage/images/profile-pictures/' . $user->image) }}" alt=""
                         class="profile-picture" width="100" height="100"
@@ -40,18 +40,23 @@
 
                     </div>
 
-                    <div
-                        @if (!is_null($user->colour)) class="text-{{ $user->colour->lightcolor }} dark:text-{{ $user->colour->darkcolor }}" @endif>
+                    <div class="flex">
                         @if ($user->name)
-                            <h2 class="small-title inline-block mr-2">{{ $user->username }}</h2>
+                            <h2
+                                class="small-title inline-block mr-2 @if (!is_null($user->colour)) text-{{ $user->colour->lightcolor }} dark:text-{{ $user->colour->darkcolor }} @endif">
+                                {{ $user->username }}</h2>
+                        @endif
+                        @if ($user->isModOrMore($user))
+                            <div
+                                class="bg-red-500 bg-opacity-20 px-2 rounded-md @if (!is_null($user->colour)) text-{{ $user->colour->lightcolor }} dark:text-{{ $user->colour->darkcolor }} @else text-red-500 dark:text-red-500 @endif">
+                                @if ($user->isAdmin($user))
+                                    <span class="small-title"><?php echo strtoupper('Admin'); ?></span>
+                                @elseif ($user->isMod($user))
+                                    <span class="small-title"><?php echo strtoupper('Mod'); ?></span>
+                                @endif
+                            </div>
                         @endif
                     </div>
-
-                    @if ($user->isAdmin($user))
-                        <span class="small-title text-red-500"><?php echo strtoupper('Admin'); ?></span>
-                    @elseif ($user->isMod($user))
-                        <span class="small-title text-red-500"><?php echo strtoupper('Moderator'); ?></span>
-                    @endif
 
                     @if ($user->bio && strlen($user->bio) >= 150)
                         <div class="max-w-md mt-4 pr-4" x-data="{ open: false, maxLength: 150, fullText: '', slicedText: '' }" x-init="fullText = $el.firstElementChild.textContent.trim();
@@ -192,18 +197,18 @@
             {{-- Links Section --}}
             <section
                 class="mt-6 flex justify-center pt-3 border-t border-neutral-300
-                @if (!is_null($user->currentColour)) border-{{ $user->colour->lightcolor }} dark:border-{{ $user->colour->darkcolor }}" @endif>
+                @if (!is_null($user->colour)) border-{{ $user->colour->lightcolor }} dark:border-{{ $user->colour->darkcolor }} @endif">
                 <nav class="profile-nav">
-                <ul class="flex flex-wrap justify-center gap-1 sm:gap-3 lg:gap-6">
-                    <li><a href="{{ route('profile.index', $user->username) }}">Home</a></li>
-                    <li><a href="{{ route('profile.posts', $user->username) }}">Posts</a></li>
-                    <li><a href="{{ route('profile.notes', $user->username) }}">Notes</a></li>
-                    @if ($user->isCreatorOrMore($user))
-                        <li><a href="{{ route('profile.shop', $user->username) }}">Shop</a></li>
-                        <li><a href="{{ route('profile.faq', $user->username) }}">FAQ</a></li>
-                        <li><a href="{{ route('profile.about', $user->username) }}">About</a></li>
-                    @endif
-                </ul>
+                    <ul class="flex flex-wrap justify-center gap-1 sm:gap-3 lg:gap-6">
+                        <li><x-colored-link :user="$user" route="profile.index">Home</x-colored-link></li>
+                        <li><x-colored-link :user="$user" route="profile.posts">Posts</x-colored-link></li>
+                        <li><x-colored-link :user="$user" route="profile.notes">Notes</x-colored-link></li>
+                        @if ($user->isCreatorOrMore($user))
+                            <li><x-colored-link :user="$user" route="profile.shop">Shop</x-colored-link></li>
+                            <li><x-colored-link :user="$user" route="profile.faq">FAQ</x-colored-link></li>
+                            <li><x-colored-link :user="$user" route="profile.about">About</x-colored-link></li>
+                        @endif
+                    </ul>
                 </nav>
             </section>
         </header>

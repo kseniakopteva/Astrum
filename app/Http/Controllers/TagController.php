@@ -11,7 +11,7 @@ class TagController extends Controller
     public function index(Tag $tag)
     {
         return view('explore', [
-            'posts' =>  Post::latest()->whereHas('tags', fn ($q) => $q->where('tag_id', $tag->id))->paginate(10)
+            'posts' =>  Post::where('removed', false)->latest()->whereHas('tags', fn ($q) => $q->where('tag_id', $tag->id))->paginate(10)
         ]);
     }
 }

@@ -12,6 +12,7 @@ use App\Models\Note;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
+use App\Models\Wallpaper;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -65,7 +66,7 @@ class DatabaseSeeder extends Seeder
         }
 
         User::factory()->create([
-            'role' => 'creator',
+            'role' => 'mod',
             'username' => 'ksenia',
             'name' => 'Ksenia K',
             'password' => Hash::make('12345678')
@@ -73,5 +74,7 @@ class DatabaseSeeder extends Seeder
 
 
         Colour::factory(10)->create();
+
+        Wallpaper::factory(10)->create();
     }
 }

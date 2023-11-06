@@ -6,11 +6,13 @@
             Report User <span class="font-bold">{{ $user->username }}</span>
         </h2>
 
-        <form action="{{ route('report', $user->id) }}" method="POST">
+        <form action="{{ route('report.user', $user->username) }}" method="POST">
             @csrf
 
+            <input type="hidden" name="reported_id" value="{{ $user->id }}">
+
             <x-input-label for="reason">Report for: </x-input-label>
-            <x-textarea class="w-full mt-2" name="reason" id="reason"></x-textarea>
+            <x-textarea class="w-full mt-2" name="reason" id="reason" required></x-textarea>
 
             <x-danger-button class="mt-4">Report</x-danger-button>
         </form>
