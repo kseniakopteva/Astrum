@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('slug');
             $table->string('image');
             $table->unsignedInteger('width');
+            $table->float('percentage');
             $table->text('description');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->unsignedInteger('price');

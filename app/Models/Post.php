@@ -34,6 +34,11 @@ class Post extends Model
         return $this->hasMany(PostComment::class);
     }
 
+    public function post_frame()
+    {
+        return $this->belongsTo(PostFrame::class);
+    }
+
     public function likes()
     {
         return $this->belongsToMany(User::class, 'post_likes')->where('liked', '=', '1');

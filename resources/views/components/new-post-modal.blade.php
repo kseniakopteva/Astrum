@@ -29,6 +29,7 @@
                 <x-input-error :messages="$errors->get('title')" class="mt-2" />
             </div>
             <div>
+                <x-input-label>Image</x-input-label>
                 <x-image-upload class="mr-1 h-80 w-full"></x-image-upload>
                 <x-input-error :messages="$errors->get('image')" class="mt-2" />
             </div>
@@ -46,6 +47,48 @@
                 <x-text-input class="h-auto" id="tags" class="block w-full" type="text" name="tags"
                     placeholder="Tags (separate with comma)" value="{{ old('tags') }}" />
                 <x-input-error :messages="$errors->get('tags')" class="mt-2" />
+            </div>
+            <div>
+                <x-input-label class="pt-2">Post Frame</x-input-label>
+                @if (auth()->user()->ownedPostFrames->isEmpty())
+                    <span class="inline-block mt-1 italic text-neutral-500 dark:text-neutral-400">You don't have any
+                        post frames yet.
+                        Visit <a href="{{ route('starshop') }}" class="underline">Starshop</a>!</span>
+                @else
+                    <div class="grid grid-cols-4 md:grid-cols-5 mt-1 gap-5">
+                        <div
+                            class="border bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-md p-3 relative">
+                            <div class="w-full h-20 md:h-24 mb-4 grid place-content-center">
+                                <span class="text-xl">x</span>
+                            </div>
+                            None
+
+                            <div class="absolute top-0 left-0 w-full h-full cursor-default rounded-md"
+                                onclick="document.querySelector('{{ '#none' }}').checked = !document.querySelector('{{ '#none' }}').checked">
+                            </div>
+                            <input
+                                class="absolute bottom-2 right-2 border-2 border-lime-600 bg-lime-200 checked:bg-lime-700 rounded-full p-2"
+                                type="radio" checked name="frame" id="none" value="none" required>
+                        </div>
+                        @foreach (auth()->user()->ownedPostFrames as $frame)
+                            <div class="border border-neutral-300 rounded-md p-3 relative">
+                                <div class="w-full h-20 md:h-24 mb-4"
+                                    style="border-image: url('{{ asset('storage/images/post-frames/' . $frame->image) }}') {{ $frame->percentage }}% round;
+                    border-style: solid; border-width: {{ $frame->width }}px !important;">
+                                </div>
+                                {{ $frame->name }}
+
+                                <div class="absolute top-0 left-0 w-full h-full cursor-default rounded-md"
+                                    onclick="document.querySelector('{{ '#frame-' . $frame->id }}').checked = !document.querySelector('{{ '#frame-' . $frame->id }}').checked">
+                                </div>
+                                <input
+                                    class="absolute bottom-2 right-2 border-2 border-lime-600 bg-lime-200 checked:bg-lime-700 rounded-full p-2"
+                                    type="radio" name="frame" id="{{ 'frame-' . $frame->id }}"
+                                    value="{{ $frame->id }}">
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
             </div>
             <div class="pt-4 flex justify-between">
                 <x-secondary-button type="reset" onclick="deletePreview()">Clear</x-secondary-button>

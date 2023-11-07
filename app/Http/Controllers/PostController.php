@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\PostFrame;
 use App\Models\PostLike;
 use App\Models\Tag;
 use App\Models\User;
@@ -44,6 +45,22 @@ class PostController extends Controller
             'body' => 'max:4000',
             'alt' => 'max:200'
         ]);
+
+        if ($request->frame[0] != 'n') {
+            // add a post frame of id to this post.
+            $pf = PostFrame::find($request->frame[0]);
+
+            $existing = auth()->user()->ownedPostFrames()
+                ->where('post_frame_id', $pf->id)
+                ->where('post_frame_user.user_id', auth()->user()->id)->first();
+            $new_amount = $existing->pivot->amount - 1;
+            if ($new_amount != 0)
+                auth()->user()->ownedPostFrames()->updateExistingPivot($pf->id, ['amount' => $new_amount]);
+            else
+                auth()->user()->ownedPostFrames()->detach($pf->id);
+
+            $attributes['post_frame_id'] = $request->frame[0];
+        }
 
         $attributes['user_id'] = auth()->user()->id;
         $attributes['slug'] = $this->make_slug($attributes['title']);

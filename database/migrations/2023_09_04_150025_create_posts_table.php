@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('excerpt');
             $table->text('body')->nullable();
             $table->string('image');
+            $table->foreignId('post_frame_id')->nullable()->nullOnDelete();
             $table->boolean('removed')->default(false);
             $table->text('alt')->nullable();
             $table->timestamps();

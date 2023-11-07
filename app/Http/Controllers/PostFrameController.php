@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PostFrame;
 use App\Models\PostFrameLike;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 
@@ -18,8 +19,8 @@ class PostFrameController extends Controller
 
     public function show(PostFrame $post_frame)
     {
-        return view('starshop.profile-picture-frames.show', [
-            'post-frame' => $post_frame
+        return view('starshop.post-frames.show', [
+            'post_frame' => $post_frame
         ]);
     }
 
@@ -35,6 +36,7 @@ class PostFrameController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
             'description' => 'max:700',
             'width' => 'required',
+            'percentage' => 'required',
             'price' => 'required|max:10000'
         ]);
 
@@ -50,7 +52,14 @@ class PostFrameController extends Controller
 
         $post_frame = PostFrame::create($attributes);
 
-        return redirect()->route('starshop.post-frames.show', ['post_frame' => $post_frame->id])
+        $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
+        foreach ($tags as $tag) {
+            Tag::firstOrCreate(['name' => $tag, 'slug' => str_replace(' ', '_', $tag)])->save();
+        }
+        $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
+        $post_frame->tags()->sync($tags);
+
+        return redirect()->route('starshop.post-frames.show', ['post_frame' => $post_frame->slug])
             ->with('success', 'You have successfully created a post frame!');
     }
 
@@ -79,5 +88,54 @@ class PostFrameController extends Controller
             }
         }
         return back();
+    }
+
+    public function buy(Request $request)
+    {
+        if (!auth()->check())
+            return back();
+
+        $user = auth()->user();
+
+        $pf = PostFrame::find($request->id);
+
+        if ($user->stars < $pf->price) {
+            return back()
+                ->with('success', 'You don\'t have enough money!');
+        }
+
+        if (!$user->ownedPostFrames()
+            ->where('post_frame_id', $pf->id)
+            ->where('post_frame_user.user_id', $user->id)
+            ->exists()) {
+
+            $user->ownedPostFrames()->attach([
+                'post_frame_id' => $pf->id
+            ]);
+        } else {
+            $existing = $user->ownedPostFrames()
+                ->where('post_frame_id', $pf->id)
+                ->where('post_frame_user.user_id', $user->id)->first();
+            $new_amount = $existing->pivot->amount + 1;
+
+            $user->ownedPostFrames()->updateExistingPivot($pf->id, ['amount' => $new_amount]);
+        }
+
+        $user->stars -= $pf->price;
+        $user->save();
+
+        return back()
+            ->with('success', 'You have successfully purchased a post frame!');
+    }
+
+    public function destroy(Request $request)
+    {
+        $pf = PostFrame::find($request->id);
+        if (auth()->user()->id === $pf->author->id) {
+            $pf->delete();
+            return redirect('/starshop');
+        } else {
+            return redirect()->route('explore');
+        }
     }
 }

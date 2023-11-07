@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('post_frame_user', function (Blueprint $table) {
+        Schema::create('post_frame_tag', function (Blueprint $table) {
             $table->id();
             $table->integer('post_frame_id')->unsigned();
-            $table->integer('user_id')->unsigned();
-            $table->unsignedInteger('amount')->default(1);
-            $table->timestamps();
+            $table->integer('tag_id')->unsigned();
         });
     }
 
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('post_frame_user');
+        Schema::dropIfExists('post_frame_tag');
     }
 };

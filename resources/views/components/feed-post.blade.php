@@ -1,7 +1,12 @@
 @props(['post'])
 
 <article id="{{ $post->slug }}"
-    {{ $attributes->merge(['class' => 'post-border first-letter:flex flex-col justify-between border bg-white border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-lg p-4 pt-4 mb-4 break-inside-avoid']) }}>
+    {{ $attributes->merge([
+        'class' =>
+            'first-letter:flex flex-col justify-between border bg-white border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-lg p-4 pt-4 mb-4 break-inside-avoid',
+    ]) }}
+    @if (!is_null($post->post_frame)) style="border-image: url('{{ asset('storage/images/post-frames/' . $post->post_frame->image) }}') {{ $post->post_frame->percentage }}% round;
+                    border-style: solid; border-width: {{ $post->post_frame->width }}px !important;" @endif>
     <div class="">
         <a class="" href="/u/{{ strtolower($post->author->username) }}/posts/{{ $post->slug }}">
             <div class="flex justify-between items-center">

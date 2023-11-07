@@ -7,5 +7,6 @@
         <x-dashboard-section :reported_arr="$reported_notes" type="note" />
         <x-dashboard-section :reported_arr="$reported_wallpapers" type="wallpaper" />
         <x-dashboard-section :reported_arr="$reported_profile_picture_frames" type="profile-picture-frame" />
+        <x-dashboard-section :reported_arr="$reported_post_frames" type="post-frame" />
     </div>
 </x-main-layout>

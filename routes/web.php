@@ -30,8 +30,6 @@ Route::middleware('auth')->group(function () {
             'user' => auth()->user(),
             'posts' => Post::where('removed', false)->latest()->whereHas('author', fn ($q) => $q->where('user_id', auth()->user()->id))->paginate(20),
             'notes' => Note::where('removed', false)->latest()->where('removed', '=', 0)->whereHas('author', fn ($q) => $q->where('user_id', auth()->user()->id))->get()->take(20),
-            // 'notes' => auth()->user()->notes()->latest()->get()->take(20),
-            // 'notes' => ['note1', 'note2'],
             'followers' => auth()->user()->followers,
             'following' => auth()->user()->following,
         ]);
@@ -104,10 +102,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/notes/{note}/like', [NoteController::class, 'toggleLike'])->name('note.like');
 });
 
-
 Route::post('/u/{user:id}/faq', [FAQuestionController::class, 'store']);
-
-
 
 Route::get('/explore', [PostController::class, 'explore'])->name('explore');
 
@@ -126,21 +121,22 @@ Route::get('/starshop', [StarshopController::class, 'redirect'])->name('starshop
 Route::middleware('auth')->group(function () {
     Route::get('/starshop', [StarshopController::class, 'index'])->name('starshop');
 
-    Route::get('/starshop/wallpapers/{wallpaper}', [WallpaperController::class, 'show'])->name('starshop.wallpapers.show');
+    Route::get('/starshop/wallpapers/{wallpaper:slug}', [WallpaperController::class, 'show'])->name('starshop.wallpapers.show');
     Route::get('/starshop/wallpapers', [WallpaperController::class, 'index'])->name('starshop.wallpapers');
     Route::post('/starshop/wallpapers/store', [WallpaperController::class, 'store'])->name('starshop.wallpapers.store');
     Route::post('/starshop/wallpapers/delete', [WallpaperController::class, 'destroy'])->name('wallpaper.delete');
 
-    Route::get('/starshop/profile-picture-frames/{profile_picture_frame}', [ProfilePictureFrameController::class, 'show'])->name('starshop.profile-picture-frames.show');
+    Route::get('/starshop/profile-picture-frames/{profile_picture_frame:slug}', [ProfilePictureFrameController::class, 'show'])->name('starshop.profile-picture-frames.show');
     Route::get('/starshop/profile-picture-frames', [ProfilePictureFrameController::class, 'index'])->name('starshop.profile-picture-frames');
     Route::post('/starshop/profile-picture-frames/store', [ProfilePictureFrameController::class, 'store'])->name('starshop.profile-picture-frames.store');
     Route::post('/starshop/profile-picture-frames/delete', [ProfilePictureFrameController::class, 'destroy'])->name('profile-picture-frame.delete');
 
     Route::get('/starshop/colours', [ColourController::class, 'index'])->name('starshop.colours');
 
-    // Route::get('/starshop/post-frames/{post_frame}', [PostFrameController::class, 'show'])->name('starshop.post-frames.show');
-    // Route::get('/starshop/post-frames', [PostFrameController::class, 'index'])->name('starshop.post-frames');
-    // Route::post('/starshop/post-frames/store', [PostFrameController::class, 'store'])->name('starshop.post-frames.store');
+    Route::get('/starshop/post-frames/{post_frame:slug}', [PostFrameController::class, 'show'])->name('starshop.post-frames.show');
+    Route::get('/starshop/post-frames', [PostFrameController::class, 'index'])->name('starshop.post-frames');
+    Route::post('/starshop/post-frames/store', [PostFrameController::class, 'store'])->name('starshop.post-frames.store');
+    Route::post('/starshop/post-frames/delete', [PostFrameController::class, 'destroy'])->name('post-frame.delete');
 });
 
 Route::middleware('auth')->group(function () {
@@ -153,7 +149,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/starshop/wallpapers/buy', [WallpaperController::class, 'buy'])->name('starshop.wallpapers.buy');
     Route::post('/starshop/profile-picture-frames/buy', [ProfilePictureFrameController::class, 'buy'])->name('starshop.profile-picture-frames.buy');
     Route::post('/starshop/colours/buy', [ColourController::class, 'buy'])->name('starshop.colours.buy');
-    // Route::post('/starshop/post-frames/{post_frame}/buy', [StarshopController::class, 'postFrameToggleLike'])->name('post-frame.like');
+    Route::post('/starshop/post-frames/buy', [PostFrameController::class, 'buy'])->name('starshop.post-frames.buy');
 });
 
 Route::get('/help', function () {
@@ -171,7 +167,8 @@ Route::get('/mod/dashboard', function () {
         'reported_post_comments' => Report::where('reported_type', 'post-comment')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get(),
         'reported_notes' => Report::where('reported_type', 'note')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get(),
         'reported_wallpapers' => Report::where('reported_type', 'wallpaper')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get(),
-        'reported_profile_picture_frames' => Report::where('reported_type', 'profile-picture-frame')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get()
+        'reported_profile_picture_frames' => Report::where('reported_type', 'profile-picture-frame')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get(),
+        'reported_post_frames' => Report::where('reported_type', 'post-frame')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get()
     ]);
 })->name('mod.dashboard')->middleware('mod');
 
@@ -245,8 +242,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/report/comment/{comment:slug}', [ReportController::class, 'store_comment'])->name('report.comment');
     Route::post('/report/note/{note:slug}', [ReportController::class, 'store_note'])->name('report.note');
     Route::post('/report/starshop/{any?}', [ReportController::class, 'store_starshop'])->name('report.starshop.product');
-    // Route::post('/report/wallpaper/{wallpaper}', [ReportController::class, 'store_wallpaper'])->name('report.wallpaper');
-    // Route::post('/report/ppf/{profile_picture_frame}', [ReportController::class, 'store_profile_picture_frame'])->name('report.profile_picture_frame');
     Route::post('/report/user/{user:username}', [ReportController::class, 'store_user'])->name('report.user');
 });
 

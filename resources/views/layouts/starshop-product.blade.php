@@ -59,14 +59,33 @@
                     </x-dropdown>
                     <div class="flex space-x-2 justify-end items-center">
                         <p class="text-lg"><x-price>{{ $item->price }}</x-price></p>
-                        @if (!auth()->user()->hasItem($item->id, $type))
-                            <form action="{{ route('starshop.' . $type . 's.buy') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="id" value="{{ $item->id }}">
-                                <x-primary-button>Buy</x-primary-button>
-                            </form>
+                        @if ($type != 'post-frame')
+                            @if (!auth()->user()->hasItem($item->id, $type))
+                                <form action="{{ route('starshop.' . $type . 's.buy') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="id" value="{{ $item->id }}">
+                                    <x-primary-button>Buy</x-primary-button>
+                                </form>
+                            @else
+                                <x-secondary-button disabled>Bought</x-secondary-button>
+                            @endif
                         @else
-                            <x-secondary-button disabled>Bought</x-secondary-button>
+                            @if (
+                                is_null(auth()->user()->postFrameAmount($item->id)) &&
+                                    auth()->user()->postFrameAmount($item->id) <= 0)
+                                <form action="{{ route('starshop.' . $type . 's.buy') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="id" value="{{ $item->id }}">
+                                    <x-primary-button>Buy</x-primary-button>
+                                </form>
+                            @else
+                                <form action="{{ route('starshop.' . $type . 's.buy') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="id" value="{{ $item->id }}">
+                                    <x-secondary-button type="submit">Buy another
+                                        ({{ auth()->user()->postFrameAmount($item->id) }})</x-secondary-button>
+                                </form>
+                            @endif
                         @endif
                     </div>
                 </div>

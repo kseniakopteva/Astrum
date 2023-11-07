@@ -18,6 +18,14 @@
                 <x-input-label for="width">Width</x-input-label>
                 <input type="number" name="width" id="width" value="{{ old('width') }}"
                     class="block border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
+                <x-input-error :messages="$errors->get('width')" class="mt-2" />
+            </div>
+
+            <div>
+                <x-input-label for="percentage">Percentage of image for frame</x-input-label>
+                <input type="number" step="0.01" name="percentage" id="percentage" value="{{ old('percentage') }}"
+                    class="block border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
+                <x-input-error :messages="$errors->get('percentage')" class="mt-2" />
             </div>
 
             <div>
@@ -33,10 +41,12 @@
                 <x-input-error :messages="$errors->get('price')" class="mt-2" />
             </div>
 
-            <br>
-            Tags here
-            {{-- TODO: Tags --}}
-            <br>
+            <div class="pb-2">
+                <x-input-label for="tags">Tags</x-input-label>
+                <x-text-input class="h-auto" id="tags" class="block w-full" type="text" name="tags"
+                    placeholder="Tags (separate with comma)" value="{{ old('tags') }}" />
+                <x-input-error :messages="$errors->get('tags')" class="mt-2" />
+            </div>
 
             <x-primary-button>Submit</x-primary-button>
         </form>

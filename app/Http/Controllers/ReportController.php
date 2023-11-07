@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Note;
 use App\Models\Post;
 use App\Models\PostComment;
+use App\Models\PostFrame;
 use App\Models\ProfilePictureFrame;
 use App\Models\Report;
 use App\Models\User;
@@ -68,13 +69,19 @@ class ReportController extends Controller
             if ($this->store($request, 'wallpaper')) {
 
                 $wallpaper = Wallpaper::find($request['reported_id']);
-                return $this->redir('starshop.wallpapers.show', ['wallpaper' => $wallpaper->id]);
+                return $this->redir('starshop.wallpapers.show', ['wallpaper' => $wallpaper->slug]);
             }
         } elseif ($request->type == 'profile-picture-frame') {
             if ($this->store($request, 'profile-picture-frame')) {
 
                 $profile_picture_frame = ProfilePictureFrame::find($request['reported_id']);
-                return $this->redir('starshop.profile-picture-frames.show', ['profile_picture_frame' => $profile_picture_frame->id]);
+                return $this->redir('starshop.profile-picture-frames.show', ['profile_picture_frame' => $profile_picture_frame->slug]);
+            }
+        } elseif ($request->type == 'post-frame') {
+            if ($this->store($request, 'post-frame')) {
+
+                $post_frame = PostFrame::find($request['reported_id']);
+                return $this->redir('starshop.post-frames.show', ['post_frame' => $post_frame->slug]);
             }
         }
     }

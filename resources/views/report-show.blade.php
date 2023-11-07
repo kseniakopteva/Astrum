@@ -41,6 +41,11 @@
             $route = 'starshop.profile-picture-frames.show';
             $route_attr['profile_picture_frame'] = $reported->id;
             break;
+        case 'post-frame':
+            $name = $reported->name;
+            $route = 'starshop.post-frames.show';
+            $route_attr['post_frame'] = $reported->id;
+            break;
     }
 @endphp
 

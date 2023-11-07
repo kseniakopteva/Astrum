@@ -20,6 +20,9 @@
         case 'profile-picture-frame':
             $title = 'Reported Profile Picture Frames';
             break;
+        case 'post-frame':
+            $title = 'Reported Post Frames';
+            break;
     }
 
     $class = '\App\Models\\' . str_replace(' ', '', ucwords(str_replace('-', ' ', $type)));
@@ -78,6 +81,11 @@
                             $name = $reported->name;
                             $route = 'starshop.profile-picture-frames.show';
                             $route_attr['profile_picture_frame'] = $reported->id;
+                            break;
+                        case 'post-frame':
+                            $name = $reported->name;
+                            $route = 'starshop.post-frames.show';
+                            $route_attr['post_frame'] = $reported->id;
                             break;
                     }
                 @endphp

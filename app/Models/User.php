@@ -120,6 +120,20 @@ class User extends Authenticatable
         return $this->ownedColours()->where('colour_id', $id)->exists();
     }
 
+
+    public function ownedPostFrames()
+    {
+        return $this->belongsToMany(PostFrame::class, 'post_frame_user')->withPivot(['amount']);
+    }
+    public function postFrameAmount($id)
+    {
+        if ($this->ownedPostFrames()->where('post_frame_id', $id)->exists())
+            return $this->ownedPostFrames()->where('post_frame_id', $id)->first()->pivot->amount;
+        else
+            return null;
+    }
+
+
     public function hasItem($id, $type)
     {
         switch ($type) {
