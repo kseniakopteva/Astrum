@@ -3,11 +3,13 @@
         <div class="col-span-3 md:col-span-2">
             <div class="flex">
                 <h2 class="medium-title mb-4 dark:text-white">Recent Posts</h2>
-                <div>
-                    @if (auth()->id() === $user->id)
-                        <x-new-post-modal></x-new-post-modal>
-                    @endif
-                </div>
+                @if (!auth()->user()->isBanned(auth()->user()))
+                    <div>
+                        @if (auth()->id() === $user->id)
+                            <x-new-post-modal></x-new-post-modal>
+                        @endif
+                    </div>
+                @endif
             </div>
 
             <div class="masonry">
@@ -23,8 +25,10 @@
         <div class="hidden md:block">
             <div class="flex">
                 <h2 class="medium-title mb-4 dark:text-white">Recent Notes</h2>
-                @if (auth()->id() === $user->id)
-                    <div><x-new-note-modal></x-new-note-modal></div>
+                @if (!auth()->user()->isBanned(auth()->user()))
+                    @if (auth()->id() === $user->id)
+                        <div><x-new-note-modal></x-new-note-modal></div>
+                    @endif
                 @endif
             </div>
             <div class="space-y-4 mb-4">

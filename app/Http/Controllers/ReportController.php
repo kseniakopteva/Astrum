@@ -94,9 +94,18 @@ class ReportController extends Controller
     public function destroy(Request $request)
     {
         $report = Report::find($request->report_id);
+
+        $type = $request->type;
+        $class = '\App\Models\\' . str_replace(' ', '', ucwords(str_replace('-', ' ', $type)));
+        $reported = $class::find($report->reported_id);
+
         if (auth()->user()->isModOrMore(auth()->user())) {
-            $report->resolved = true;
-            $report->save();
+            if (is_null($reported)) {
+                $report->delete();
+            } else {
+                $report->resolved = true;
+                $report->save();
+            }
             return back();
         } else {
             return redirect()->route('explore');

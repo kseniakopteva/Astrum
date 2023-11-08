@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ban;
 use App\Models\Tag;
 use App\Models\Wallpaper;
 use App\Models\WallpaperLike;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
@@ -13,8 +15,13 @@ class WallpaperController extends Controller
 {
     public function index()
     {
+        $banned_users = Ban::where('start_date', '<', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
+            ->where('end_date', '>', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())->pluck('user_id');
+
+        $w = Wallpaper::whereNotIn('user_id', $banned_users)->where('removed', false)->get();
+
         return view('starshop.wallpapers.index', [
-            'wallpapers' => Wallpaper::all()
+            'wallpapers' => $w
         ]);
     }
 
@@ -31,6 +38,9 @@ class WallpaperController extends Controller
     }
     public function store(Request $request)
     {
+        if (auth()->user()->isBanned(auth()->user()))
+            return back()->with('success', 'You can\'t create because you are banned.');
+
         $attributes = $request->validate([
             'name' => 'required|max:100',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',

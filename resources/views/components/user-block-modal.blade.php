@@ -6,7 +6,7 @@
             Block User <span class="font-bold">{{ $user->username }}</span>
         </h2>
 
-        <form action="{{ route('ban', $user->id) }}" method="POST">
+        <form action="{{ route('block', $user->id) }}" method="POST">
             @csrf
 
             <x-input-label>Are you sure you want to block {{ $user->username }}?</x-input-label>

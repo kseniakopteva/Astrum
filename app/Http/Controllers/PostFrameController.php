@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ban;
 use App\Models\PostFrame;
 use App\Models\PostFrameLike;
 use App\Models\Tag;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 
@@ -12,8 +14,13 @@ class PostFrameController extends Controller
 {
     public function index()
     {
+        $banned_users = Ban::where('start_date', '<', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
+            ->where('end_date', '>', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())->pluck('user_id');
+
+        $pf = PostFrame::whereNotIn('user_id', $banned_users)->where('removed', false)->get();
+
         return view('starshop.post-frames.index', [
-            'post_frames' => PostFrame::all()
+            'post_frames' => $pf
         ]);
     }
 
@@ -31,6 +38,9 @@ class PostFrameController extends Controller
 
     public function store(Request $request)
     {
+        if (auth()->user()->isBanned(auth()->user()))
+            return back()->with('success', 'You can\'t create because you are banned.');
+
         $attributes = $request->validate([
             'name' => 'required|max:100',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',

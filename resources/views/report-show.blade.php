@@ -1,6 +1,7 @@
 @php
 
-    $class = '\App\Models\\' . str_replace(' ', '', ucwords(str_replace('-', ' ', $report->reported_type)));
+    $pretty_type = str_replace(' ', '', ucwords(str_replace('-', ' ', $report->reported_type)));
+    $class = '\App\Models\\' . $pretty_type;
 
     $reported = $class::find($report->reported_id);
     $reportee = \App\Models\User::find($report->user_id);
@@ -64,7 +65,7 @@
 
 
             <div class="relative">
-                <span class="text-rose-500">Reported:</span> <a
+                <span class="text-rose-500">Reported:</span> <span>[{{ $pretty_type }}]</span> <a
                     href="{{ route($route, $route_attr) }}">{{ $name }}</a>
                 <br>
                 <span class="text-rose-500">Reported by:</span> <a
@@ -129,7 +130,7 @@
             </div>
         </div>
 
-        <h2 class="medium-title">Other Reports Of This
+        <h2 class="medium-title mb-2">Other Reports Of This
             {{ str_replace(' ', '', ucwords(str_replace('-', ' ', $report->reported_type))) }}</h2>
 
         @php
@@ -140,7 +141,24 @@
                 ->orderBy('created_at', 'ASC')
                 ->get();
         @endphp
-        <x-dashboard-section :reported_arr="$other_reports" type="{{ $report->reported_type }}" />
+        <x-dashboard-section cols="4" :reported_arr="$other_reports" type="{{ $report->reported_type }}" />
+
+        <h2 class="medium-title mb-2">Other Reports mentioning
+            @if ($report->reported_type != 'user')
+                <a
+                    href="{{ route('profile.index', $reported->author->username) }}">{{ $reported->author->username }}</a>
+            @else
+                <a href="{{ route('profile.index', $reported->username) }}">{{ $reported->username }}</a>
+            @endif
+        </h2>
+
+        @php
+            $resolved_reports = \App\Models\Report::where('reported_type', '!=', $report->reported_type)
+                ->orderBy('resolved', 'ASC')
+                ->orderBy('created_at', 'ASC')
+                ->get();
+        @endphp
+        <x-dashboard-section cols="4" :reported_arr="$resolved_reports" type="{{ $report->reported_type }}" />
 
     </div>
 </x-main-layout>

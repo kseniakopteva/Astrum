@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BanController;
 use App\Http\Controllers\ColourController;
 use App\Http\Controllers\FAQuestionController;
 use App\Http\Controllers\FollowController;
@@ -13,10 +14,12 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StarshopController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\WallpaperController;
+use App\Models\Ban;
 use App\Models\Note;
 use App\Models\Post;
 use App\Models\Report;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
 /* -------------------------------------------------------------------------- */
@@ -71,8 +74,13 @@ Route::get('/', function () {
     if (!auth()->check())
         return redirect()->route('explore')->with('success', 'Log in to access your feed!');
 
-    $userIds = auth()->user()->following()->pluck('follows.following_id');
-    $userIds[] = auth()->user()->id;
+
+    $banned_users = Ban::where('start_date', '<', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
+        ->where('end_date', '>', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())->pluck('user_id');
+
+    $userIds = auth()->user()->following()->whereNotIn('users.id', $banned_users)->pluck('follows.following_id');
+    if (!auth()->user()->isBanned(auth()->user()))
+        $userIds[] = auth()->user()->id;
 
     $posts = Post::whereIn('user_id', $userIds)->get();
     $notes = Note::whereIn('user_id', $userIds)->get();
@@ -222,11 +230,8 @@ Route::post('/remove/mod', function () {
     return back()->with('success', 'User ' . $userToRemMod->username . ' is now NOT a moderator!');
 })->name('remove.mod');
 
-Route::post('/ban/{user}', function (User $user) {
-    // TODO ban
-    // TODO remove all reports if a person gets banned
-})->name('ban');
-
+Route::post('/ban/user', [BanController::class, 'store'])->name('ban');
+Route::post('/unban/user', [BanController::class, 'destroy'])->name('unban');
 
 Route::post('/block/{user}', function (User $user) {
     // TODO block

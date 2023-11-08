@@ -11,6 +11,9 @@ class PostCommentController extends Controller
 {
     public function store(Post $post)
     {
+        if (auth()->user()->isBanned(auth()->user()))
+            return back()->with('success', 'You can\'t write comments because you are banned.');
+
         request()->validate([
             'body' => 'required|max:4000'
         ]);

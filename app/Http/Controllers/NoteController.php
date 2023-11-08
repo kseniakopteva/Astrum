@@ -22,6 +22,9 @@ class NoteController extends Controller
 
     public function store(Request $request, Note $note)
     {
+        if (auth()->user()->isBanned(auth()->user()))
+            return back()->with('success', 'You can\'t write notes because you are banned.');
+
         $attributes = $request->validate([
             'notebody' => 'max:600|required',
         ]);

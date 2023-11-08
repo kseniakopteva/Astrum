@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -213,5 +215,13 @@ class User extends Authenticatable
     public function reports(User $u)
     {
         return Report::where('reported_type', 'user')->where('reported_id', $u->id)->latest()->get();
+    }
+
+    public function isBanned(User $user)
+    {
+        return Ban::where('user_id', $user->id)
+            ->where('start_date', '<', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
+            ->where('end_date', '>', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
+            ->exists();
     }
 }

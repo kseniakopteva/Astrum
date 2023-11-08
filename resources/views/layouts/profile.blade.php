@@ -17,6 +17,13 @@
                         <img class="profile-image-overlay"
                             src="{{ asset('storage/images/profile-picture-frames/' . $user->currentProfilePictureFrame->image) }}">
                     @endif
+                    @if ($user->isBanned($user))
+                        <div class="profile-image-overlay flex justify-center items-center">
+                            <div class=" -rotate-12 bg-red-200 text-red-500 text-xl border-2 border-red-500 px-3 py-1">
+                                BANNED
+                            </div>
+                        </div>
+                    @endif
 
                 </div>
                 {{-- Personal Info Section --}}
@@ -57,7 +64,6 @@
                             </div>
                         @endif
                     </div>
-
                     @if ($user->bio && strlen($user->bio) >= 150)
                         <div class="max-w-md mt-4 pr-4" x-data="{ open: false, maxLength: 150, fullText: '', slicedText: '' }" x-init="fullText = $el.firstElementChild.textContent.trim();
                         slicedText = fullText.slice(0, maxLength) + '...'">
@@ -115,11 +121,22 @@
                                                 {{ __('Block') }}
                                             </button>
                                             @if (in_array(auth()->user()->role, ['mod', 'admin']))
-                                                <button x-data=""
-                                                    x-on:click.prevent="$dispatch('open-modal', 'ban')"
-                                                    class="block w-full px-4 py-2 text-left text-sm dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-neutral-700">
-                                                    {{ __('Ban User') }}
-                                                </button>
+                                                @if (!$user->isBanned($user))
+                                                    <button x-data=""
+                                                        x-on:click.prevent="$dispatch('open-modal', 'ban')"
+                                                        class="block w-full px-4 py-2 text-left text-sm dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-neutral-700">
+                                                        {{ __('Ban User') }}
+                                                    </button>
+                                                @else
+                                                    <form method="POST" action="{{ route('unban') }}">
+                                                        @csrf
+                                                        <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                                        <button type="submit"
+                                                            onclick="return confirm('Are you sure you want to unban this user?')"
+                                                            class="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out">
+                                                            Unban</button>
+                                                    </form>
+                                                @endif
                                                 @admin
                                                     @if ($user->role == 'user')
                                                         <form method="POST" action="{{ route('make.creator') }}">
@@ -195,8 +212,15 @@
 
             </div>
             {{-- Links Section --}}
+            {{-- @if ($user->isBanned($user) && auth()->user()->id !== $user->id)
+                <style>
+                    .profile-links a {
+                        pointer-events: none;
+                    }
+                </style>
+            @endif --}}
             <section
-                class="mt-6 flex justify-center pt-3 border-t border-neutral-300
+                class="profile-links mt-6 flex justify-center pt-3 border-t border-neutral-300
                 @if (!is_null($user->colour)) border-{{ $user->colour->lightcolor }} dark:border-{{ $user->colour->darkcolor }} @endif">
                 <nav class="profile-nav">
                     <ul class="flex flex-wrap justify-center gap-1 sm:gap-3 lg:gap-6">
@@ -212,7 +236,16 @@
                 </nav>
             </section>
         </header>
-        {{ $slot }}
+        @if ($user->isBanned($user) && auth()->user()->id !== $user->id)
+            <div class="flex justify-center">
+                <div
+                    class="text-lg italic text-red-500 py-2 px-4 bg-white dark:bg-neutral-800 rounded-md border border-neutral-300 dark:border-neutral-700 inline-block">
+                    {{ $user->username }} is banned.
+                </div>
+            </div>
+        @else
+            {{ $slot }}
+        @endif
     </div>
     <script>
         function deletePreview() {
@@ -228,7 +261,9 @@
     </script>
     <x-follow-modal name="followers" :users="$followers"></x-follow-modal>
     <x-follow-modal name="following" :users="$following"></x-follow-modal>
-    <x-user-ban-modal :user="$user"></x-user-ban-modal>
+    @if (in_array(auth()->user()->role, ['mod', 'admin']))
+        <x-user-ban-modal :user="$user"></x-user-ban-modal>
+    @endif
     <x-user-block-modal :user="$user"></x-user-block-modal>
     <x-user-report-modal :user="$user"></x-user-report-modal>
 

@@ -13,7 +13,7 @@
             </div>
         @endif
     </a>
-    <a href="{{ route('starshop.' . $slug . '.show', $item->id) }}">
+    <a href="{{ route('starshop.' . $slug . '.show', $item->slug) }}">
         <h3 class="small-title">{{ $item->name }}</h3>
     </a>
     <p class="my-2">

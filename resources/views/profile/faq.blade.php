@@ -2,7 +2,9 @@
 
     <section class="max-w-3xl m-auto mb-4"
         @if ($errors->isEmpty()) x-data="{ open: false }" @else x-data="{open:true}" @endif>
-        @if (auth()->check() && $user->id === auth()->user()->id)
+        @if (auth()->check() &&
+                $user->id === auth()->user()->id &&
+                !auth()->user()->isBanned(auth()->user()))
             <form action="/u/{{ $user->id }}/faq" method="post"
                 class="bg-neutral-100 border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-700 p-4 rounded-md">
                 @csrf

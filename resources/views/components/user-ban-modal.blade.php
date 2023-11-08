@@ -6,8 +6,10 @@
             Ban User <span class="font-bold">{{ $user->username }}</span>
         </h2>
 
-        <form action="{{ route('ban', $user->id) }}" method="POST">
-            @csrf
+        <form action="{{ route('ban') }}" method="POST">
+            @csrf @method('post')
+
+            <input type="hidden" name="user_id" value="{{ $user->id }}">
 
             <x-input-label for="duration">Ban for: </x-input-label>
             <select name="duration" id="duration"

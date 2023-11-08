@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ban;
 use App\Models\ProfilePictureFrame;
 use App\Models\ProfilePictureFrameLike;
 use App\Models\Tag;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
@@ -14,8 +16,13 @@ class ProfilePictureFrameController extends Controller
 
     public function index()
     {
+        $banned_users = Ban::where('start_date', '<', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
+            ->where('end_date', '>', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())->pluck('user_id');
+
+        $ppf = ProfilePictureFrame::whereNotIn('user_id', $banned_users)->where('removed', false)->get();
+
         return view('starshop.profile-picture-frames.index', [
-            'profile_picture_frames' => ProfilePictureFrame::where('removed', false)->get(),
+            'profile_picture_frames' => $ppf
         ]);
     }
 
@@ -33,6 +40,9 @@ class ProfilePictureFrameController extends Controller
 
     public function store(Request $request)
     {
+        if (auth()->user()->isBanned(auth()->user()))
+            return back()->with('success', 'You can\'t create because you are banned.');
+
         $attributes = $request->validate([
             'name' => 'required|max:100',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',

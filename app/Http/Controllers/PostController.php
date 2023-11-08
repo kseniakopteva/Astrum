@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ban;
 use App\Models\Post;
 use App\Models\PostFrame;
 use App\Models\PostLike;
 use App\Models\Tag;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -17,9 +19,12 @@ class PostController extends Controller
 {
     public function explore()
     {
+        $banned_users = Ban::where('start_date', '<', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
+            ->where('end_date', '>', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())->pluck('user_id');
+
+        $posts = Post::where('removed', false)->whereNotIn('user_id', $banned_users)->latest()->filter(request(['search']))->paginate(100)->withQueryString();
         return view('explore', [
-            // 'posts' =>  Post::inRandomOrder()->latest()->filter(request(['search']))->paginate(30)->withQueryString()
-            'posts' =>  Post::where('removed', false)->latest()->filter(request(['search']))->paginate(100)->withQueryString()
+            'posts' => $posts
         ]);
     }
 
@@ -32,6 +37,9 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
+        if (auth()->user()->isBanned(auth()->user()))
+            return back()->with('success', 'You can\'t post because you are banned.');
+
         $u = auth()->user();
         $price = 10;
         if ($u->stars < $price) {
@@ -46,20 +54,22 @@ class PostController extends Controller
             'alt' => 'max:200'
         ]);
 
-        if ($request->frame[0] != 'n') {
-            // add a post frame of id to this post.
-            $pf = PostFrame::find($request->frame[0]);
+        if (!is_null($request->frame)) {
+            if ($request->frame[0] != 'n') {
+                // add a post frame of id to this post.
+                $pf = PostFrame::find($request->frame[0]);
 
-            $existing = auth()->user()->ownedPostFrames()
-                ->where('post_frame_id', $pf->id)
-                ->where('post_frame_user.user_id', auth()->user()->id)->first();
-            $new_amount = $existing->pivot->amount - 1;
-            if ($new_amount != 0)
-                auth()->user()->ownedPostFrames()->updateExistingPivot($pf->id, ['amount' => $new_amount]);
-            else
-                auth()->user()->ownedPostFrames()->detach($pf->id);
+                $existing = auth()->user()->ownedPostFrames()
+                    ->where('post_frame_id', $pf->id)
+                    ->where('post_frame_user.user_id', auth()->user()->id)->first();
+                $new_amount = $existing->pivot->amount - 1;
+                if ($new_amount != 0)
+                    auth()->user()->ownedPostFrames()->updateExistingPivot($pf->id, ['amount' => $new_amount]);
+                else
+                    auth()->user()->ownedPostFrames()->detach($pf->id);
 
-            $attributes['post_frame_id'] = $request->frame[0];
+                $attributes['post_frame_id'] = $request->frame[0];
+            }
         }
 
         $attributes['user_id'] = auth()->user()->id;
