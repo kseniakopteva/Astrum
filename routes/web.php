@@ -14,12 +14,10 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StarshopController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\WallpaperController;
-use App\Models\Ban;
 use App\Models\Note;
 use App\Models\Post;
 use App\Models\Report;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
 /* -------------------------------------------------------------------------- */
@@ -75,8 +73,7 @@ Route::get('/', function () {
         return redirect()->route('explore')->with('success', 'Log in to access your feed!');
 
 
-    $banned_users = Ban::where('start_date', '<', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
-        ->where('end_date', '>', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())->pluck('user_id');
+    $banned_users = User::getBannedUserIds();
 
     $userIds = auth()->user()->following()->whereNotIn('users.id', $banned_users)->pluck('follows.following_id');
     if (!auth()->user()->isBanned(auth()->user()))

@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ban;
 use App\Models\ProfilePictureFrame;
 use App\Models\ProfilePictureFrameLike;
 use App\Models\Tag;
-use Carbon\Carbon;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
@@ -16,8 +15,7 @@ class ProfilePictureFrameController extends Controller
 
     public function index()
     {
-        $banned_users = Ban::where('start_date', '<', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
-            ->where('end_date', '>', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())->pluck('user_id');
+        $banned_users = User::getBannedUserIds();
 
         $ppf = ProfilePictureFrame::whereNotIn('user_id', $banned_users)->where('removed', false)->get();
 

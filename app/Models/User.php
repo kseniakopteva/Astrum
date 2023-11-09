@@ -221,7 +221,41 @@ class User extends Authenticatable
     {
         return Ban::where('user_id', $user->id)
             ->where('start_date', '<', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
-            ->where('end_date', '>', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
+            ->where(function ($query) {
+                $query->where('end_date', '>', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
+                    ->orWhereNull('end_date');
+            })
             ->exists();
+    }
+
+    public function getCurrentBan($user)
+    {
+        return Ban::where('user_id', $user->id)
+            ->where('start_date', '<', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
+            ->where(function ($query) {
+                $query->where('end_date', '>', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
+                    ->orWhereNull('end_date');
+            })
+            ->first();
+    }
+
+    static public function getBannedUserIds()
+    {
+        return Ban::where('start_date', '<', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
+            ->where(function ($query) {
+                $query->where('end_date', '>', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
+                    ->orWhereNull('end_date');
+            })
+            ->pluck('user_id');
+    }
+
+    static public function getBannedUsers()
+    {
+        return Ban::where('start_date', '<', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
+            ->where(function ($query) {
+                $query->where('end_date', '>', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
+                    ->orWhereNull('end_date');
+            })
+            ->get();
     }
 }

@@ -71,40 +71,49 @@
                                     Username
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    from
+                                    Start date
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    to
+                                    End date
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     reason
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Banned by
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             @php
 
-                            $banned_users = \App\Models\Ban::where('start_date', '<', \Carbon\Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
-                                ->where('end_date', '>', \Carbon\Carbon::now()->timezone('Europe/Riga')->toDateTimeString())->get();
+                            $banned_users = \App\Models\User::getBannedUsers();
 
-                                @endphp
-                                @foreach ($banned_users as $ban)
+                            @endphp
+                            @foreach ($banned_users as $ban)
 
-                                <tr class="bg-white dark:bg-gray-800">
-                                    <th scope="row" class="px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ \App\Models\User::find($ban->user_id)->username }}
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        {{ date_format(new DateTime($ban->start_date), 'd.m.y H:i'); }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        {{ date_format(new DateTime($ban->end_date), 'd.m.y H:i'); }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        {{ $ban->reason }}
-                                    </td>
-                                </tr>
-                                @endforeach
+                            <tr class="bg-white dark:bg-gray-800">
+                                <th scope="row" class="px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                                    <a href="{{ route('profile.index', \App\Models\User::find($ban->user_id)->username) }}">{{ \App\Models\User::find($ban->user_id)->username }}</a>
+                                </th>
+                                <td class="px-6 py-4">
+                                    {{ date_format(new DateTime($ban->start_date), 'd.m.y H:i'); }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if (!is_null($ban->end_date))
+                                    {{ date_format(new DateTime($ban->end_date), 'd.m.y H:i'); }}
+                                    @else
+                                    Forever
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ $ban->reason }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <a href="{{ route('profile.index', \App\Models\User::find($ban->banned_by_id)->username) }}">{{ \App\Models\User::find($ban->banned_by_id)->username }}</a>
+                                </td>
+                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

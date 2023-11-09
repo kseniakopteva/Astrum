@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ban;
 use App\Models\Post;
 use App\Models\PostFrame;
 use App\Models\PostLike;
 use App\Models\Tag;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -19,8 +17,7 @@ class PostController extends Controller
 {
     public function explore()
     {
-        $banned_users = Ban::where('start_date', '<', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
-            ->where('end_date', '>', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())->pluck('user_id');
+        $banned_users = User::getBannedUserIds();
 
         $posts = Post::where('removed', false)->whereNotIn('user_id', $banned_users)->latest()->filter(request(['search']))->paginate(100)->withQueryString();
         return view('explore', [
