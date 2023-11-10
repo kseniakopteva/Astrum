@@ -70,6 +70,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Post::class, 'post_id');
     }
 
+    public function aboutLinks()
+    {
+        return $this->hasMany(AboutLink::class);
+    }
+
     /* -------------------------------------------------------------------------- */
     /*                                 WALLPAPERS                                 */
     /* -------------------------------------------------------------------------- */

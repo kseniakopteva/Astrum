@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\AboutLink;
 use App\Models\Badge;
 use App\Models\Note;
 use App\Models\Post;
@@ -73,6 +74,48 @@ class ProfileController extends Controller
             'followers' => $author->followers,
             'following' => $author->following,
         ]);
+    }
+
+    public function about_store_link(Request $request)
+    {
+        if (!auth()->check())
+            return redirect()->back()->with('success', 'You need to be authorized!');
+
+        $attr = $request->validate([
+            'name' => 'required|max:255',
+            'link' => 'required|url'
+        ]);
+
+        $attr['user_id'] = auth()->user()->id;
+
+        AboutLink::create($attr);
+
+        return redirect()->back()->with('success', 'Link created!');
+    }
+
+    public function about_destroy_link(Request $request)
+    {
+        if (!auth()->check())
+            return redirect()->back()->with('success', 'You need to be authorized!');
+
+        AboutLink::find($request->link_id)->delete();
+
+        return redirect()->back()->with('success', 'Link removed!');
+    }
+
+    public function about_update(Request $request)
+    {
+        if (!auth()->check())
+            return redirect()->back()->with('success', 'You need to be authorized!');
+
+        $attr = $request->validate([
+            'about' => 'max:4000'
+        ]);
+
+        $user = auth()->user();
+
+        User::find($user->id)->update(['about' => $attr['about']]);
+        return redirect()->back()->with('success', 'You have updated your \'About\' section!');
     }
 
     /**

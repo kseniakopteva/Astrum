@@ -35,5 +35,5 @@
             </div>
         </form>
     </div>
-    </div>
 </x-modal>
+    </div>

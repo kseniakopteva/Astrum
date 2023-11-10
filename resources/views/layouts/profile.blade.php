@@ -190,7 +190,7 @@
                         </button>
 
                     </div>
-                    @if ($user->id === auth()->user()->id)
+                    @if (auth()->check() && $user->id === auth()->user()->id)
                     <div class="mt-4">
                         Stars: <x-price>{{ $user->stars }}</x-price>
                     </div>
@@ -251,7 +251,7 @@
             </div>
         </div>
         {{ $slot }}
-        @elseif (auth()->user()->isBlockedBy($user))
+        @elseif (auth()->check() && auth()->user()->isBlockedBy($user))
         <div class="flex justify-center">
             <div class="text-lg italic text-red-500 py-2 px-4 bg-white dark:bg-neutral-800 rounded-md border border-neutral-300 dark:border-neutral-700 inline-block">
                 <span>You are blocked.</span>
@@ -276,7 +276,7 @@
     </script>
     <x-follow-modal name="followers" :users="$followers"></x-follow-modal>
     <x-follow-modal name="following" :users="$following"></x-follow-modal>
-    @if (in_array(auth()->user()->role, ['mod', 'admin']))
+    @if (auth()->check() && in_array(auth()->user()->role, ['mod', 'admin']))
     <x-user-ban-modal :user="$user"></x-user-ban-modal>
     @endif
     <x-user-block-modal :user="$user"></x-user-block-modal>

@@ -48,8 +48,8 @@
 
                 <div class="space-y-2">
                     @foreach ($reported_arr as $reported_type)
-                    <div x-data="{ open: false }" class="w-full bg-neutral-50 rounded-md @if ($reported_type['arr']->where('resolved', 0)->count() > 0) shadow-md @endif">
-                        <button @click="open=!open" @if ($reported_type['arr']->where('resolved', 0)->count() <= 0) disabled @endif x-html="open ? '<span>{{ $reported_type['title'] }} ({{ $reported_type['arr']->where('resolved', 0)->count() }})</span> @if ($reported_type['arr']->where('resolved', 0)->where('resolved', 0)->count() > 0)<span>-</span>@endif' :'<span>{{ $reported_type['title'] }} ({{ $reported_type['arr']->where('resolved', 0)->count() }})</span> @if ($reported_type['arr']->where('resolved', 0)->count() > 0)<span>+</span>@endif' " class="py-2 px-3 flex justify-between w-full @if ($reported_type['arr']->where('resolved', 0)->count() > 0) text-black hover:text-lime-600 @else text-neutral-400 @endif text-lg"></button>
+                    <div x-data="{ open: false }" class="w-full bg-neutral-50 dark:bg-neutral-900/50 rounded-md @if ($reported_type['arr']->where('resolved', 0)->count() > 0) shadow-md @endif">
+                        <button @click="open=!open" @if ($reported_type['arr']->where('resolved', 0)->count() <= 0) disabled @endif x-html="open ? '<span>{{ $reported_type['title'] }} ({{ $reported_type['arr']->where('resolved', 0)->count() }})</span> @if ($reported_type['arr']->where('resolved', 0)->where('resolved', 0)->count() > 0)<span>-</span>@endif' :'<span>{{ $reported_type['title'] }} ({{ $reported_type['arr']->where('resolved', 0)->count() }})</span> @if ($reported_type['arr']->where('resolved', 0)->count() > 0)<span>+</span>@endif' " class="py-2 px-3 flex justify-between w-full @if ($reported_type['arr']->where('resolved', 0)->count() > 0) text-black dark:text-white hover:text-lime-600 @else text-neutral-400 dark:text-neutral-700 @endif text-lg"></button>
 
                         @if ($reported_type['arr']->count() > 0)
                         <div x-show="open" x-cloak class="mx-4 py-4" x-transition>
@@ -64,8 +64,8 @@
                 <h2 class="medium-title mb-3">Banned users</h2>
 
                 <div class="relative overflow-x-auto">
-                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <table class="w-full text-sm text-left text-neutral-500 dark:text-neutral-400">
+                        <thead class="text-xs text-neutral-700 uppercase bg-neutral-50 dark:bg-neutral-700 dark:text-neutral-400">
                             <tr>
                                 <th scope="col" class="px-6 py-3">
                                     Username

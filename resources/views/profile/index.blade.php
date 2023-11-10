@@ -3,11 +3,10 @@
         <div class="col-span-3 md:col-span-2">
             <div class="flex">
                 <h2 class="medium-title mb-4 dark:text-white">Recent Posts</h2>
-                @if (!auth()->user()->isBanned())
+                @if (auth()->check() && auth()->id() === $user->id && !auth()->user()->isBanned())
                 <div>
-                    @if (auth()->id() === $user->id)
                     <x-new-post-modal></x-new-post-modal>
-                    @endif
+
                 </div>
                 @endif
             </div>
@@ -25,12 +24,10 @@
         <div class="hidden md:block">
             <div class="flex">
                 <h2 class="medium-title mb-4 dark:text-white">Recent Notes</h2>
-                @if (!auth()->user()->isBanned())
-                @if (auth()->id() === $user->id)
+                @if (auth()->check() && auth()->id() === $user->id && !auth()->user()->isBanned())
                 <div>
                     <x-new-note-modal></x-new-note-modal>
                 </div>
-                @endif
                 @endif
             </div>
             <div class="space-y-4 mb-4">

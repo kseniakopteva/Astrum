@@ -26,6 +26,7 @@ return new class extends Migration
             $table->foreignId('colour_id')->nullable();
             $table->string('image');
             $table->unsignedInteger('stars')->default('100');
+            $table->longText('about')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

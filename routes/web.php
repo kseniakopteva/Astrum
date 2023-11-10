@@ -64,6 +64,13 @@ Route::get('/profile/{author:username}/shop', [ProfileController::class, 'shop']
 Route::get('/profile/{author:username}/faq', [ProfileController::class, 'faq'])->name('profile.faq');
 Route::get('/profile/{author:username}/about', [ProfileController::class, 'about'])->name('profile.about');
 
+
+Route::post('/profile/about', [ProfileController::class, 'about_update'])->name('about.update');
+
+Route::post('/profile/about/store/link', [ProfileController::class, 'about_store_link'])->name('about.link.store');
+Route::post('/profile/about/destroy/link', [ProfileController::class, 'about_destroy_link'])->name('about.link.destroy');
+
+
 Route::get('/u/{author:username}/posts/{post:slug}', [PostController::class, 'show'])->name('post.show');
 Route::get('/u/{author:username}/notes/{note:slug}#current', [NoteController::class, 'show'])->name('note.show');
 Route::get('/u/{author:username}/notes/{note:slug}', [NoteController::class, 'show']);
