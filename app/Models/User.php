@@ -187,39 +187,39 @@ class User extends Authenticatable
         return $this->hasManyThrough(User::class, Follow::class, 'following_id', 'id', 'id', 'user_id')->where('is_currently_following', '=', 1);
     }
 
-    public function isCreator(User $user)
+    public function isCreator()
     {
-        return $user->role === 'creator';
+        return $this->role === 'creator';
     }
 
-    public function isCreatorOrMore(User $user)
+    public function isCreatorOrMore()
     {
-        return in_array($user->role, ['creator', 'mod', 'admin']);
+        return in_array($this->role, ['creator', 'mod', 'admin']);
     }
 
-    public function isMod(User $user)
+    public function isMod()
     {
-        return $user->role === 'mod';
+        return $this->role === 'mod';
     }
 
-    public function isModOrMore(User $user)
+    public function isModOrMore()
     {
-        return in_array($user->role, ['mod', 'admin']);
+        return in_array($this->role, ['mod', 'admin']);
     }
 
-    public function isAdmin(User $user)
+    public function isAdmin()
     {
-        return $user->role === 'admin';
+        return $this->role === 'admin';
     }
 
-    public function reports(User $u)
+    public function reports()
     {
-        return Report::where('reported_type', 'user')->where('reported_id', $u->id)->latest()->get();
+        return Report::where('reported_type', 'user')->where('reported_id', $this->id)->latest()->get();
     }
 
-    public function isBanned(User $user)
+    public function isBanned()
     {
-        return Ban::where('user_id', $user->id)
+        return Ban::where('user_id', $this->id)
             ->where('start_date', '<', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
             ->where(function ($query) {
                 $query->where('end_date', '>', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
@@ -228,9 +228,9 @@ class User extends Authenticatable
             ->exists();
     }
 
-    public function getCurrentBan($user)
+    public function getCurrentBan()
     {
-        return Ban::where('user_id', $user->id)
+        return Ban::where('user_id', $this->id)
             ->where('start_date', '<', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
             ->where(function ($query) {
                 $query->where('end_date', '>', Carbon::now()->timezone('Europe/Riga')->toDateTimeString())
@@ -257,5 +257,15 @@ class User extends Authenticatable
                     ->orWhereNull('end_date');
             })
             ->get();
+    }
+
+    public function isBlockedBy(User $user)
+    {
+        return Block::where('user_id', $user->id)->where('blocked_id', $this->id)->exists();
+    }
+
+    public function allBlockedBy()
+    {
+        return Block::where('blocked_id', $this->id)->pluck('user_id')->all();
     }
 }

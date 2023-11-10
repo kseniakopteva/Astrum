@@ -4,7 +4,7 @@
     <form action="{{ route($route, $item->id) }}" method="POST">
         @csrf @method('POST')
 
-        @if ($item->author->isBanned($item->author))
+        @if ($item->author->isBanned())
             <x-secondary-button type="submit" class="space-x-0.5" disabled>
                 <span>{{ $item->likes->count() }}</span>
 

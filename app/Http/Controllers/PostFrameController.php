@@ -36,7 +36,7 @@ class PostFrameController extends Controller
 
     public function store(Request $request)
     {
-        if (auth()->user()->isBanned(auth()->user()))
+        if (auth()->user()->isBanned())
             return back()->with('success', 'You can\'t create because you are banned.');
 
         $attributes = $request->validate([

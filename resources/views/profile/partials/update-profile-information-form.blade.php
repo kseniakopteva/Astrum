@@ -75,7 +75,7 @@
             </div>
 
             <div class="col-span-2 grid grid-cols-2 gap-6 w-full">
-                @if ($user->isCreatorOrMore($user))
+                @if ($user->isCreatorOrMore())
                     <div class="space-y-4 mt-6 md:ml-10">
                         <span class="block font-medium text-sm text-neutral-700 dark:text-neutral-300">Badge</span>
                         @foreach ($badges as $badge)
@@ -98,7 +98,7 @@
 
                 <div
                     class="space-y-4 mt-6 m-auto
-                @if (!$user->isCreatorOrMore($user)) col-span-2 @endif
+                @if (!$user->isCreatorOrMore()) col-span-2 @endif
                 ">
                     <div>
                         <span class="block font-medium text-sm text-neutral-700 dark:text-neutral-300">Profile

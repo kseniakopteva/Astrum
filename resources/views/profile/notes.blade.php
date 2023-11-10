@@ -11,7 +11,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
 <script>
-    var macy_instance = Macy.init({
+    var macy_instance = Macy({
         container: '.masonry',
         trueOrder: false,
         waitForImages: true,

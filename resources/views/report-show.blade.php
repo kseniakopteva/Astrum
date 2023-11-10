@@ -77,7 +77,7 @@
                     {{ $report->reason }}
                 </span>
 
-                @if ($reported->reports($reported)->count() > 1)
+                @if ($reported->reports()->count() > 1)
                     <div class="absolute top-0 right-0 danger-icon"><a href="{{ route('report.show', $report->id) }}"
                             title="More Info">
                             <svg xmlns="http://www.w3.org/2000/svg" height="1.5em"

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Block;
 use App\Models\Post;
 use App\Models\PostFrame;
 use App\Models\PostLike;
@@ -17,9 +18,14 @@ class PostController extends Controller
 {
     public function explore()
     {
-        $banned_users = User::getBannedUserIds();
+        $posts = Post::where('removed', false)
+            ->whereNotIn('user_id', User::getBannedUserIds())
+            ->whereNotIn('user_id', auth()->user()->allBlockedBy())
+            ->latest()
+            ->filter(request(['search']))
+            ->paginate(100)
+            ->withQueryString();
 
-        $posts = Post::where('removed', false)->whereNotIn('user_id', $banned_users)->latest()->filter(request(['search']))->paginate(100)->withQueryString();
         return view('explore', [
             'posts' => $posts
         ]);
@@ -34,7 +40,7 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
-        if (auth()->user()->isBanned(auth()->user()))
+        if (auth()->user()->isBanned())
             return back()->with('success', 'You can\'t post because you are banned.');
 
         $u = auth()->user();

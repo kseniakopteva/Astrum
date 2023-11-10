@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ban;
+use App\Models\Block;
 use App\Models\Note;
 use App\Models\Post;
 use App\Models\PostFrame;
@@ -17,12 +18,12 @@ class BanController extends Controller
 {
     public function store(Request $request)
     {
-        if (!(auth()->check() && auth()->user()->isModOrMore(auth()->user())))
-            return redirect()->route('profile.index', $request->user_id)->with('success', 'You can\'t do that!');
-
         $user = User::find($request->user_id);
-        if (!is_null($user->getCurrentBan($user)))
-            return redirect()->route('profile.index', $request->user_id)->with('success', 'This user is already banned.');
+        if (!(auth()->check() && auth()->user()->isModOrMore()))
+            return redirect()->route('profile.index', $user->username)->with('success', 'You can\'t do that!');
+
+        if (!is_null($user->getCurrentBan()))
+            return redirect()->route('profile.index', $user->username)->with('success', 'This user is already banned.');
 
         $attributes = $request->validate([
             'duration' => 'required',
@@ -61,12 +62,51 @@ class BanController extends Controller
 
     public function destroy(Request $request)
     {
-        if (!(auth()->check() && auth()->user()->isModOrMore(auth()->user())))
-            return redirect()->route('profile.index', $request->user_id)->with('success', 'You can\'t do that!');
-
         $user = User::find($request->user_id);
-        $user->getCurrentBan($user)->delete();
+
+        if (!(auth()->check() && auth()->user()->isModOrMore()))
+            return redirect()->route('profile.index', $user->username)->with('success', 'You can\'t do that!');
+
+        $user->getCurrentBan()->delete();
 
         return redirect()->route('profile.index', User::find($request->user_id)->username)->with('success', 'User unbanned!');
+    }
+
+    public function block_store(Request $request)
+    {
+        $user = auth()->user();
+        $blocked = User::find($request->user_id);
+
+        if (!auth()->check() || auth()->user()->id == $request->user_id)
+            return redirect()->route('profile.index', $blocked->username)->with('success', 'You can\'t do that!');
+
+
+        if ($blocked->isBlockedBy($user))
+            return redirect()->route('profile.index', $blocked->username)->with('success', 'You have already blocked ' . $blocked->username . '!');
+
+        if ($user->isFollowing($blocked))
+            $user->unfollow($blocked);
+
+        if ($blocked->isFollowing($user))
+            $blocked->unfollow($user);
+
+        Block::create([
+            'user_id' => $user->id,
+            'blocked_id' => $blocked->id
+        ]);
+
+        return redirect()->route('profile.index', $blocked->username)->with('success', 'User ' . $blocked->username . ' is blocked');
+    }
+
+    public function block_destroy(Request $request)
+    {
+        $user = User::find($request->user_id);
+
+        if (!(auth()->check() && auth()->user()->id != $request->user_id))
+            return redirect()->route('profile.index', $user->username)->with('success', 'You can\'t do that!');
+
+        Block::where('user_id', auth()->user()->id)->where('blocked_id', $user->id)->delete();
+
+        return redirect()->route('profile.index', $user->username)->with('success', 'User unblocked!');
     }
 }

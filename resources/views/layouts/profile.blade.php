@@ -11,7 +11,7 @@
                     @if (!is_null($user->currentProfilePictureFrame))
                     <img class="profile-image-overlay" src="{{ asset('storage/images/profile-picture-frames/' . $user->currentProfilePictureFrame->image) }}">
                     @endif
-                    @if ($user->isBanned($user))
+                    @if ($user->isBanned())
                     <div class="profile-image-overlay flex justify-center items-center">
                         <div class=" -rotate-12 bg-red-200 text-red-500 text-xl border-2 border-red-500 px-3 py-1">
                             BANNED
@@ -32,7 +32,7 @@
                         </div>
                         @endif
 
-                        @if ($user->isCreatorOrMore($user))
+                        @if ($user->isCreatorOrMore())
                         <span class="rounded-md py-1 text-black px-2 bg-{{ $user->badge->lightcolor }} dark:bg-{{ $user->badge->darkcolor }} dark:text-white">
                             {{ ucfirst($user->badge->name) }}</span>
                         @endif
@@ -44,11 +44,11 @@
                         <h2 class="small-title inline-block mr-2 @if (!is_null($user->colour)) text-{{ $user->colour->lightcolor }} dark:text-{{ $user->colour->darkcolor }} @endif">
                             {{ $user->username }}</h2>
                         @endif
-                        @if ($user->isModOrMore($user))
+                        @if ($user->isModOrMore())
                         <div class="bg-red-500 bg-opacity-20 px-2 rounded-md @if (!is_null($user->colour)) text-{{ $user->colour->lightcolor }} dark:text-{{ $user->colour->darkcolor }} @else text-red-500 dark:text-red-500 @endif">
-                            @if ($user->isAdmin($user))
+                            @if ($user->isAdmin())
                             <span class="small-title"><?php echo strtoupper('Admin'); ?></span>
-                            @elseif ($user->isMod($user))
+                            @elseif ($user->isMod())
                             <span class="small-title"><?php echo strtoupper('Mod'); ?></span>
                             @endif
                         </div>
@@ -75,6 +75,7 @@
                         @auth
                         @if ($user->id !== auth()->user()->id)
                         <div class="flex">
+                            @if (!$user->isBlockedBy(auth()->user()))
                             @if (!auth()->user()->isFollowing($user))
                             <form method="POST" action="{{ route('user.follow') }}">
                                 @csrf
@@ -88,6 +89,9 @@
                                 <x-secondary-button type="submit" class="bg-white/30 hover:border-neutral-300">Unfollow</x-secondary-button>
                             </form>
                             @endif
+                            @else
+                            <button class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest" type="button" disabled>Blocked</button>
+                            @endif
 
 
                             <x-dropdown align="right" width="52">
@@ -99,11 +103,23 @@
                                     <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'report')" class="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-red-400 hover:text-red-600">
                                         {{ __('Report') }}
                                     </button>
+
+                                    @if (!$user->isBlockedBy(auth()->user()))
                                     <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'block')" class="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-red-400 hover:text-red-600">
                                         {{ __('Block') }}
                                     </button>
+                                    @else
+                                    <form method="POST" action="{{ route('unblock') }}">
+                                        @csrf
+                                        <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                        <button type="submit" onclick="return confirm('Are you sure you want to unblock this user?')" class="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out">
+                                            Unblock</button>
+                                    </form>
+                                    @endif
+
+
                                     @if (in_array(auth()->user()->role, ['mod', 'admin']))
-                                    @if (!$user->isBanned($user))
+                                    @if (!$user->isBanned())
                                     <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'ban')" class="block w-full px-4 py-2 text-left text-sm dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-neutral-700">
                                         {{ __('Ban User') }}
                                     </button>
@@ -123,14 +139,14 @@
                                         <button type="submit" class="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-green-600">
                                             Make Creator</button>
                                     </form>
-                                    @elseif ($user->isCreator($user))
+                                    @elseif ($user->isCreator())
                                     <form method="POST" action="{{ route('make.mod') }}">
                                         @csrf
                                         <input type="hidden" name="id" value="{{ $user->id }}">
                                         <button type="submit" class="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-green-600">
                                             Make Moderator</button>
                                     </form>
-                                    @elseif ($user->isMod($user))
+                                    @elseif ($user->isMod())
                                     <form method="POST" action="{{ route('remove.mod') }}">
                                         @csrf
                                         <input type="hidden" name="id" value="{{ $user->id }}">
@@ -183,7 +199,7 @@
 
             </div>
             {{-- Links Section --}}
-            {{-- @if ($user->isBanned($user) && auth()->user()->id !== $user->id)
+            {{-- @if ($user->isBanned() && auth()->user()->id !== $user->id)
                 <style>
                     .profile-links a {
                         pointer-events: none;
@@ -203,7 +219,7 @@
                         <li>
                             <x-colored-link :user="$user" route="profile.notes">Notes</x-colored-link>
                         </li>
-                        @if ($user->isCreatorOrMore($user))
+                        @if ($user->isCreatorOrMore())
                         <li>
                             <x-colored-link :user="$user" route="profile.shop">Shop</x-colored-link>
                         </li>
@@ -218,23 +234,29 @@
                 </nav>
             </section>
         </header>
-        @if ($user->isBanned($user) && auth()->user()->id !== $user->id)
+        @if ($user->isBanned() && auth()->user()->id !== $user->id)
         <div class="flex justify-center">
             <div class="text-lg italic text-red-500 py-2 px-4 bg-white dark:bg-neutral-800 rounded-md border border-neutral-300 dark:border-neutral-700 inline-block">
                 <span>{{ $user->username }} is banned.</span>
             </div>
         </div>
-        @elseif ($user->isBanned($user) && auth()->user()->id == $user->id)
+        @elseif ($user->isBanned() && auth()->user()->id == $user->id)
         <div class="flex justify-center items-center mb-4 gap-4 relative">
             <div class="text-center text-lg italic text-red-500 py-2 px-4 bg-white dark:bg-neutral-800 rounded-md border border-neutral-300 dark:border-neutral-700 inline-block">
                 <span>{{ $user->username }} is banned.</span>
             </div>
             <div class="bg-white py-2 px-4 text-red-500 text-center dark:bg-neutral-800 rounded-md border border-neutral-300 dark:border-neutral-700 inline-block">
                 <p class="text-sm">Reason: <span class="text-xs">(Only you can see the reason)</span></p>
-                <div class="bg-red-200 px-1 py-1 rounded-md text-sm">"{{ $user->getCurrentBan($user)->reason }}"</div>
+                <div class="bg-red-200 px-1 py-1 rounded-md text-sm">"{{ $user->getCurrentBan()->reason }}"</div>
             </div>
         </div>
         {{ $slot }}
+        @elseif (auth()->user()->isBlockedBy($user))
+        <div class="flex justify-center">
+            <div class="text-lg italic text-red-500 py-2 px-4 bg-white dark:bg-neutral-800 rounded-md border border-neutral-300 dark:border-neutral-700 inline-block">
+                <span>You are blocked.</span>
+            </div>
+        </div>
         @else
         {{ $slot }}
         @endif

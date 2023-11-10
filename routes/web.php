@@ -76,7 +76,7 @@ Route::get('/', function () {
     $banned_users = User::getBannedUserIds();
 
     $userIds = auth()->user()->following()->whereNotIn('users.id', $banned_users)->pluck('follows.following_id');
-    if (!auth()->user()->isBanned(auth()->user()))
+    if (!auth()->user()->isBanned())
         $userIds[] = auth()->user()->id;
 
     $posts = Post::whereIn('user_id', $userIds)->get();
@@ -230,9 +230,8 @@ Route::post('/remove/mod', function () {
 Route::post('/ban/user', [BanController::class, 'store'])->name('ban');
 Route::post('/unban/user', [BanController::class, 'destroy'])->name('unban');
 
-Route::post('/block/{user}', function (User $user) {
-    // TODO block
-})->name('block');
+Route::post('/block/user', [BanController::class, 'block_store'])->name('block');
+Route::post('/unblock/user', [BanController::class, 'block_destroy'])->name('unblock');
 
 /* -------------------------------------------------------------------------- */
 /*                                   Report                                   */

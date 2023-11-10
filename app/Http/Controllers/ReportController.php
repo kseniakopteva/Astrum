@@ -99,7 +99,7 @@ class ReportController extends Controller
         $class = '\App\Models\\' . str_replace(' ', '', ucwords(str_replace('-', ' ', $type)));
         $reported = $class::find($report->reported_id);
 
-        if (auth()->user()->isModOrMore(auth()->user())) {
+        if (auth()->user()->isModOrMore()) {
             if (is_null($reported)) {
                 $report->delete();
             } else {
@@ -117,7 +117,7 @@ class ReportController extends Controller
         $report = Report::find($request->report_id);
         $class = $request->class;
         $item = $class::find($request->reported_id);
-        if (auth()->user()->isModOrMore(auth()->user())) {
+        if (auth()->user()->isModOrMore()) {
             $item->removed = true;
             $item->save();
             $report->resolved = true;

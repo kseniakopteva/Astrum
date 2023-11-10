@@ -15,6 +15,9 @@ class FollowController extends Controller
         if ($userToFollow->id === auth()->user()->id)
             return back()->with('success', 'You can\'t follow yourself!');
 
+        if (auth()->user()->isBlockedBy($userToFollow))
+            return back();
+
         auth()->user()->follow($userToFollow);
 
         if ($userToFollow->followers->count() == 30 && $userToFollow->role == 'user') {
