@@ -34,6 +34,22 @@
                 <x-input-error :messages="$errors->get('image')" class="mt-2" />
             </div>
             <div>
+                <div class="flex items-center gap-3">
+                    <x-input-label class="!inline-block" for="watermark">Image Watermark:</x-input-label>
+                    <select name="watermark" id="watermark"
+                        class="flex-grow my-2 border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
+                        <option value="none" selected="selected">(None)</option>
+                        <option value="center">Center</option>
+                        <option value="bottom-right">Bottom right</option>
+                        <option value="tiled">Tiled</option>
+                    </select>
+                    <x-input-label class="!inline-block ml-3" for="watermark-color">Color:</x-input-label>
+                    <input class="color-input w-16 self-stretch cursor-pointer rounded-md my-1" type="color"
+                        name="watermark_color" value="#eeeeee">
+                </div>
+                <x-input-error :messages="$errors->get('watermark')" class="mt-2" />
+            </div>
+            <div>
                 <x-text-input id="alt" class="block w-full" type="text" name="alt" placeholder="Alt"
                     value="{{ old('alt') }}" />
                 <x-input-error :messages="$errors->get('alt')" class="mt-2" />

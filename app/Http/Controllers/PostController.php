@@ -84,9 +84,59 @@ class PostController extends Controller
         $attributes['image'] = $imageName;
         $request->image->move($path, $imageName);
 
-        Image::make($path . '\\' . $imageName)->resize(1000, null, function ($constraint) {
+        $image = Image::make($path . '\\' . $imageName)->resize(1000, null, function ($constraint) {
             $constraint->aspectRatio();
-        })->save($path . '\\' . $imageName);
+            $constraint->upsize();
+        });
+
+        if (!is_null($request->watermark) && $request->watermark != 'none') {
+            switch ($request->watermark) {
+                case 'bottom-right':
+                    $image->text('@' . auth()->user()->username, $image->width() - strlen(auth()->user()->username) * 8.5, $image->height() - 25, function ($font) use ($image, $request) {
+                        $font->file(public_path('fonts/Sono-Medium.ttf'));
+                        $font->size($image->height() / 25);
+                        $font->color($request->watermark_color);
+                        $font->align('center');
+                        $font->valign('center');
+                    });
+                    break;
+                case 'center':
+                    $image->text('@' . auth()->user()->username, $image->width() / 2 - strlen(auth()->user()->username) / 2 * 8.5, $image->height() / 2, function ($font) use ($image, $request) {
+                        $font->file(public_path('fonts/Sono-Medium.ttf'));
+                        $font->size($image->height() / 25);
+                        $font->color($request->watermark_color);
+                        $font->align('center');
+                        $font->valign('center');
+                    });
+                    break;
+                case 'tiled':
+                    if ($image->width() > $image->height()) {
+                        $gap = $image->height() / 3;
+                    } else {
+                        $gap = $image->width() / 3;
+                    }
+
+                    $x = $image->height() / 7;
+                    while ($x < $image->width()) {
+                        $y = $image->height() / 8;
+                        while ($y < $image->height()) {
+                            $image->text('@' . auth()->user()->username, $x, $y, function ($font) use ($image, $request) {
+                                $font->file(public_path('fonts/Sono-Medium.ttf'));
+                                $font->size($image->height() / 25);
+                                $font->angle(30);
+                                $font->color($request->watermark_color);
+                                $font->align('center');
+                                $font->valign('center');
+                            });
+                            $y += $gap;
+                        }
+                        $x += $gap;
+                    }
+                    break;
+            }
+        }
+
+        $image->save($path . '\\' . $imageName);
 
         $new_post = Post::create($attributes);
         $u->stars -= $price;
