@@ -16,7 +16,7 @@ class Post extends Model
         $query->when($filters['search'] ?? false, fn ($query, $search) =>
         $query
             ->where('title', 'like', '%' . $search . '%')
-            ->orWhere('body', 'like', '%' . $search . '%'));;
+            ->orWhere('body', 'like', '%' . $search . '%'));
     }
 
     public function tags()

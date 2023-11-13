@@ -62,7 +62,7 @@ class ProfilePictureFrameController extends Controller
 
         $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
         foreach ($tags as $tag) {
-            Tag::firstOrCreate(['name' => $tag, 'slug' => str_replace(' ', '_', $tag)])->save();
+            Tag::firstOrCreate(['name' => $tag], ['slug' => str_replace(' ', '_', $tag)])->save();
         }
         $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
         $profile_picture_frame->tags()->sync($tags);

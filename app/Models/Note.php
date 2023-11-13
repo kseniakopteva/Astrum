@@ -11,6 +11,13 @@ class Note extends Model
     use HasFactory;
     use HasRecursiveRelationships;
 
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['search'] ?? false, fn ($query, $search) =>
+        $query
+            ->where('notebody', 'like', '%' . $search . '%'));
+    }
+
     public function author()
     {
         return $this->belongsTo(User::class, 'user_id');

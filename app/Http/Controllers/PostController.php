@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Block;
+use App\Models\Note;
 use App\Models\Post;
 use App\Models\PostFrame;
 use App\Models\PostLike;
@@ -19,9 +20,12 @@ class PostController extends Controller
     public function explore()
     {
         $posts = Post::where('removed', false)
-            ->whereNotIn('user_id', User::getBannedUserIds())
-            ->whereNotIn('user_id', auth()->user()->allBlockedBy())
-            ->latest()
+            ->whereNotIn('user_id', User::getBannedUserIds());
+
+        if (auth()->check())
+            $posts = $posts->whereNotIn('user_id', auth()->user()->allBlockedBy());
+
+        $posts = $posts->latest()
             ->filter(request(['search']))
             ->paginate(100)
             ->withQueryString();
@@ -96,7 +100,7 @@ class PostController extends Controller
                         $font->file(public_path('fonts/Sono-Medium.ttf'));
                         $font->size($image->height() / 25);
                         $font->color($request->watermark_color);
-                        $font->align('center');
+                        $font->align('right');
                         $font->valign('center');
                     });
                     break;
@@ -144,7 +148,7 @@ class PostController extends Controller
 
         $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
         foreach ($tags as $tag) {
-            Tag::firstOrCreate(['name' => $tag, 'slug' => str_replace(' ', '_', $tag)])->save();
+            Tag::firstOrCreate(['name' => $tag], ['slug' => str_replace(' ', '_', $tag)])->save();
         }
         $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
         $new_post->tags()->sync($tags);
