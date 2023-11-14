@@ -8,6 +8,7 @@ use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostFrameController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilePictureFrameController;
 use App\Http\Controllers\ReportController;
@@ -70,6 +71,7 @@ Route::post('/profile/about', [ProfileController::class, 'about_update'])->name(
 Route::post('/profile/about/store/link', [ProfileController::class, 'about_store_link'])->name('about.link.store');
 Route::post('/profile/about/destroy/link', [ProfileController::class, 'about_destroy_link'])->name('about.link.destroy');
 
+Route::post('/profile/shop/store', [ProductController::class, 'store'])->name('product.store');
 
 Route::get('/u/{author:username}/posts/{post:slug}', [PostController::class, 'show'])->name('post.show');
 Route::get('/u/{author:username}/notes/{note:slug}#current', [NoteController::class, 'show'])->name('note.show');

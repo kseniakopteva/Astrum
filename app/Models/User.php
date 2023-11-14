@@ -82,6 +82,11 @@ class User extends Authenticatable
         return $this->hasMany(AboutLink::class);
     }
 
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
     /* -------------------------------------------------------------------------- */
     /*                                 WALLPAPERS                                 */
     /* -------------------------------------------------------------------------- */

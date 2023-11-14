@@ -7,6 +7,7 @@ use App\Models\AboutLink;
 use App\Models\Badge;
 use App\Models\Note;
 use App\Models\Post;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -55,6 +56,8 @@ class ProfileController extends Controller
             'user' => $author,
             'followers' => $author->followers,
             'following' => $author->following,
+            'products_e' => Product::where('user_id', $author->id)->where('currency', 'euro')->orderBy('price', 'ASC')->get(),
+            'products_s' => Product::where('user_id', $author->id)->where('currency', 'stars')->orderBy('price', 'ASC')->get()
         ]);
     }
 

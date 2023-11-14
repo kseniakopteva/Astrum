@@ -37,7 +37,7 @@
                 <div class="flex items-center gap-3">
                     <x-input-label class="!inline-block" for="watermark">Image Watermark:</x-input-label>
                     <select name="watermark" id="watermark"
-                        class="flex-grow my-2 border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
+                        class="cursor-pointer flex-grow my-2 border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
                         <option value="none" selected="selected">(None)</option>
                         <option value="center">Center</option>
                         <option value="bottom-right">Bottom right</option>
