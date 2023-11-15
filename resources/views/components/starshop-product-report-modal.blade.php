@@ -4,7 +4,7 @@
     <div class="p-6">
         <h2 class="text-lg font-medium text-red-500 dark:text-neutral-100 mb-4">
             Report {{ ucwords(str_replace('-', ' ', $type)) }} <span class="font-bold">[{{ $item->name }}]</span> by <a
-                href="/u/{{ $item->author->username }}"><span class="font-bold">{{ $item->author->username }}</span></a>
+                href="{{ route('profile.index', $item->author->username) }}"><span class="font-bold">{{ $item->author->username }}</span></a>
         </h2>
 
         <form action="{{ route('report.starshop.product', $item->slug) }}" method="POST">

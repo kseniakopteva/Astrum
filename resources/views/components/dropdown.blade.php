@@ -1,4 +1,4 @@
-@props(['align' => 'right', 'width' => '48', 'contentClasses' => 'py-1 bg-white dark:bg-neutral-700'])
+@props(['align' => 'right', 'width' => '48', 'contentClasses' => 'py-1 bg-white dark:bg-neutral-700', 'absolute' => false])
 
 @php
     switch ($align) {
@@ -13,7 +13,7 @@
             $alignmentClasses = 'origin-top-right right-0';
             break;
     }
-    
+
     switch ($width) {
         case '48':
             $width = 'w-48';
@@ -24,7 +24,7 @@
     }
 @endphp
 
-<div class="relative" x-data="{ open: false }" @click.outside="open = false" @close.stop="open = false">
+<div class="@if ($absolute) absolute top-3 right-3 @else relative @endif" x-data="{ open: false }" @click.outside="open = false" @close.stop="open = false">
     <div @click="open = ! open">
         {{ $trigger }}
     </div>

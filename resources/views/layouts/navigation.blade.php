@@ -13,6 +13,7 @@
                 <li><a href="/starshop">StarShop</a></li>
                 <li><a href="/help">Help</a></li>
                 @if (auth()->check())
+                <li><a href="/orders">Orders</a></li>
                     <x-dropdown align="right" width="52">
                         <x-slot name="trigger">
                             <button
@@ -91,6 +92,11 @@
             <x-responsive-nav-link :href="route('help')" :active="request()->routeIs('help')">
                 {{ __('Help') }}
             </x-responsive-nav-link>
+            @auth
+            <x-responsive-nav-link :href="route('orders')" :active="request()->routeIs('orders')">
+                {{ __('Orders') }}
+            </x-responsive-nav-link>
+            @endauth
             {{-- @auth
                 <x-responsive-nav-link :href="route('profile')" :active="request()->routeIs('profile')">
                     {{ __('Profile') }}

@@ -20,9 +20,9 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('image');
             $table->unsignedInteger('price');
-            $table->string('currency');
+            // $table->string('currency');
             $table->unsignedInteger('max_slots')->nullable();
-            $table->unsignedInteger('available_slots')->nullable();
+            // $table->unsignedInteger('available_slots')->nullable();
             $table->boolean('removed')->default(false);
             $table->timestamps();
         });

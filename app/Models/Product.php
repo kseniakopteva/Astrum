@@ -13,4 +13,17 @@ class Product extends Model
     {
         return $this->belongsToMany(Tag::class);
     }
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function availableSlots()
+    {
+        $max = $this->max_slots;
+        $in_process = Order::where('product_id', $this->id)->where('status', 'working')->count();
+
+        return $max - $in_process;
+    }
 }

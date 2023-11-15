@@ -4,7 +4,7 @@
         @if (auth()->check() &&
         $user->id === auth()->user()->id &&
         !auth()->user()->isBanned())
-        <form action="/u/{{ $user->id }}/faq" method="post" class="bg-neutral-100 border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-700 p-4 rounded-md">
+        <form action="{{ route('profile.index', $user->username) }}/faq" method="post" class="bg-neutral-100 border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-700 p-4 rounded-md">
             @csrf
             <header class="flex items-center cursor-pointer" x-on:click="open = ! open">
                 <img src="{{ asset('storage/images/profile-pictures/' . auth()->user()->image) }}" alt="" width="40" height="40" class="rounded-full">
@@ -27,8 +27,8 @@
 
     <section class="max-w-3xl m-auto mb-8">
         @foreach ($user->questions as $question)
-        <article class="bg-white border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-lg p-4 pt-4 mb-4 break-inside-avoid">
-            <h2 class="text-lg mb-4 border-b-2 pb-4 border-neutral-500">{{ $question->question }}</h2>
+        <article class="bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 rounded-lg p-4 pt-4 mb-4 break-inside-avoid">
+            <h2 class="text-lg mb-4 border-b-2 pb-4 @if (!is_null($user->colour)) border-{{ $user->colour->lightcolor }} dark:border-{{ $user->colour->darkcolor }} text-{{ $user->colour->lightcolor }} dark:text-{{ $user->colour->darkcolor }} @else border-neutral-500 @endif">{{ $question->question }}</h2>
             <p>{{ $question->answer }}</p>
         </article>
         @endforeach

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Tag;
 use Illuminate\Http\Request;
@@ -28,10 +29,9 @@ class ProductController extends Controller
             'max_slots' => 'numeric|nullable',
             'description' => 'required|max:2000',
             'price' => 'required|numeric',
-            'currency' => 'required',
+            // 'currency' => 'required',
         ]);
 
-        $attributes['available_slots'] = $attributes['max_slots'];
         $attributes['user_id'] = auth()->user()->id;
         $attributes['slug'] = PostController::make_slug($attributes['name']);
 
@@ -60,5 +60,39 @@ class ProductController extends Controller
 
         return redirect()->route('profile.shop', ['author' => auth()->user()->username])
             ->with('success', 'You have successfully added a product!');
+    }
+
+    public function buy(Request $request)
+    {
+        if (!auth()->check())
+            return redirect()->route('login');
+
+        if (auth()->user()->isBanned())
+            return back()->with('success', 'You can\'t buy anything because you are banned.');
+
+        $attributes = $request->validate([
+            'email' => 'required|email|max:100',
+            'details' => 'required|max:2000',
+        ]);
+
+        $attributes['product_id'] = $request->product_id;
+
+        $attributes['buyer_id'] = $request->buyer_id;
+        $attributes['seller_id'] = $request->seller_id;
+
+        Order::create($attributes);
+
+        return redirect()->back()->with('success', 'Order submitted!');
+    }
+
+    public function destroy(Request $request)
+    {
+        $product = Product::find($request->product_id);
+        if ($product->author->id !== auth()->user()->id) {
+            return back()->with('success', 'You can\'t do that.');
+        }
+
+        $product->delete();
+        return back()->with('success', 'Product deleted!');
     }
 }

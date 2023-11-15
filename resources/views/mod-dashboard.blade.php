@@ -92,8 +92,8 @@
                             @endphp
                             @foreach ($banned_users as $ban)
 
-                            <tr class="bg-white dark:bg-gray-800">
-                                <th scope="row" class="px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                            <tr class="bg-white dark:bg-neutral-800">
+                                <th scope="row" class="px-6 py-4 text-neutral-900 whitespace-nowrap dark:text-white">
                                     <a href="{{ route('profile.index', \App\Models\User::find($ban->user_id)->username) }}">{{ \App\Models\User::find($ban->user_id)->username }}</a>
                                 </th>
                                 <td class="px-6 py-4">
