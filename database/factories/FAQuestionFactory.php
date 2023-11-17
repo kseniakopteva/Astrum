@@ -17,7 +17,7 @@ class FAQuestionFactory extends Factory
     public function definition(): array
     {
         return [
-            'question' => $this->faker->sentence() . '?',
+            'question' => substr($this->faker->sentence(), 0, -1) . '?',
             'answer' => $this->faker->paragraph(),
         ];
     }

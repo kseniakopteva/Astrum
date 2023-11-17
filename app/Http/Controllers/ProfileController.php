@@ -83,7 +83,7 @@ class ProfileController extends Controller
     public function about_store_link(Request $request)
     {
         if (!auth()->check())
-            return redirect()->back()->with('success', 'You need to be authorized!');
+            return redirect()->back()->with('error', 'You need to be authorized!');
 
         $attr = $request->validate([
             'name' => 'required|max:255',
@@ -100,7 +100,7 @@ class ProfileController extends Controller
     public function about_destroy_link(Request $request)
     {
         if (!auth()->check())
-            return redirect()->back()->with('success', 'You need to be authorized!');
+            return redirect()->back()->with('error', 'You need to be authorized!');
 
         AboutLink::find($request->link_id)->delete();
 
@@ -110,7 +110,7 @@ class ProfileController extends Controller
     public function about_update(Request $request)
     {
         if (!auth()->check())
-            return redirect()->back()->with('success', 'You need to be authorized!');
+            return redirect()->back()->with('error', 'You need to be authorized!');
 
         $attr = $request->validate([
             'about' => 'max:4000'
@@ -157,7 +157,7 @@ class ProfileController extends Controller
 
             $imageName = strtolower($request->user()->username) . '_profile' . '.' . $request->image->extension();
             // $image = $request->file('image');
-            $filePath = storage_path('app/public/images/profile-pictures');
+            $filePath = public_path('images/profile-pictures');
 
             $request->user()->image = $imageName;
             $request->image->move($filePath, $imageName);

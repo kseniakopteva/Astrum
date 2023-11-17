@@ -13,13 +13,13 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         if (auth()->user()->isBanned())
-            return back()->with('success', 'You can\'t add a product because you are banned.');
+            return back()->with('error', 'You can\'t add a product because you are banned.');
 
         $u = auth()->user();
         $price = 10;
         if ($u->stars < $price) {
             return back()
-                ->with('success', 'You don\'t have enough money!');
+                ->with('error', 'You don\'t have enough money!');
         }
 
         $attributes = $request->validate([
@@ -35,7 +35,7 @@ class ProductController extends Controller
         $attributes['user_id'] = auth()->user()->id;
         $attributes['slug'] = PostController::make_slug($attributes['name']);
 
-        $path = storage_path('app\public\images\\products');
+        $path = public_path('images\\products');
         $imageName = strtolower($request->user()->username) . '_' . time() . '.' . $request->image->extension();
         $attributes['image'] = $imageName;
         $request->image->move($path, $imageName);
@@ -68,7 +68,7 @@ class ProductController extends Controller
             return redirect()->route('login');
 
         if (auth()->user()->isBanned())
-            return back()->with('success', 'You can\'t buy anything because you are banned.');
+            return back()->with('error', 'You can\'t buy anything because you are banned.');
 
         $attributes = $request->validate([
             'email' => 'required|email|max:100',
@@ -89,9 +89,10 @@ class ProductController extends Controller
     {
         $product = Product::find($request->product_id);
         if ($product->author->id !== auth()->user()->id) {
-            return back()->with('success', 'You can\'t do that.');
+            return back()->with('error', 'You can\'t do that.');
         }
 
+        unlink(public_path('images/products/' . $product->image));
         $product->delete();
         return back()->with('success', 'Product deleted!');
     }

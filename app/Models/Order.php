@@ -27,6 +27,10 @@ class Order extends Model
     {
         return $this->status === 'working';
     }
+    public function isRejected()
+    {
+        return $this->status === 'rejected';
+    }
     public function isComplete()
     {
         return $this->status === 'complete';

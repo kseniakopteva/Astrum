@@ -7,7 +7,7 @@
         <form action="{{ route('profile.index', $user->username) }}/faq" method="post" class="bg-neutral-100 border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-700 p-4 rounded-md">
             @csrf
             <header class="flex items-center cursor-pointer" x-on:click="open = ! open">
-                <img src="{{ asset('storage/images/profile-pictures/' . auth()->user()->image) }}" alt="" width="40" height="40" class="rounded-full">
+                <img src="{{ asset('images/profile-pictures/' . auth()->user()->image) }}" alt="" width="40" height="40" class="rounded-full">
                 <h2 class="ml-4">Add new FAQ item!</h2>
             </header>
             <div class="mt-6" x-show="open">

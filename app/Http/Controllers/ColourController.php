@@ -31,6 +31,6 @@ class ColourController extends Controller
                 ->with('success', 'You have successfully purchased a colour!');
         }
         return back()
-            ->with('success', 'You don\'t have enough money!');
+            ->with('error', 'You don\'t have enough money!');
     }
 }

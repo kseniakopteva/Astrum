@@ -22,8 +22,8 @@ class Product extends Model
     public function availableSlots()
     {
         $max = $this->max_slots;
-        $in_process = Order::where('product_id', $this->id)->where('status', 'working')->count();
+        $pending = Order::where('product_id', $this->id)->where('status', 'pending')->count();
 
-        return $max - $in_process;
+        return $max - $pending;
     }
 }

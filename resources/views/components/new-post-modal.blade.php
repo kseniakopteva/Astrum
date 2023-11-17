@@ -89,7 +89,7 @@
                         @foreach (auth()->user()->ownedPostFrames as $frame)
                             <div class="border border-neutral-300 rounded-md p-3 relative">
                                 <div class="w-full h-20 md:h-24 mb-4"
-                                    style="border-image: url('{{ asset('storage/images/post-frames/' . $frame->image) }}') {{ $frame->percentage }}% round;
+                                    style="border-image: url('{{ asset('images/post-frames/' . $frame->image) }}') {{ $frame->percentage }}% round;
                     border-style: solid; border-width: {{ $frame->width }}px !important;">
                                 </div>
                                 {{ $frame->name }}

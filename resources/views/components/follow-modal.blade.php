@@ -11,7 +11,7 @@
                 <li class="flex justify-between w-full p-2 rounded-sm">
                     <div class="flex-grow flex items-center space-x-4">
                         <img class="w-10 h-10 rounded-full"
-                            src="{{ asset('storage/images/profile-pictures/' . $u->image) }}" alt="" width="50"
+                            src="{{ asset('images/profile-pictures/' . $u->image) }}" alt="" width="50"
                             height="50">
                         <div>
                             <x-colored-username-link size="small" :user="$u"></x-colored-username-link>

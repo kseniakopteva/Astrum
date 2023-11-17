@@ -10,7 +10,7 @@ class FAQuestionController extends Controller
     public function store(Request $request)
     {
         if (auth()->user()->isBanned())
-            return back()->with('success', 'You can\'t create FAQ because you are banned.');
+            return back()->with('error', 'You can\'t create FAQ because you are banned.');
 
         $attributes = $request->validate([
             'question' => 'required|max:256',

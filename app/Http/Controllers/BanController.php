@@ -20,10 +20,10 @@ class BanController extends Controller
     {
         $user = User::find($request->user_id);
         if (!(auth()->check() && auth()->user()->isModOrMore()))
-            return redirect()->route('profile.index', $user->username)->with('success', 'You can\'t do that!');
+            return redirect()->route('profile.index', $user->username)->with('error', 'You can\'t do that!');
 
         if (!is_null($user->getCurrentBan()))
-            return redirect()->route('profile.index', $user->username)->with('success', 'This user is already banned.');
+            return redirect()->route('profile.index', $user->username)->with('error', 'This user is already banned.');
 
         $attributes = $request->validate([
             'duration' => 'required',
@@ -65,7 +65,7 @@ class BanController extends Controller
         $user = User::find($request->user_id);
 
         if (!(auth()->check() && auth()->user()->isModOrMore()))
-            return redirect()->route('profile.index', $user->username)->with('success', 'You can\'t do that!');
+            return redirect()->route('profile.index', $user->username)->with('error', 'You can\'t do that!');
 
         $user->getCurrentBan()->delete();
 
@@ -78,11 +78,11 @@ class BanController extends Controller
         $blocked = User::find($request->user_id);
 
         if (!auth()->check() || auth()->user()->id == $request->user_id)
-            return redirect()->route('profile.index', $blocked->username)->with('success', 'You can\'t do that!');
+            return redirect()->route('profile.index', $blocked->username)->with('error', 'You can\'t do that!');
 
 
         if ($blocked->isBlockedBy($user))
-            return redirect()->route('profile.index', $blocked->username)->with('success', 'You have already blocked ' . $blocked->username . '!');
+            return redirect()->route('profile.index', $blocked->username)->with('error', 'You have already blocked ' . $blocked->username . '!');
 
         if ($user->isFollowing($blocked))
             $user->unfollow($blocked);
@@ -103,7 +103,7 @@ class BanController extends Controller
         $user = User::find($request->user_id);
 
         if (!(auth()->check() && auth()->user()->id != $request->user_id))
-            return redirect()->route('profile.index', $user->username)->with('success', 'You can\'t do that!');
+            return redirect()->route('profile.index', $user->username)->with('error', 'You can\'t do that!');
 
         Block::where('user_id', auth()->user()->id)->where('blocked_id', $user->id)->delete();
 

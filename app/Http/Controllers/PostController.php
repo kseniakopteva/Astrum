@@ -27,7 +27,7 @@ class PostController extends Controller
 
         $posts = $posts->latest()
             ->filter(request(['search']))
-            ->paginate(100)
+            ->paginate(30)
             ->withQueryString();
 
         return view('explore', [
@@ -45,13 +45,13 @@ class PostController extends Controller
     public function store(Request $request)
     {
         if (auth()->user()->isBanned())
-            return back()->with('success', 'You can\'t post because you are banned.');
+            return back()->with('error', 'You can\'t post because you are banned.');
 
         $u = auth()->user();
         $price = 10;
         if ($u->stars < $price) {
             return back()
-                ->with('success', 'You don\'t have enough money!');
+                ->with('error', 'You don\'t have enough money!');
         }
 
         $attributes = $request->validate([
@@ -83,7 +83,7 @@ class PostController extends Controller
         $attributes['slug'] = $this->make_slug($attributes['title']);
         $attributes['excerpt'] = preg_replace('/(.*?[?!.](?=\s|$)).*/', '\\1',  $attributes['body']);
 
-        $path = storage_path('app\public\images\\posts');
+        $path = public_path('images\\posts');
         $imageName = strtolower($request->user()->username) . '_' . time() . '.' . $request->image->extension();
         $attributes['image'] = $imageName;
         $request->image->move($path, $imageName);
@@ -161,6 +161,7 @@ class PostController extends Controller
     {
         $post = Post::find($request->id);
         if (Auth::user()->id === $post->author->id) {
+            unlink(public_path('images/posts/' . $post->image));
             $post->delete();
             return redirect('/profile');
         } else {

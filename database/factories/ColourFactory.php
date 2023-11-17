@@ -23,13 +23,15 @@ class ColourFactory extends Factory
             'violet', 'purple', 'fuchsia', 'pink', 'rose'
         ];
 
+        // $prices = array(3000, 3250, 3500, 700, 750, 800);
+
         $color = $colors[array_rand($colors)];
 
         return [
             'name' => $this->faker->unique()->word,
             'lightcolor' => $color . '-700',
             'darkcolor' => $color . '-300',
-            'price' => rand(1, 15)
+            'price' => 3000
         ];
     }
 }

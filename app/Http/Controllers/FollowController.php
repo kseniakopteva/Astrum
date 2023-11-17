@@ -13,7 +13,7 @@ class FollowController extends Controller
         // dd('Follow!');
         $userToFollow = User::findOrFail(request('id'));
         if ($userToFollow->id === auth()->user()->id)
-            return back()->with('success', 'You can\'t follow yourself!');
+            return back()->with('error', 'You can\'t follow yourself!');
 
         if (auth()->user()->isBlockedBy($userToFollow))
             return back();

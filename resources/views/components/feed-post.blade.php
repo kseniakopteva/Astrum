@@ -1,12 +1,10 @@
 @props(['post'])
 
-<article id="{{ $post->slug }}"
-    {{ $attributes->merge([
+<article id="{{ $post->slug }}" {{ $attributes->merge([
         'class' =>
             'first-letter:flex flex-col justify-between border bg-white border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-lg p-4 pt-4 mb-4 break-inside-avoid',
-    ]) }}
-    @if (!is_null($post->post_frame)) style="border-image: url('{{ asset('storage/images/post-frames/' . $post->post_frame->image) }}') {{ $post->post_frame->percentage }}% round;
-                    border-style: solid; border-width: {{ $post->post_frame->width }}px !important;" @endif>
+    ]) }} @if (!is_null($post->post_frame)) style="border-image: url('{{ asset('images/post-frames/' . $post->post_frame->image) }}') {{ $post->post_frame->percentage }}% round;
+    border-style: solid; border-width: {{ $post->post_frame->width }}px !important;" @endif>
     <div class="">
         <a class="" href="/u/{{ strtolower($post->author->username) }}/posts/{{ $post->slug }}">
             <div class="flex justify-between items-center">
@@ -15,25 +13,26 @@
                 </h1>
                 <span>{{ $post->created_at->diffForHumans() }}</span>
             </div>
-            <h2 class="mb-2">
-                <x-colored-username-link size="small" :user="$post->author"></x-colored-username-link>
-            </h2>
+        </a>
+        <h2 class="mb-2">
+            <x-colored-username-link size="small" :user="$post->author"></x-colored-username-link>
+        </h2>
+        <a class="" href="/u/{{ strtolower($post->author->username) }}/posts/{{ $post->slug }}">
             <img class="w-full" src="<?php if (!strncmp('https', $post->image, 5)) {
                 echo $post->image;
             } else {
-                echo asset('storage/images/posts/' . $post->image);
+                echo asset('images/posts/' . $post->image);
             } ?>" alt="{{ $post->alt }}">
         </a>
         @if ($post->body)
-            <div>
-                <p class="mt-4">{{ $post->excerpt . '...' }}</p>
-            </div>
+        <a class="" href="/u/{{ strtolower($post->author->username) }}/posts/{{ $post->slug }}">
+            <p class="mt-4">{{ $post->excerpt . '...' }}</p>
+        </a>
         @endif
     </div>
     <div class="">
         <footer class="mt-4 flex justify-between">
-            <a href="{{ route('post.show', ['author' => $post->author, 'post' => $post]) }}"
-                class="space-x-1"><span>{{ $post->comments->count() }}</span><i class="fa-regular fa-comment"></i></a>
+            <a href="{{ route('post.show', ['author' => $post->author, 'post' => $post]) }}" class="space-x-1"><span>{{ $post->comments->count() }}</span><i class="fa-regular fa-comment"></i></a>
 
 
             <x-likes route="post.like" :item="$post"></x-likes>

@@ -1,7 +1,7 @@
 <x-starshop-product-layout :item="$post_frame" type="post-frame">
     <div class="border-b border-neutral-200 dark:border-neutral-700 pb-16 grid grid-cols-5">
         <article
-            style="border-image: url('{{ asset('storage/images/post-frames/' . $post_frame->image) }}') {{ $post_frame->percentage }}% round;
+            style="border-image: url('{{ asset('images/post-frames/' . $post_frame->image) }}') {{ $post_frame->percentage }}% round;
                     border-style: solid; border-width: {{ $post_frame->width }}px !important;"
             class="col-start-2 col-span-3 first-letter:flex flex-col justify-between border bg-white border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-lg p-4 pt-4 mb-4 break-inside-avoid">
             <div class="">

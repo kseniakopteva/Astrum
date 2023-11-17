@@ -1,6 +1,13 @@
 <x-profile-layout :user="$user" :posts="$posts" :followers="$followers" :following="$following">
+
+    @push('preloads')
+        @foreach ($posts as $post)
+            <link rel="preload" href="{{ asset('images/posts/' . $post->image) }}" as="image">
+        @endforeach
+    @endpush
+
     <div>
-        <h2 class="medium-title mb-4 dark:text-white">Posts</h2>
+        <h2 class="medium-title mb-4 dark:text-white text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">Posts</h2>
         {{-- <div class="columns lg:columns-3 overflow-hidden mb-4"> --}}
         <div class="masonry">
             @foreach ($posts as $post)

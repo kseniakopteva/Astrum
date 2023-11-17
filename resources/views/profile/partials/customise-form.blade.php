@@ -35,7 +35,7 @@
                     @csrf
                     <input type="hidden" value="{{ $wallpaper->id }}" name="id">
                     <button type="submit">
-                        <img src="{{ asset('storage/images/wallpapers/' . $wallpaper->image) }}" alt=""
+                        <img src="{{ asset('images/wallpapers/' . $wallpaper->image) }}" alt=""
                             class="rounded-md
                         <?php
                         if (!is_null(auth()->user()->currentWallpaper)) {
@@ -78,7 +78,7 @@
                     @csrf
                     <input type="hidden" value="{{ $ppf->id }}" name="id">
                     <button type="submit">
-                        <img src="{{ asset('storage/images/profile-picture-frames/' . $ppf->image) }}" alt=""
+                        <img src="{{ asset('images/profile-picture-frames/' . $ppf->image) }}" alt=""
                             class="rounded-md
                         <?php
                         if (!is_null(auth()->user()->currentProfilePictureFrame)) {

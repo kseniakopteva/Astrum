@@ -39,7 +39,7 @@ class ProfilePictureFrameController extends Controller
     public function store(Request $request)
     {
         if (auth()->user()->isBanned())
-            return back()->with('success', 'You can\'t create because you are banned.');
+            return back()->with('error', 'You can\'t create because you are banned.');
 
         $attributes = $request->validate([
             'name' => 'required|max:100',
@@ -51,7 +51,7 @@ class ProfilePictureFrameController extends Controller
         $attributes['user_id'] = auth()->user()->id;
         $attributes['slug'] = PostController::make_slug($attributes['name']);
 
-        $path = storage_path('app\public\images\\profile-picture-frames');
+        $path = public_path('images\\profile-picture-frames');
         $imageName = strtolower($request->user()->username) . '_' . time() . '.' . $request->image->extension();
         $attributes['image'] = $imageName;
         $request->image->move($path, $imageName);
@@ -67,7 +67,7 @@ class ProfilePictureFrameController extends Controller
         $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
         $profile_picture_frame->tags()->sync($tags);
 
-        return redirect()->route('starshop.profile-picture-frames.show', ['profile_picture_frame' => $profile_picture_frame->id])
+        return redirect()->route('starshop.profile-picture-frames.show', ['profile_picture_frame' => $profile_picture_frame->slug])
             ->with('success', 'You have successfully created a profile picture frame!');
     }
 
@@ -88,7 +88,7 @@ class ProfilePictureFrameController extends Controller
                 ->with('success', 'You have successfully purchased a profile picture frame!');
         }
         return back()
-            ->with('success', 'You don\'t have enough money!');
+            ->with('error', 'You don\'t have enough money!');
     }
 
 
@@ -96,6 +96,7 @@ class ProfilePictureFrameController extends Controller
     {
         $ppf = ProfilePictureFrame::find($request->id);
         if (Auth::user()->id === $ppf->author->id) {
+            unlink(public_path('images/profile-picture-frames/' . $ppf->image));
             $ppf->delete();
             return redirect('/starshop');
         } else {

@@ -4,7 +4,7 @@
     class="bg-neutral-100 border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-700 rounded-md">
     @csrf
     <header class="flex items-center cursor-pointer p-4" x-on:click="open = ! open">
-        <img src="{{ asset('storage/images/profile-pictures/' . auth()->user()->image) }}" alt="" width="40"
+        <img src="{{ asset('images/profile-pictures/' . auth()->user()->image) }}" alt="" width="40"
             height="40" class="rounded-full">
         <h2 class="ml-4">Join the discussion...</h2>
     </header>

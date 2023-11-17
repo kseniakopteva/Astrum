@@ -16,7 +16,7 @@ class StarshopController extends Controller
         return view('starshop.index', [
             'wallpapers' => Wallpaper::where('removed', false)->whereNotIn('user_id', $banned_users)->latest()->take(3)->get(),
             'profile_picture_frames' => ProfilePictureFrame::where('removed', false)->whereNotIn('user_id', $banned_users)->latest()->take(5)->get(),
-            'post_frames' => PostFrame::where('removed', false)->whereNotIn('user_id', $banned_users)->latest()->take(5)->get(),
+            'post_frames' => PostFrame::where('removed', false)->whereNotIn('user_id', $banned_users)->latest()->take(4)->get(),
         ]);
     }
 }

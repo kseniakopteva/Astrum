@@ -89,7 +89,7 @@
                      dark:bg-neutral-800 dark:border-neutral-700 p-4 rounded-md space-x-4">
 
                     <div class="flex-shrink-0">
-                        <img src="{{ asset('storage/images/profile-pictures/' . $comment->author->image) }}"
+                        <img src="{{ asset('images/profile-pictures/' . $comment->author->image) }}"
                             alt="" width="60" height="60" class="rounded-full">
                     </div>
                     <div>

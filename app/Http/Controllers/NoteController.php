@@ -23,7 +23,7 @@ class NoteController extends Controller
     public function store(Request $request, Note $note)
     {
         if (auth()->user()->isBanned())
-            return back()->with('success', 'You can\'t write notes because you are banned.');
+            return back()->with('error', 'You can\'t write notes because you are banned.');
 
         $attributes = $request->validate([
             'notebody' => 'max:600|required',
@@ -41,7 +41,7 @@ class NoteController extends Controller
         $u = auth()->user();
         $price = 5;
         if ($u->stars < $price)
-            return back()->with('success', 'Not enough stars!');
+            return back()->with('error', 'Not enough stars!');
 
         $new_note = Note::create($attributes);
         $u->stars -= $price;

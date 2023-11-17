@@ -21,13 +21,15 @@ class WallpaperFactory extends Factory
         $title = ucfirst($this->faker->words(rand(1, 5), true));
         $slug = str_replace(" ", "-", $title) . rand();
 
+        $prices = array(1500, 1750, 2000, 2250, 2500, 3000);
+
         return [
             'user_id' => rand(1, 10),
             'name' => $title,
             'slug' => $slug,
             'description' => $description,
-            'image' => 'https://source.unsplash.com/random/' . rand(1, 100),
-            'price' => rand(10, 30),
+            // 'image' => 'https://source.unsplash.com/random/' . rand(1, 100),
+            'price' => $prices[array_rand($prices)],
         ];
     }
 }

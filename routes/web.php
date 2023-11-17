@@ -86,7 +86,7 @@ Route::get('/u/{author:username}/notes/{note:slug}', [NoteController::class, 'sh
 
 Route::get('/', function () {
     if (!auth()->check())
-        return redirect()->route('explore')->with('success', 'Log in to access your feed!');
+        return redirect()->route('explore')->with('error', 'Log in to access your feed!');
 
 
     $banned_users = User::getBannedUserIds();

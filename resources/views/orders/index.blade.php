@@ -28,7 +28,7 @@
 
 @if ($order->isPending()) bg-red-100 dark:bg-red-700/10
 @elseif ($order->inProcess()) bg-white dark:bg-neutral-800
-@elseif ($order->isComplete()) opacity-30
+@elseif ($order->isComplete() || $order->isRejected()) opacity-30
 @endif
 
                     {{-- bg-white dark:bg-neutral-800 --}}
@@ -52,6 +52,7 @@
                                 <select name="status" onchange="this.form.submit()" class="cursor-pointer border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
                                     <option value="pending" @if ($order->isPending()) selected="selected" @endif>Pending</option>
                                     <option value="working" @if ($order->inProcess()) selected="selected" @endif>Working on it</option>
+                                    <option value="rejected" @if ($order->isRejected()) selected="selected" @endif>Rejected</option>
                                     <option value="complete" @if ($order->isComplete()) selected="selected" @endif>Complete</option>
                                 </select>
                             </form>

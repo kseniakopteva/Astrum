@@ -37,7 +37,7 @@ class PostFrameController extends Controller
     public function store(Request $request)
     {
         if (auth()->user()->isBanned())
-            return back()->with('success', 'You can\'t create because you are banned.');
+            return back()->with('error', 'You can\'t create because you are banned.');
 
         $attributes = $request->validate([
             'name' => 'required|max:100',
@@ -51,7 +51,7 @@ class PostFrameController extends Controller
         $attributes['user_id'] = auth()->user()->id;
         $attributes['slug'] = PostController::make_slug($attributes['name']);
 
-        $path = storage_path('app\public\images\\post-frames');
+        $path = public_path('images\\post-frames');
         $imageName = strtolower($request->user()->username) . '_' . time() . '.' . $request->image->extension();
         $attributes['image'] = $imageName;
         $request->image->move($path, $imageName);
@@ -109,7 +109,7 @@ class PostFrameController extends Controller
 
         if ($user->stars < $pf->price) {
             return back()
-                ->with('success', 'You don\'t have enough money!');
+                ->with('error', 'You don\'t have enough money!');
         }
 
         if (!$user->ownedPostFrames()
@@ -140,6 +140,7 @@ class PostFrameController extends Controller
     {
         $pf = PostFrame::find($request->id);
         if (auth()->user()->id === $pf->author->id) {
+            unlink(public_path('images/post-frames/' . $pf->image));
             $pf->delete();
             return redirect('/starshop');
         } else {

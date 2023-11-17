@@ -16,7 +16,7 @@ class WallpaperController extends Controller
     {
         $banned_users = User::getBannedUserIds();
 
-        $w = Wallpaper::whereNotIn('user_id', $banned_users)->where('removed', false)->get();
+        $w = Wallpaper::whereNotIn('user_id', $banned_users)->where('removed', false)->latest()->get();
 
         return view('starshop.wallpapers.index', [
             'wallpapers' => $w
@@ -37,7 +37,7 @@ class WallpaperController extends Controller
     public function store(Request $request)
     {
         if (auth()->user()->isBanned())
-            return back()->with('success', 'You can\'t create because you are banned.');
+            return back()->with('error', 'You can\'t create because you are banned.');
 
         $attributes = $request->validate([
             'name' => 'required|max:100',
@@ -49,7 +49,7 @@ class WallpaperController extends Controller
         $attributes['user_id'] = auth()->user()->id;
         $attributes['slug'] = PostController::make_slug($attributes['name']);
 
-        $path = storage_path('app\public\images\\wallpapers');
+        $path = public_path('images\\wallpapers');
         $imageName = strtolower($request->user()->username) . '_' . time() . '.' . $request->image->extension();
         $attributes['image'] = $imageName;
         $request->image->move($path, $imageName);
@@ -65,7 +65,7 @@ class WallpaperController extends Controller
         $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
         $wallpaper->tags()->sync($tags);
 
-        return redirect()->route('starshop.wallpapers.show', ['wallpaper' => $wallpaper->id])
+        return redirect()->route('starshop.wallpapers.show', ['wallpaper' => $wallpaper->slug])
             ->with('success', 'You have successfully created a wallpaper!');
     }
 
@@ -86,13 +86,14 @@ class WallpaperController extends Controller
                 ->with('success', 'You have successfully purchased a wallpaper!');
         }
         return back()
-            ->with('success', 'You don\'t have enough money!');
+            ->with('error', 'You don\'t have enough money!');
     }
 
     public function destroy(Request $request)
     {
         $wallpaper = Wallpaper::find($request->id);
         if (Auth::user()->id === $wallpaper->author->id) {
+            unlink(public_path('images/wallpapers/' . $wallpaper->image));
             $wallpaper->delete();
             return redirect('/starshop');
         } else {

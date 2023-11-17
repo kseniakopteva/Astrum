@@ -5,7 +5,7 @@
                 <img class=" h-full object-contain" src="<?php if (!strncmp('https', $post->image, 5)) {
                     echo $post->image;
                 } else {
-                    echo asset('storage/images/posts/' . $post->image);
+                    echo asset('images/posts/' . $post->image);
                 } ?>" alt="">
             </div>
             <div class="lg:border-s border-neutral-300 dark:border-neutral-700 ps-4 flex flex-col">
@@ -80,7 +80,7 @@
             <article class="flex max-w-3xl m-auto bg-neutral-100 border border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 p-4 rounded-md
             space-x-4">
                 <div class="flex-shrink-0">
-                    <img src="{{ asset('storage/images/profile-pictures/' . $comment->author->image) }}" alt="" width="60" height="60" class="rounded-full">
+                    <img src="{{ asset('images/profile-pictures/' . $comment->author->image) }}" alt="" width="60" height="60" class="rounded-full">
                 </div>
                 <div class="w-full">
                     <header class="mb-4 flex justify-between">

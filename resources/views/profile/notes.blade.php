@@ -1,6 +1,6 @@
 <x-profile-layout :user="$user" :notes="$notes" :followers="$followers" :following="$following">
     <div>
-        <h2 class="medium-title mb-4 dark:text-white">Notes</h2>
+        <h2 class="medium-title mb-4 dark:text-white text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">Notes</h2>
         {{-- <div class="columns lg:columns-3 overflow-hidden mb-4"> --}}
         <div class="masonry">
             @foreach ($notes as $note)

@@ -7,9 +7,9 @@
 
                 {{-- Profile Image --}}
                 <div class=" col-span-2 sm:col-span-1 order-1 sm:order-1 profile-image-container mr-10 w-32 h-32 sm:w-full sm:h-auto self-start">
-                    <img class="profile-image rounded-full shadow-md w-full h-auto" src="{{ asset('storage/images/profile-pictures/' . $user->image) }}" alt="" class="profile-picture" width="100" height="100" style=" pointer-events: none; user-select: none;">
+                    <img class="profile-image rounded-full shadow-md w-full h-auto" src="{{ asset('images/profile-pictures/' . $user->image) }}" alt="" class="profile-picture" width="100" height="100" style=" pointer-events: none; user-select: none;">
                     @if (!is_null($user->currentProfilePictureFrame))
-                    <img class="profile-image-overlay" src="{{ asset('storage/images/profile-picture-frames/' . $user->currentProfilePictureFrame->image) }}">
+                    <img class="profile-image-overlay" src="{{ asset('images/profile-picture-frames/' . $user->currentProfilePictureFrame->image) }}">
                     @endif
                     @if ($user->isBanned())
                     <div class="profile-image-overlay flex justify-center items-center">
@@ -72,6 +72,15 @@
                 <section class="order-2 sm:order-3 mt-4 sm:mt-0 col-span-3 sm:col-span-1 flex flex-col
                      w-full items-center">
                     <div class="flex gap-8 items-center mb-2 justify-between">
+                        @if (!auth()->check())
+                        {{-- <a href="/login" class="inline-flex items-center px-4 py-2 bg-lime-800 dark:bg-neutral-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-neutral-800 uppercase tracking-widest hover:bg-lime-700 dark:hover:bg-white focus:bg-lime-700 dark:focus:bg-white active:bg-lime-900 dark:active:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-800 transition ease-in-out duration-150">Follow</a> --}}
+                        <form method="POST" action="{{ route('user.follow') }}">
+                            @csrf
+                            <input type="hidden" name="id" value="{{ $user->id }}">
+                            <x-primary-button type="submit">Follow</x-primary-button>
+                        </form>
+
+                        @endif
                         @auth
                         @if ($user->id !== auth()->user()->id)
                         <div class="flex">

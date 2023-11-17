@@ -17,7 +17,7 @@ class ReportController extends Controller
     public function store(Request $request, $type)
     {
         if (!auth()->check())
-            return back()->with('success', 'You need to be authorized to do this.');
+            return back()->with('error', 'You need to be authorized to do this.');
 
         $attributes = $request->validate([
             'reported_id' => 'required',
