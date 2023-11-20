@@ -167,3 +167,24 @@ a {
         /* border: none; */
     }
 }
+
+.question-icon-link {
+    svg {
+        fill: #000000;
+
+        &:hover {
+            fill: rgb(101 163 13);
+        }
+    }
+}
+.dark {
+    .question-icon-link {
+        svg {
+            fill: #ffffff;
+
+            &:hover {
+                fill: rgb(101 163 13);
+            }
+        }
+    }
+}
