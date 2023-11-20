@@ -12,6 +12,8 @@ class OrderController extends Controller
         return view('orders.index', [
             'orders' => Order::where('seller_id', auth()->user()->id)->orderByRaw('CASE WHEN status = "pending" THEN 1 WHEN status = "working" THEN 2 WHEN status = "complete" THEN 3 ELSE 4 END')
                 ->orderBy('created_at', 'DESC')->get(),
+            'my_orders' => Order::where('buyer_id', auth()->user()->id)->orderByRaw('CASE WHEN status = "pending" THEN 1 WHEN status = "working" THEN 2 WHEN status = "complete" THEN 3 ELSE 4 END')
+                ->orderBy('created_at', 'DESC')->get(),
         ]);
     }
 
