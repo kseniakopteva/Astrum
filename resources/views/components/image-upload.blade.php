@@ -9,8 +9,7 @@
 
             </div>
             <div class="w-full h-full absolute bottom-0 flex items-end pb-4 justify-center">
-                <input style="display: none" class="" type="file" name="image" id="image"
-                    @change="fileChosen">
+                <input style="display: none" class="" type="file" name="image" id="image" @change="fileChosen">
 
                 <input
                     class="inline-flex items-center px-4 py-2 cursor-pointer
@@ -23,26 +22,29 @@
 
     </div>
 </div>
-<script>
-    function previewImage() {
-        return {
-            imageUrl: "",
 
-            fileChosen(event) {
-                this.fileToDataUrl(event, (src) => (this.imageUrl = src));
-            },
+@push('scripts')
+    <script>
+        function previewImage() {
+            return {
+                imageUrl: "",
 
-            fileToDataUrl(event, callback) {
-                if (!event.target.files.length) return;
+                fileChosen(event) {
+                    this.fileToDataUrl(event, (src) => (this.imageUrl = src));
+                },
 
-                let file = event.target.files[0],
-                    reader = new FileReader();
+                fileToDataUrl(event, callback) {
+                    if (!event.target.files.length) return;
 
-                reader.readAsDataURL(file);
-                reader.onload = (e) => callback(e.target.result);
+                    let file = event.target.files[0],
+                        reader = new FileReader();
+
+                    reader.readAsDataURL(file);
+                    reader.onload = (e) => callback(e.target.result);
 
 
-            },
-        };
-    }
-</script>
+                },
+            };
+        }
+    </script>
+@endpush

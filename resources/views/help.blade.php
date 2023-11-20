@@ -109,7 +109,9 @@
             </li>
         </ul>
     </div>
+</x-main-layout>
 
+@push('scripts')
     <script>
         (changeImg = function() {
             if (localStorage.getItem("theme") === 'dark') {
@@ -117,4 +119,4 @@
             }
         })()
     </script>
-</x-main-layout>
+@endpush
