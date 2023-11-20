@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\AboutLink;
 use App\Models\Badge;
 use App\Models\Colour;
 use App\Models\FAQuestion;
@@ -114,6 +115,16 @@ class DatabaseSeeder extends Seeder
                     'type' => $product['type'],
                     'max_slots' => $product['max_slots'],
                     'price' => $product['price'],
+                ]);
+            }
+
+            $links = ['ArtStation', 'Patreon', 'My Personal Website'];
+
+            for ($i = 0; $i < 3; $i++) {
+                AboutLink::factory()->create([
+                    'user_id' => $u->id,
+                    'name' => $links[$i],
+                    'link' => '#'
                 ]);
             }
         });

@@ -96,7 +96,7 @@ class PostController extends Controller
         if (!is_null($request->watermark) && $request->watermark != 'none') {
             switch ($request->watermark) {
                 case 'bottom-right':
-                    $image->text('@' . auth()->user()->username, $image->width() - strlen(auth()->user()->username) * 8.5, $image->height() - 25, function ($font) use ($image, $request) {
+                    $image->text('@' . auth()->user()->username, $image->width() - strlen(auth()->user()->username) * 1.8 - 10, $image->height() - 38, function ($font) use ($image, $request) {
                         $font->file(public_path('fonts/Sono-Medium.ttf'));
                         $font->size($image->height() / 25);
                         $font->color($request->watermark_color);

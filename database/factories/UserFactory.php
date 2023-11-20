@@ -27,7 +27,8 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'bio' => $bio,
             'badge_id' => rand(1, 6),
-            'image' => 'default' . rand(1, 7) . '.png'
+            'image' => 'default' . rand(1, 7) . '.png',
+            'about' => fake()->paragraph(3) . "\n\n" . fake()->paragraph(8) . "\n\n" . fake()->paragraph(2),
         ];
     }
 
