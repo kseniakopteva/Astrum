@@ -1,10 +1,6 @@
 @props(['post'])
 
-<article id="{{ $post->slug }}" {{ $attributes->merge([
-        'class' =>
-            'first-letter:flex flex-col justify-between border bg-white border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-lg p-4 pt-4 mb-4 break-inside-avoid',
-    ]) }} @if (!is_null($post->post_frame)) style="border-image: url('{{ asset('images/post-frames/' . $post->post_frame->image) }}') {{ $post->post_frame->percentage }}% round;
-    border-style: solid; border-width: {{ $post->post_frame->width }}px !important;" @endif>
+<x-panel :item="$post">
     <div class="">
         <a class="" href="/u/{{ strtolower($post->author->username) }}/posts/{{ $post->slug }}">
             <div class="flex justify-between items-center">
@@ -25,9 +21,9 @@
             } ?>" alt="{{ $post->alt }}">
         </a>
         @if ($post->body)
-        <a class="" href="/u/{{ strtolower($post->author->username) }}/posts/{{ $post->slug }}">
-            <p class="mt-4">{{ $post->excerpt . '...' }}</p>
-        </a>
+            <a class="" href="/u/{{ strtolower($post->author->username) }}/posts/{{ $post->slug }}">
+                <p class="mt-4">{{ $post->excerpt . '...' }}</p>
+            </a>
         @endif
     </div>
     <div class="">
@@ -38,7 +34,7 @@
             <x-likes route="post.like" :item="$post"></x-likes>
         </footer>
     </div>
-</article>
+</x-panel>
 
 {{-- <div
     class="relative mb-4 before:content-[''] before:rounded-md before:absolute before:inset-0 before:bg-black before:bg-opacity-20">

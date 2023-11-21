@@ -1,8 +1,6 @@
 <x-profile-layout :user="$user" :followers="$followers" :following="$following">
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 xl:gap-10 max-w-5xl mx-auto">
-        <div
-            class="lg:col-span-2 bg-white dark:bg-neutral-800 p-4 pt-4 mb-4 break-inside-avoid border-l-4
-        @if (!is_null($user->colour)) border-{{ $user->colour->lightcolor }} dark:border-{{ $user->colour->darkcolor }} @else border-lime-600 dark:border-lime-700 @endif">
+        <x-panel class="lg:col-span-2" :accent="true" :rounded="false" :border="false" :user="$user">
             <div class="flex items-center mb-4 gap-3">
                 <h2 class="medium-title">About Me</h2>
 
@@ -15,10 +13,9 @@
             @else
                 <p class="text-sm italic text-neutral-400 dark:text-neutral-500 m-2 mt-6">Nothing here yet.</p>
             @endif
-        </div>
-        <div
-            class="bg-white 200 dark:bg-neutral-800 p-4 pt-4 mb-4 break-inside-avoid border-l-4
-        @if (!is_null($user->colour)) border-{{ $user->colour->lightcolor }} dark:border-{{ $user->colour->darkcolor }} @else border-lime-600 dark:border-lime-700 @endif">
+        </x-panel>
+
+        <x-panel :accent="true" :rounded="false" :border="false" :user="$user">
             <div class="flex items-center mb-2 gap-3">
                 <h2 class="medium-title">Social Links</h2>
 
@@ -49,6 +46,6 @@
             @else
                 <p class="text-sm italic text-neutral-400 dark:text-neutral-500 m-2 mt-6">Nothing here yet.</p>
             @endif
-        </div>
+        </x-panel>
     </div>
 </x-profile-layout>

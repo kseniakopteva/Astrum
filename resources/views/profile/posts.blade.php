@@ -16,25 +16,23 @@
         </div>
 </x-profile-layout>
 
-@push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
-    <script>
-        var macy_instance = Macy({
-            container: '.masonry',
-            trueOrder: false,
-            waitForImages: true,
-            debug: true,
-            margin: 10,
-            columns: 3,
-            breakAt: {
-                1024: 3,
-                768: 2,
-                640: 1
-            }
-        });
+<script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
+<script>
+    var macy_instance = Macy({
+        container: '.masonry',
+        trueOrder: false,
+        waitForImages: true,
+        debug: true,
+        margin: 10,
+        columns: 3,
+        breakAt: {
+            1024: 3,
+            768: 2,
+            640: 1
+        }
+    });
 
-        macy_instance.runOnImageLoad(function() {
-            macy_instance.recalculate(true);
-        }, true)
-    </script>
-@endpush
+    macy_instance.runOnImageLoad(function() {
+        macy_instance.recalculate(true);
+    }, true)
+</script>
