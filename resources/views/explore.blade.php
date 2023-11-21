@@ -18,7 +18,7 @@
         @if (isset($tag) && $tag)
             <form class="main-search-form pt-3 pb-8" action="#" method="get">
             @else
-                <form class="main-search-form pt-3 pb-8" action="{{ route('explore') }}" method="get">
+                <form class="main-search-form pt-3 pb-8" action="{{ route('search') }}" method="get">
         @endif
         <input
             class="input border border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md"
@@ -66,25 +66,25 @@
     </div>
 </x-main-layout>
 
-@push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
-    <script>
-        var macy_instance = Macy({
-            container: '.masonry',
-            trueOrder: false,
-            waitForImages: true,
-            debug: true,
-            margin: 10,
-            columns: 4,
-            breakAt: {
-                1024: 3,
-                768: 2,
-                640: 1
-            }
-        });
+{{-- @push('head-scripts') --}}
+<script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
+<script>
+    var macy_instance = Macy({
+        container: '.masonry',
+        trueOrder: false,
+        waitForImages: true,
+        debug: true,
+        margin: 10,
+        columns: 4,
+        breakAt: {
+            1024: 3,
+            768: 2,
+            640: 1
+        }
+    });
 
-        macy_instance.runOnImageLoad(function() {
-            macy_instance.recalculate(true);
-        }, true);
-    </script>
-@endpush
+    macy_instance.runOnImageLoad(function() {
+        macy_instance.recalculate(true);
+    }, true);
+</script>
+{{-- @endpush --}}

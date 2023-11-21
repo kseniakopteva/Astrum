@@ -127,7 +127,7 @@ Route::get('/explore', [PostController::class, 'explore'])->name('explore');
 
 Route::get('/search', function () {
 
-    if (count(request(['search'])) === 0) {
+    if (is_null(request(['search'])['search']) && empty(request(['search'])['search'])) {
         return redirect('/explore');
     }
 

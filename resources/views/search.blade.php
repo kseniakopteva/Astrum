@@ -21,9 +21,9 @@
 
         @if (count($users) !== 0)
             <h2 class="small-title mb-2 mt-3">Users</h2>
-            <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+            <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-4">
                 @foreach ($users as $user)
-                    <div class="flex flex-col items-center border bg-white border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-lg p-4 pt-4 mb-4 break-inside-avoid">
+                    <div class="flex flex-col items-center border bg-white border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-lg p-4 pt-4 break-inside-avoid">
                         <a href="{{ route('profile.index', $user->username) }}">
                             <img src="{{ asset('storage/images/profile-pictures/' . $user->image) }}" alt="" class="rounded-full" width="130" height="130"></a>
                         <p class="text-lg mt-2">{{ $user->name }}</p>
@@ -51,25 +51,25 @@
     </div>
 </x-main-layout>
 
-@push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
-    <script>
-        var macy_instance = Macy({
-            container: '.masonry',
-            trueOrder: false,
-            waitForImages: true,
-            debug: true,
-            margin: 10,
-            columns: 4,
-            breakAt: {
-                1024: 3,
-                768: 2,
-                640: 1
-            }
-        });
+{{-- @push('scripts') --}}
+<script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
+<script>
+    var macy_instance = Macy({
+        container: '.masonry',
+        trueOrder: false,
+        waitForImages: true,
+        debug: true,
+        margin: 10,
+        columns: 4,
+        breakAt: {
+            1024: 3,
+            768: 2,
+            640: 1
+        }
+    });
 
-        macy_instance.runOnImageLoad(function() {
-            macy_instance.recalculate(true);
-        }, true);
-    </script>
-@endpush
+    macy_instance.runOnImageLoad(function() {
+        macy_instance.recalculate(true);
+    }, true);
+</script>
+{{-- @endpush --}}
