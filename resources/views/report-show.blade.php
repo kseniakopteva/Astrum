@@ -51,12 +51,10 @@
 @endphp
 
 <x-main-layout>
-    <div class="bg-white dark:bg-neutral-800 max-w-7xl m-auto min-h-[calc(100vh-9rem)] p-6">
+    <x-page-panel>
 
         <h1 class="large-title mb-4">Moderator Dashboard</h1>
         <a href="{{ route('mod.dashboard') }}">Go Back</a>
-
-
 
         <div
             class="panel border max-w-3xl mx-auto my-6
@@ -65,11 +63,9 @@
 
 
             <div class="relative">
-                <span class="text-rose-500">Reported:</span> <span>[{{ $pretty_type }}]</span> <a
-                    href="{{ route($route, $route_attr) }}">{{ $name }}</a>
+                <span class="text-rose-500">Reported:</span> <span>[{{ $pretty_type }}]</span> <a href="{{ route($route, $route_attr) }}">{{ $name }}</a>
                 <br>
-                <span class="text-rose-500">Reported by:</span> <a
-                    href="{{ route('profile.index', $reportee) }}">{{ $reportee->username }}</a> <br>
+                <span class="text-rose-500">Reported by:</span> <a href="{{ route('profile.index', $reportee) }}">{{ $reportee->username }}</a> <br>
                 <span class="text-rose-500">Date of report:</span>
                 {{ date_format(new DateTime($report->created_at), 'd.m.o H:i') }} <br>
                 <span class="text-rose-500">Reason:</span> <br>
@@ -78,8 +74,7 @@
                 </span>
 
                 @if ($reported->reports()->count() > 1)
-                    <div class="absolute top-0 right-0 danger-icon"><a href="{{ route('report.show', $report->id) }}"
-                            title="More Info">
+                    <div class="absolute top-0 right-0 danger-icon"><a href="{{ route('report.show', $report->id) }}" title="More Info">
                             <svg xmlns="http://www.w3.org/2000/svg" height="1.5em"
                                 viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                                 <style>
@@ -100,8 +95,7 @@
                     <form action="{{ route('report.delete') }}" method="post">
                         @csrf @method('post')
                         <input type="hidden" name="report_id" value="{{ $report->id }}">
-                        <x-secondary-button type="submit"
-                            onclick="return confirm('Are you sure you want to dismiss this report?')">Dismiss</x-secondary-button>
+                        <x-secondary-button type="submit" onclick="return confirm('Are you sure you want to dismiss this report?')">Dismiss</x-secondary-button>
                     </form>
                     @if ($report->reported_type != 'user')
                         <form action="{{ route('report.approve') }}" method="POST">
@@ -110,12 +104,10 @@
                             <input type="hidden" name="reported_id" value="{{ $reported->id }}">
                             <input type="hidden" name="class" value="{{ $class }}">
 
-                            <x-danger-button
-                                onclick="return confirm('Are you sure you want to remove this {{ str_replace('-', ' ', $report->reported_type) }}?')">Remove</x-danger-button>
+                            <x-danger-button onclick="return confirm('Are you sure you want to remove this {{ str_replace('-', ' ', $report->reported_type) }}?')">Remove</x-danger-button>
                         </form>
                     @else
-                        <x-danger-button type="button" x-data=""
-                            x-on:click.prevent="$dispatch('open-modal', 'ban')">Ban</x-danger-button>
+                        <x-danger-button type="button" x-data="" x-on:click.prevent="$dispatch('open-modal', 'ban')">Ban</x-danger-button>
 
                         <x-user-ban-modal :user="$reported"></x-user-ban-modal>
                     @endif
@@ -145,8 +137,7 @@
 
         <h2 class="medium-title mb-2">Other Reports mentioning
             @if ($report->reported_type != 'user')
-                <a
-                    href="{{ route('profile.index', $reported->author->username) }}">{{ $reported->author->username }}</a>
+                <a href="{{ route('profile.index', $reported->author->username) }}">{{ $reported->author->username }}</a>
             @else
                 <a href="{{ route('profile.index', $reported->username) }}">{{ $reported->username }}</a>
             @endif
@@ -160,5 +151,5 @@
         @endphp
         <x-dashboard-section cols="4" :reported_arr="$resolved_reports" type="{{ $report->reported_type }}" />
 
-    </div>
+    </x-page-panel>
 </x-main-layout>

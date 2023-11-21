@@ -1,5 +1,5 @@
 <x-main-layout>
-    <div class="bg-white dark:bg-neutral-800 max-w-7xl m-auto min-h-[calc(100vh-9rem)] p-6">
+    <x-page-panel>
         <h1 class="large-title mb-4">Orders</h1>
         <div class="relative overflow-x-auto">
             @if (!$orders->isEmpty())
@@ -119,5 +119,5 @@
                 <p class="text-lg text-neutral-400 dark:text-neutral-500">(None)</p>
             @endif
         </div>
-    </div>
+    </x-page-panel>
 </x-main-layout>

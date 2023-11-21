@@ -2,7 +2,7 @@
 
 @php
 
-    $class = 'first-letter:flex flex-col justify-between p-4 mb-4 break-inside-avoid';
+    $class = 'flex-col justify-between p-4 mb-4 break-inside-avoid';
 
     if ($rounded) {
         $class .= ' rounded-lg';

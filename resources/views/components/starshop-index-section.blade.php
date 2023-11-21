@@ -9,7 +9,8 @@
         <a href="{{ route('starshop.' . $slug) }}" class="p-5">
             <div
                 class="w-full h-full grid place-content-center small-title underline rounded-xl
-                 text-neutral-500 dark:text-neutral-400 hover:text-neutral-400 hover:bg-neutral-200 bg-neutral-300 dark:bg-neutral-900 dark:hover:bg-neutral-900/50 dark:hover:text-netral-300">
+                 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white
+                 bg-neutral-500/20 hover:bg-neutral-500/30 dark:bg-neutral-700/30 dark:hover:bg-neutral-700/40 transition">
                 See more...
             </div>
         </a>

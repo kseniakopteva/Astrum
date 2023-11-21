@@ -45,7 +45,7 @@
     @stack('preloads')
 </head>
 
-<body class="flex flex-col min-h-screen bg-lime-900 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-300">
+<body class="flex flex-col min-h-screen bg-lime-900 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-300 selection:bg-lime-600/30">
 
     <header class="main-header">
         @include('layouts.navigation')

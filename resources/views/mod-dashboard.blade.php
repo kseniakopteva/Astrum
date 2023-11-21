@@ -1,5 +1,5 @@
 <x-main-layout>
-    <div class="bg-white dark:bg-neutral-800 max-w-7xl m-auto min-h-[calc(100vh-9rem)] p-6">
+    <x-page-panel>
         <h1 class="large-title mb-4">Moderator Dashboard</h1>
 
         <div class="grid grid-cols-2 gap-10">
@@ -120,5 +120,5 @@
 
             </div>
         </div>
-    </div>
+    </x-page-panel>
 </x-main-layout>

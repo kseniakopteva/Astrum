@@ -1,9 +1,8 @@
 <x-starshop-layout>
     <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-3 justify-center">
         @foreach ($colours as $colour)
-            <div class="p-3 bg-neutral-300 bg-opacity-10 rounded-t-full flex flex-col shadow-lg">
-                <div
-                    class=" h-24 w-24 mx-auto rounded-full bg-{{ $colour->lightcolor }} dark:bg-{{ $colour->darkcolor }}">
+            <div class="p-3 bg-white dark:bg-neutral-800 bg-opacity-60 rounded-t-full flex flex-col shadow-lg">
+                <div class=" h-24 w-24 mx-auto rounded-full bg-{{ $colour->lightcolor }} dark:bg-{{ $colour->darkcolor }}">
                 </div>
                 <h3 class="mt-2 text-lg">{{ $colour->name }}</h3>
                 {{-- <div class="flex justify-between items-center"> --}}

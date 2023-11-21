@@ -3,12 +3,12 @@
 <x-starshop-layout>
     <a href="{{ url()->previous() }}" class="block pb-2"><i class="mr-1 fa-solid fa-arrow-left"></i>Go
         back</a>
-    <article class=" bg-white dark:bg-neutral-800 rounded-md shadow-sm p-4 mb-6">
+    <article class="rounded-md p-6 mb-6">
 
         {{ $slot }}
 
-        <div class="mt-2 grid grid-cols-4">
-            <div class="col-span-3">
+        <div class="mt-2 grid grid-cols-4 p-6">
+            <div class="col-span-3 mb-10">
                 <div class="flex items-center space-x-2">
                     <h1 class="large-title pb-1 pr-2">
                         {{ $item->name }}
@@ -17,10 +17,9 @@
                     <x-likes :route="$type . '.like', $item->id" :item="$item" :button="true"></x-likes>
 
                 </div>
-                <p><span>added by <x-colored-username-link size="small"
-                            :user="$item->author"></x-colored-username-link></span></p>
+                <p><span>added by <x-colored-username-link size="small" :user="$item->author"></x-colored-username-link></span></p>
 
-                <div class="text-lg my-2">
+                <div class="text-lg my-4">
                     <p>{{ $item->description }}</p>
                 </div>
 
@@ -35,8 +34,7 @@
 
                     <x-dropdown align="right" width="52">
                         <x-slot name="trigger">
-                            <x-secondary-button type="submit" class="ml-2 !px-2 h-7 w-7"><i
-                                    class="fa-solid fa-ellipsis"></i></x-secondary-button>
+                            <x-secondary-button type="submit" class="ml-2 !px-2 h-7 w-7"><i class="fa-solid fa-ellipsis"></i></x-secondary-button>
                         </x-slot>
 
                         <x-slot name="content">
@@ -70,8 +68,7 @@
                                 <x-secondary-button disabled>Bought</x-secondary-button>
                             @endif
                         @else
-                            @if (
-                                is_null(auth()->user()->postFrameAmount($item->id)) &&
+                            @if (is_null(auth()->user()->postFrameAmount($item->id)) &&
                                     auth()->user()->postFrameAmount($item->id) <= 0)
                                 <form action="{{ route('starshop.' . $type . 's.buy') }}" method="POST">
                                     @csrf

@@ -1,7 +1,6 @@
 <x-main-layout>
-    <div class="max-w-7xl m-auto bg-white p-6 dark:bg-neutral-800">
-        <div
-            class="flex justify-between items-center mb-6 pb-6 border-b border-neutral-300 dark:border-neutral-700 flex-col space-y-4 lg:space-y-0 lg:flex-row">
+    <x-page-panel class="!p-0">
+        <div class="bg-gradient-to-r from-white dark:from-neutral-900 to-transparent flex justify-between items-center p-6 flex-col space-y-4 lg:space-y-0 lg:flex-row">
             <h1 class="large-title min-w-44">
                 <a href="{{ route('starshop') }}">Star <x-star-icon class="text-yellow-600 dark:text-yellow-500" />
                     Shop</a>
@@ -18,8 +17,8 @@
             </nav>
             <span class="text-lg">Your stars: <x-price>{{ auth()->user()->stars }}</x-price></span>
         </div>
-        <div class="w-full overflow-hidden p-1">
+        <div class="overflow-hidden py-6 mx-6 border-t border-neutral-300 dark:border-neutral-700">
             {{ $slot }}
         </div>
-    </div>
+    </x-page-panel>
 </x-main-layout>
