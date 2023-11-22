@@ -1,8 +1,4 @@
-@if (
-    $errors->getBag('default')->has('body') ||
-        $errors->getBag('default')->has('title') ||
-        $errors->getBag('default')->has('image') ||
-        $errors->getBag('default')->has('alt'))
+@if ($errors->getBag('default')->has('body') || $errors->getBag('default')->has('title') || $errors->getBag('default')->has('image') || $errors->getBag('default')->has('alt'))
     <div x-data="{ show: true }"> {{-- do not remove, stops working --}}
         <?php $show = true; ?>
     @else
@@ -24,8 +20,7 @@
         <form method="POST" action="{{ route('post.store') }}" enctype="multipart/form-data" class="space-y-2">
             @csrf
             <div>
-                <x-text-input id="title" class="block w-full" type="text" name="title" placeholder="Title"
-                    required value="{{ old('title') }}" />
+                <x-text-input id="title" class="block w-full" type="text" name="title" placeholder="Title" required value="{{ old('title') }}" />
                 <x-input-error :messages="$errors->get('title')" class="mt-2" />
             </div>
             <div>
@@ -51,24 +46,20 @@
                         </svg>
                     </a>
                     <x-input-label class="!inline-block ml-3" for="watermark-color">Color:</x-input-label>
-                    <input class="color-input w-16 self-stretch cursor-pointer rounded-md my-1" type="color"
-                        name="watermark_color" value="#eeeeee">
+                    <input class="color-input w-16 self-stretch cursor-pointer rounded-md my-1" type="color" name="watermark_color" value="#eeeeee">
                 </div>
                 <x-input-error :messages="$errors->get('watermark')" class="mt-2" />
             </div>
             <div>
-                <x-text-input id="alt" class="block w-full" type="text" name="alt" placeholder="Alt"
-                    value="{{ old('alt') }}" />
+                <x-text-input id="alt" class="block w-full" type="text" name="alt" placeholder="Alt" value="{{ old('alt') }}" />
                 <x-input-error :messages="$errors->get('alt')" class="mt-2" />
             </div>
             <div class="flex-grow">
-                <x-textarea class="h-auto" rows="4" id="body" class="block w-full" type="text"
-                    name="body" placeholder="Post text" value="{{ old('body') }}" />
+                <x-textarea class="h-auto" rows="4" id="body" class="block w-full" type="text" name="body" placeholder="Post text" value="{{ old('body') }}" />
                 <x-input-error :messages="$errors->get('body')" class="mt-2" />
             </div>
             <div class="flex-grow">
-                <x-text-input class="h-auto" id="tags" class="block w-full" type="text" name="tags"
-                    placeholder="Tags (separate with comma)" value="{{ old('tags') }}" />
+                <x-text-input class="h-auto" id="tags" class="block w-full" type="text" name="tags" placeholder="Tags (separate with comma)" value="{{ old('tags') }}" />
                 <x-input-error :messages="$errors->get('tags')" class="mt-2" />
             </div>
             <div>
@@ -79,8 +70,7 @@
                         Visit <a href="{{ route('starshop') }}" class="underline">Starshop</a>!</span>
                 @else
                     <div class="grid grid-cols-4 md:grid-cols-5 mt-1 gap-5">
-                        <div
-                            class="border bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 rounded-md p-3 relative">
+                        <x-panel class="!p-3 relative">
                             <div class="w-full h-20 md:h-24 mb-4 grid place-content-center">
                                 <span class="text-xl">x</span>
                             </div>
@@ -89,26 +79,25 @@
                             <div class="absolute top-0 left-0 w-full h-full cursor-default rounded-md"
                                 onclick="document.querySelector('{{ '#none' }}').checked = !document.querySelector('{{ '#none' }}').checked">
                             </div>
-                            <input
-                                class="absolute bottom-2 right-2 border-2 border-lime-600 bg-lime-200 checked:bg-lime-700 rounded-full p-2"
-                                type="radio" checked name="frame" id="none" value="none" required>
-                        </div>
+                            <input class="absolute -top-2 -right-2 border-2 border-lime-600 bg-lime-200 checked:bg-lime-700 rounded-full p-2" type="radio" checked name="frame" id="none"
+                                value="none" required>
+                        </x-panel>
+
                         @foreach (auth()->user()->ownedPostFrames as $frame)
-                            <div class="border border-neutral-300 rounded-md p-3 relative">
+                            <x-panel class="!p-3 relative text-center">
                                 <div class="w-full h-20 md:h-24 mb-4"
                                     style="border-image: url('{{ asset('images/post-frames/' . $frame->image) }}') {{ $frame->percentage }}% round;
                     border-style: solid; border-width: {{ $frame->width }}px !important;">
                                 </div>
-                                {{ $frame->name }}
+                                <p class="font-bold">{{ $frame->name }}</p>
+                                <p>(You have {{ $frame->pivot->amount }})</p>
 
                                 <div class="absolute top-0 left-0 w-full h-full cursor-default rounded-md"
                                     onclick="document.querySelector('{{ '#frame-' . $frame->id }}').checked = !document.querySelector('{{ '#frame-' . $frame->id }}').checked">
                                 </div>
-                                <input
-                                    class="absolute bottom-2 right-2 border-2 border-lime-600 bg-lime-200 checked:bg-lime-700 rounded-full p-2"
-                                    type="radio" name="frame" id="{{ 'frame-' . $frame->id }}"
-                                    value="{{ $frame->id }}">
-                            </div>
+                                <input class="absolute -top-2 -right-2 border-2 border-lime-600 bg-lime-200 checked:bg-lime-700 rounded-full p-2" type="radio" name="frame"
+                                    id="{{ 'frame-' . $frame->id }}" value="{{ $frame->id }}">
+                            </x-panel>
                         @endforeach
                     </div>
                 @endif
