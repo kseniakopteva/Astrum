@@ -1,5 +1,5 @@
 <x-starshop-layout>
-    <div class="max-w-xl m-auto">
+    <div class="max-w-xl m-auto mb-6">
         <h2 class="medium-title mb-6">Submit a Post Frame</h2>
         <form action="{{ route('starshop.post-frames.store') }}" method="POST" class="space-y-2" enctype="multipart/form-data">
             @csrf
@@ -17,7 +17,6 @@
                 <div class="flex items-center gap-5">
                     <input type="number" name="width" id="width" value="{{ old('width') }}"
                         class="block border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
-                    <x-input-error :messages="$errors->get('width')" class="mt-2" />
                     <a target="_blank" href="{{ route('help') . '#post-frame-upload-guidelines' }}" class="question-icon-link">
                         <svg xmlns="http://www.w3.org/2000/svg" height="1.4em"
                             viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
@@ -26,6 +25,7 @@
                         </svg>
                     </a>
                 </div>
+                <x-input-error :messages="$errors->get('width')" class="mt-2" />
             </div>
 
             <div>
@@ -33,7 +33,6 @@
                 <div class="flex items-center gap-5">
                     <input type="number" step="0.01" name="percentage" id="percentage" value="{{ old('percentage') }}"
                         class="block border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
-                    <x-input-error :messages="$errors->get('percentage')" class="mt-2" />
                     <a target="_blank" href="{{ route('help') . '#post-frame-upload-guidelines' }}" class="question-icon-link">
                         <svg xmlns="http://www.w3.org/2000/svg" height="1.4em"
                             viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
@@ -42,7 +41,7 @@
                         </svg>
                     </a>
                 </div>
-
+                <x-input-error :messages="$errors->get('percentage')" class="mt-2" />
             </div>
 
             <div>
@@ -53,8 +52,13 @@
 
             <div>
                 <x-input-label for="price">Price</x-input-label>
-                <input type="number" name="price" id="price" value="{{ old('price') }}"
-                    class="block border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
+                <div class="flex items-center gap-4">
+                    <input type="number" name="price" id="price" value="{{ old('price') }}"
+                        class="block border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
+                    <span class="text-red-600 dark:text-red-300">
+                        <x-price>You will have to pay this price to post</x-price>
+                    </span>
+                </div>
                 <x-input-error :messages="$errors->get('price')" class="mt-2" />
             </div>
 

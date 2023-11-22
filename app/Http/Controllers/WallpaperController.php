@@ -43,8 +43,15 @@ class WallpaperController extends Controller
             'name' => 'required|max:100',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
             'description' => 'max:700',
-            'price' => 'required|max:10000'
+            'price' => 'required|numeric|min:800|max:10000'
         ]);
+
+        $u = auth()->user();
+        $price = $attributes['price'];
+        if ($u->stars < $price) {
+            return back()
+                ->with('error', 'You don\'t have enough money!');
+        }
 
         $attributes['user_id'] = auth()->user()->id;
         $attributes['slug'] = PostController::make_slug($attributes['name']);
@@ -57,6 +64,8 @@ class WallpaperController extends Controller
         Image::make($path . '/' . $imageName)->fit(1920, 1080)->save($path . '/' . $imageName);
 
         $wallpaper = Wallpaper::create($attributes);
+        $u->stars -= $price;
+        $u->save();
 
         $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
         foreach ($tags as $tag) {
@@ -82,6 +91,10 @@ class WallpaperController extends Controller
             ]);
             auth()->user()->stars -= $wallpaper->price;
             auth()->user()->save();
+
+            $wallpaper->author->stars += $wallpaper->price;
+            $wallpaper->author->save();
+
             return back()
                 ->with('success', 'You have successfully purchased a wallpaper!');
         }

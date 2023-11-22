@@ -45,8 +45,15 @@ class PostFrameController extends Controller
             'description' => 'max:700',
             'width' => 'required',
             'percentage' => 'required',
-            'price' => 'required|max:10000'
+            'price' => 'required|numeric|min:500|max:10000'
         ]);
+
+        $u = auth()->user();
+        $price = $attributes['price'];
+        if ($u->stars < $price) {
+            return back()
+                ->with('error', 'You don\'t have enough money!');
+        }
 
         $attributes['user_id'] = auth()->user()->id;
         $attributes['slug'] = PostController::make_slug($attributes['name']);
@@ -59,6 +66,8 @@ class PostFrameController extends Controller
         Image::make($path . '/' . $imageName)->fit(2000)->save($path . '/' . $imageName);
 
         $post_frame = PostFrame::create($attributes);
+        $u->stars -= $price;
+        $u->save();
 
         $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
         foreach ($tags as $tag) {
@@ -131,6 +140,9 @@ class PostFrameController extends Controller
 
         $user->stars -= $pf->price;
         $user->save();
+
+        $pf->author->stars += $pf->price;
+        $pf->author->save();
 
         return back()
             ->with('success', 'You have successfully purchased a post frame!');

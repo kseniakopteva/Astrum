@@ -45,8 +45,15 @@ class ProfilePictureFrameController extends Controller
             'name' => 'required|max:100',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
             'description' => 'max:700',
-            'price' => 'required|max:10000'
+            'price' => 'required|numeric|min:500|max:10000'
         ]);
+
+        $u = auth()->user();
+        $price = $attributes['price'];
+        if ($u->stars < $price) {
+            return back()
+                ->with('error', 'You don\'t have enough money!');
+        }
 
         $attributes['user_id'] = auth()->user()->id;
         $attributes['slug'] = PostController::make_slug($attributes['name']);
@@ -59,6 +66,8 @@ class ProfilePictureFrameController extends Controller
         Image::make($path . '/' . $imageName)->fit(2000)->save($path . '/' . $imageName);
 
         $profile_picture_frame = ProfilePictureFrame::create($attributes);
+        $u->stars -= $price;
+        $u->save();
 
         $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
         foreach ($tags as $tag) {
@@ -84,6 +93,10 @@ class ProfilePictureFrameController extends Controller
             ]);
             auth()->user()->stars -= $ppf->price;
             auth()->user()->save();
+
+            $ppf->author->stars += $ppf->price;
+            $ppf->author->save();
+
             return back()
                 ->with('success', 'You have successfully purchased a profile picture frame!');
         }
