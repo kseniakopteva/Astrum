@@ -121,4 +121,14 @@
             </div>
         </div>
     </x-page-panel>
+
+    @foreach ($reported_arr as $reported_type)
+        @if ($reported_type['arr']->count() > 0)
+            @foreach ($reported_type['arr'] as $report)
+                @if (!is_null($report->reported_type) && $report->reported_type == 'user' && !$report->resolved)
+                    <x-user-ban-modal :user="\App\Models\User::find($report->reported_id)"></x-user-ban-modal>
+                @endif
+            @endforeach
+        @endif
+    @endforeach
 </x-main-layout>

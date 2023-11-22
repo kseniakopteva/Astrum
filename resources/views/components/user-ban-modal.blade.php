@@ -1,6 +1,6 @@
 @props(['user'])
 
-<x-modal name="ban" focusable>
+<x-modal name="ban-{{ $user->id }}" focusable>
     <div class="p-6">
         <h2 class="text-lg font-medium text-red-500 dark:text-neutral-100 mb-4">
             Ban User <span class="font-bold">{{ $user->username }}</span>

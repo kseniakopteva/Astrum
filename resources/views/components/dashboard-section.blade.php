@@ -11,7 +11,7 @@
     @if (!$reported_arr->isEmpty())
         @foreach ($reported_arr as $report)
             <div
-                class="panel border
+                class="panel border bg-white dark:bg-neutral-800
                 @if ($report->resolved) border-neutral-300 dark:border-neutral-600 opacity-50 hover:opacity-70 @else border-red-300 dark:border-red-700 @endif
                 shadow-md  rounded-md p-3 flex flex-col justify-between">
                 @php
@@ -82,13 +82,11 @@
 
                     <div class="relative">
                         <div class="mr-10"><span class="text-rose-500">Reported:</span>
-                            <span>[{{ $pretty_type }}]</span> <a href="{{ route($route, $route_attr) }}"
-                                target="_blank">{{ $name }}</a>
+                            <span>[{{ $pretty_type }}]</span> <a href="{{ route($route, $route_attr) }}" target="_blank">{{ $name }}</a>
                         </div>
 
                         <div><span class="text-rose-500">Reported by:</span>
-                            <a href="{{ route('profile.index', $reportee->username) }}"
-                                target="_blank">{{ $reportee->username }}</a>
+                            <a href="{{ route('profile.index', $reportee->username) }}" target="_blank">{{ $reportee->username }}</a>
                         </div>
                         <div><span class="text-rose-500">Date of report:</span>
                             {{ date_format(new DateTime($report->created_at), 'd.m.o H:i') }} </div>
@@ -98,12 +96,10 @@
                         </span>
 
                         <div class="absolute top-0 right-0">
-                            <a class="underline hover:text-lime-600"
-                                href="{{ route('report.show', $report->id) }}">Open</a>
+                            <a class="underline hover:text-lime-600" href="{{ route('report.show', $report->id) }}">Open</a>
                         </div>
                         @if ($reported->reports()->count() > 1)
-                            <div class="absolute top-5 right-0 danger-icon"><a
-                                    href="{{ route('report.show', $report->id) }}" title="More Info">
+                            <div class="absolute top-5 right-0 danger-icon"><a href="{{ route('report.show', $report->id) }}" title="Subject of more than one report">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="1.5em"
                                         viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                                         <style>
@@ -125,8 +121,7 @@
                                 @csrf @method('post')
                                 <input type="hidden" name="report_id" value="{{ $report->id }}">
                                 <input type="hidden" name="type" value="{{ $report->reported_type }}">
-                                <x-secondary-button type="submit"
-                                    onclick="return confirm('Are you sure you want to dismiss this report?')">Dismiss</x-secondary-button>
+                                <x-secondary-button type="submit" onclick="return confirm('Are you sure you want to dismiss this report?')">Dismiss</x-secondary-button>
                             </form>
                             @if ($report->reported_type != 'user')
                                 <form action="{{ route('report.approve') }}" method="POST">
@@ -135,14 +130,10 @@
                                     <input type="hidden" name="reported_id" value="{{ $reported->id }}">
                                     <input type="hidden" name="class" value="{{ $class }}">
 
-                                    <x-danger-button
-                                        onclick="return confirm('Are you sure you want to remove this {{ str_replace('-', ' ', $report->reported_type) }}?')">Remove</x-danger-button>
+                                    <x-danger-button onclick="return confirm('Are you sure you want to remove this {{ str_replace('-', ' ', $report->reported_type) }}?')">Remove</x-danger-button>
                                 </form>
                             @else
-                                <x-danger-button type="button" x-data=""
-                                    x-on:click.prevent="$dispatch('open-modal', 'ban')">Ban</x-danger-button>
-
-                                <x-user-ban-modal :user="$reported"></x-user-ban-modal>
+                                <x-danger-button type="button" x-data="" x-on:click.prevent="$dispatch('open-modal', 'ban-{{ $reported->id }}')">Ban</x-danger-button>
                             @endif
                         @else
                             <div class="flex justify-center w-full">
@@ -160,8 +151,7 @@
                             @csrf @method('post')
                             <input type="hidden" name="report_id" value="{{ $report->id }}">
                             <input type="hidden" name="type" value="{{ $report->reported_type }}">
-                            <x-secondary-button type="submit"
-                                onclick="return confirm('Are you sure you want to dismiss this report?')">Remove
+                            <x-secondary-button type="submit" onclick="return confirm('Are you sure you want to dismiss this report?')">Remove
                                 report</x-secondary-button>
                         </form>
                     @else

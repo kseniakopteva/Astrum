@@ -55,8 +55,8 @@ class Post extends Model
                 ->exists();
         else return null;
     }
-    public function reports(Post $p)
+    public function reports()
     {
-        return Report::where('reported_type', 'post')->where('reported_id', $p->id)->latest()->get();
+        return Report::where('reported_type', 'post')->where('reported_id', $this->id)->latest()->get();
     }
 }

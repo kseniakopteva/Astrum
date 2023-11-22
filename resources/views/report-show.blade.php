@@ -57,7 +57,7 @@
         <a href="{{ route('mod.dashboard') }}">Go Back</a>
 
         <div
-            class="panel border max-w-3xl mx-auto my-6
+            class="panel border max-w-3xl mx-auto my-6 bg-white dark:bg-neutral-800
         @if ($report->resolved) border-neutral-300 dark:border-neutral-600 opacity-50 hover:opacity-70 @else border-red-300 dark:border-red-700 @endif
         shadow-md  rounded-md p-3 flex flex-col justify-between">
 
@@ -74,7 +74,7 @@
                 </span>
 
                 @if ($reported->reports()->count() > 1)
-                    <div class="absolute top-0 right-0 danger-icon"><a href="{{ route('report.show', $report->id) }}" title="More Info">
+                    <div class="absolute top-0 right-0 danger-icon"><a href="{{ route('report.show', $report->id) }}" title="Subject of more than one report">
                             <svg xmlns="http://www.w3.org/2000/svg" height="1.5em"
                                 viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                                 <style>
@@ -107,9 +107,7 @@
                             <x-danger-button onclick="return confirm('Are you sure you want to remove this {{ str_replace('-', ' ', $report->reported_type) }}?')">Remove</x-danger-button>
                         </form>
                     @else
-                        <x-danger-button type="button" x-data="" x-on:click.prevent="$dispatch('open-modal', 'ban')">Ban</x-danger-button>
-
-                        <x-user-ban-modal :user="$reported"></x-user-ban-modal>
+                        <x-danger-button type="button" x-data="" x-on:click.prevent="$dispatch('open-modal', 'ban-{{ $reported->id }}')">Ban</x-danger-button>
                     @endif
                 @else
                     <div class="flex justify-center w-full">
@@ -126,14 +124,15 @@
             {{ str_replace(' ', '', ucwords(str_replace('-', ' ', $report->reported_type))) }}</h2>
 
         @php
-            $other_reports = \App\Models\Report::where('reported_type', $report->reported_type)
+            $other_reports_of_this = \App\Models\Report::where('reported_type', $report->reported_type)
                 ->where('reported_id', $report->reported_id)
                 ->where('id', '!=', $report->id)
                 ->orderBy('resolved', 'ASC')
                 ->orderBy('created_at', 'ASC')
                 ->get();
         @endphp
-        <x-dashboard-section cols="4" :reported_arr="$other_reports" type="{{ $report->reported_type }}" />
+
+        <x-dashboard-section cols="4" :reported_arr="$other_reports_of_this" type="{{ $report->reported_type }}" />
 
         <h2 class="medium-title mb-2">Other Reports mentioning
             @if ($report->reported_type != 'user')
@@ -144,12 +143,27 @@
         </h2>
 
         @php
-            $resolved_reports = \App\Models\Report::where('reported_type', '!=', $report->reported_type)
+            $other_reports = \App\Models\Report::where('reported_type', '!=', $report->reported_type)
                 ->orderBy('resolved', 'ASC')
                 ->orderBy('created_at', 'ASC')
                 ->get();
         @endphp
-        <x-dashboard-section cols="4" :reported_arr="$resolved_reports" type="{{ $report->reported_type }}" />
+        
+        <x-dashboard-section cols="4" :reported_arr="$other_reports" type="{{ $report->reported_type }}" />
 
     </x-page-panel>
+
+    @if ($report->reported_type == 'user')
+        <x-user-ban-modal :user="$reported"></x-user-ban-modal>
+    @endif
+
+    @if ($other_reports->count() > 0)
+        @foreach ($other_reports as $report)
+            @if (!is_null($report->reported_type) && $report->reported_type == 'user')
+                <x-user-ban-modal :user="\App\Models\User::find($report->reported_id)"></x-user-ban-modal>
+            @break
+        @endif
+    @endforeach
+@endif
+
 </x-main-layout>
