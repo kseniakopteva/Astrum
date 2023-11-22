@@ -3,7 +3,7 @@
         <div class="flex space-x-2">
             <x-colored-username-link size="big" :user="$note->author"></x-colored-username-link>
 
-            @if (!is_null($note->parent_id))
+            @if (!is_null($note->parent_id) && !$note->parent->removed)
                 <?php $parent = App\Models\Note::find($note->parent_id); ?>
                 <p>
                     <a href={{ route('note.show', ['author' => $parent->author->username, 'note' => $parent->slug]) }}>
