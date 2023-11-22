@@ -134,7 +134,7 @@
 
                                             @if (in_array(auth()->user()->role, ['mod', 'admin']))
                                                 @if (!$user->isBanned())
-                                                    <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'ban')"
+                                                    <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'ban-{{ $user->id }}')"
                                                         class="block w-full px-4 py-2 text-left text-sm dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-neutral-700">
                                                         {{ __('Ban User') }}
                                                     </button>
