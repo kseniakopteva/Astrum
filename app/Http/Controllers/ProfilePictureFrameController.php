@@ -56,7 +56,7 @@ class ProfilePictureFrameController extends Controller
         $attributes['image'] = $imageName;
         $request->image->move($path, $imageName);
 
-        Image::make($path . '\\' . $imageName)->fit(2000)->save($path . '\\' . $imageName);
+        Image::make($path . '/' . $imageName)->fit(2000)->save($path . '/' . $imageName);
 
         $profile_picture_frame = ProfilePictureFrame::create($attributes);
 

@@ -88,7 +88,7 @@ class PostController extends Controller
         $attributes['image'] = $imageName;
         $request->image->move($path, $imageName);
 
-        $image = Image::make($path . '\\' . $imageName)->resize(1000, null, function ($constraint) {
+        $image = Image::make($path . '/' . $imageName)->resize(1000, null, function ($constraint) {
             $constraint->aspectRatio();
             $constraint->upsize();
         });
@@ -140,7 +140,7 @@ class PostController extends Controller
             }
         }
 
-        $image->save($path . '\\' . $imageName);
+        $image->save($path . '/' . $imageName);
 
         $new_post = Post::create($attributes);
         $u->stars -= $price;

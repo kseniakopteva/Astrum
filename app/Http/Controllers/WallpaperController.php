@@ -54,7 +54,7 @@ class WallpaperController extends Controller
         $attributes['image'] = $imageName;
         $request->image->move($path, $imageName);
 
-        Image::make($path . '\\' . $imageName)->fit(1920, 1080)->save($path . '\\' . $imageName);
+        Image::make($path . '/' . $imageName)->fit(1920, 1080)->save($path . '/' . $imageName);
 
         $wallpaper = Wallpaper::create($attributes);
 

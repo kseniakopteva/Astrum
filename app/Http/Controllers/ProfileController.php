@@ -139,7 +139,7 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         if ($request->image && $request->image->isValid() && fnmatch(auth()->user()->image, 'default[1234567].png')) {
-            File::delete(public_path('images') . '\\' . auth()->user()->image);
+            File::delete(public_path('images') . '/' . auth()->user()->image);
         }
 
         $request->user()->fill($request->validated());
@@ -162,7 +162,7 @@ class ProfileController extends Controller
             $request->user()->image = $imageName;
             $request->image->move($filePath, $imageName);
 
-            Image::make($filePath . '\\' . $imageName)->fit(500)->save($filePath . '\\' . $imageName);
+            Image::make($filePath . '/' . $imageName)->fit(500)->save($filePath . '/' . $imageName);
 
             // $image->move($filePath, $imageName);
         }
@@ -203,7 +203,7 @@ class ProfileController extends Controller
     {
         $user =  User::find(Auth::id());
         if (!fnmatch('default[1234567].png', $user->image))
-            File::delete(public_path('images') . '\\' . $user->image);
+            File::delete(public_path('images') . '/' . $user->image);
 
         $user->image = 'default' . rand(1, 7) . '.png';
         $user->save();

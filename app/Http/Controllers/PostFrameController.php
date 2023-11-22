@@ -56,7 +56,7 @@ class PostFrameController extends Controller
         $attributes['image'] = $imageName;
         $request->image->move($path, $imageName);
 
-        Image::make($path . '\\' . $imageName)->fit(2000)->save($path . '\\' . $imageName);
+        Image::make($path . '/' . $imageName)->fit(2000)->save($path . '/' . $imageName);
 
         $post_frame = PostFrame::create($attributes);
 
