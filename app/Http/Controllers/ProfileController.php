@@ -58,7 +58,7 @@ class ProfileController extends Controller
             'following' => $author->following,
             'products' => Product::where('user_id', $author->id)
                 // ->orderBy('currency')
-                ->orderBy('price', 'ASC')->get()
+                ->orderBy('price', 'ASC')->paginate(12) //->get()
         ]);
     }
 

@@ -53,8 +53,8 @@
 <x-main-layout>
     <x-page-panel>
 
-        <h1 class="large-title mb-4">Moderator Dashboard</h1>
-        <a href="{{ route('mod.dashboard') }}">Go Back</a>
+        <h1 class="large-title mb-4"><a href="{{ route('mod.dashboard') }}" class="underline">Moderator Dashboard</a></h1>
+        <h2 class="medium-title mb-3">Reported {{ $pretty_type }}: <a href="{{ route($route, $route_attr) }}">{{ $name }}</a></h2>
 
         <div
             class="panel border max-w-3xl mx-auto my-6 bg-white dark:bg-neutral-800
@@ -132,7 +132,7 @@
                 ->get();
         @endphp
 
-        <x-dashboard-section cols="4" :reported_arr="$other_reports_of_this" type="{{ $report->reported_type }}" />
+        <x-dashboard-section cols="4" :reported_arr="$other_reports_of_this" type="{{ $report->reported_type }}" :no_button="true" />
 
         <h2 class="medium-title mb-2">Other Reports mentioning
             @if ($report->reported_type != 'user')
@@ -148,8 +148,8 @@
                 ->orderBy('created_at', 'ASC')
                 ->get();
         @endphp
-        
-        <x-dashboard-section cols="4" :reported_arr="$other_reports" type="{{ $report->reported_type }}" />
+
+        <x-dashboard-section cols="4" :reported_arr="$other_reports" type="{{ $report->reported_type }}" :no_button="true" />
 
     </x-page-panel>
 

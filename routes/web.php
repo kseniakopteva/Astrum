@@ -213,21 +213,23 @@ Route::get('/help', function () {
 
 Route::get('/mod/dashboard', function () {
     return view('mod-dashboard', [
-        'reported_users' => Report::where('reported_type', 'user')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get(),
-        'reported_posts' => Report::where('reported_type', 'post')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get(),
-        'reported_post_comments' => Report::where('reported_type', 'post-comment')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get(),
-        'reported_notes' => Report::where('reported_type', 'note')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get(),
-        'reported_wallpapers' => Report::where('reported_type', 'wallpaper')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get(),
-        'reported_profile_picture_frames' => Report::where('reported_type', 'profile-picture-frame')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get(),
-        'reported_post_frames' => Report::where('reported_type', 'post-frame')->orderBy('resolved', 'ASC')->orderBy('created_at', 'ASC')->get()
+        'reported_users' => Report::where('reported_type', 'user')->orderBy('resolved', 'ASC')->orderBy('created_at', 'DESC')->get()->take(4),
+        'reported_posts' => Report::where('reported_type', 'post')->orderBy('resolved', 'ASC')->orderBy('created_at', 'DESC')->get()->take(4),
+        'reported_post_comments' => Report::where('reported_type', 'post-comment')->orderBy('resolved', 'ASC')->orderBy('created_at', 'DESC')->get()->take(4),
+        'reported_notes' => Report::where('reported_type', 'note')->orderBy('resolved', 'ASC')->orderBy('created_at', 'DESC')->get()->take(4),
+        'reported_wallpapers' => Report::where('reported_type', 'wallpaper')->orderBy('resolved', 'ASC')->orderBy('created_at', 'DESC')->get()->take(4),
+        'reported_profile_picture_frames' => Report::where('reported_type', 'profile-picture-frame')->orderBy('resolved', 'DESC')->orderBy('created_at', 'ASC')->get()->take(4),
+        'reported_post_frames' => Report::where('reported_type', 'post-frame')->orderBy('resolved', 'ASC')->orderBy('created_at', 'DESC')->get()->take(4)
     ]);
 })->name('mod.dashboard')->middleware('mod');
 
-Route::get('/mod/dashboard/{report}', function (Report $report) {
+Route::get('/mod/dashboard/{type}', [ReportController::class, 'index'])->name('reports')->middleware('mod');
+
+Route::get('/mod/dashboard/report/{report}', function (Report $report) {
     return view('report-show', [
         'report' => $report
     ]);
-})->name('report.show');
+})->name('report.show')->middleware('mod');
 
 Route::post('/make/creator', function () {
     if (auth()->user()?->role === 'admin') {

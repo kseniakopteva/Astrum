@@ -14,6 +14,14 @@ use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
+    public function index($type)
+    {
+        return view('reports.index', [
+            'type' => $type,
+            'reports' => Report::where('reported_type', $type)->orderBy('resolved', 'ASC')->orderBy('created_at', 'DESC')->get(),
+        ]);
+    }
+
     public function store(Request $request, $type)
     {
         if (!auth()->check())
