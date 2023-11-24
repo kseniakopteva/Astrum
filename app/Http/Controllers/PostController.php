@@ -19,6 +19,38 @@ class PostController extends Controller
 {
     public function explore()
     {
+        if (request(['search']) && is_null(request(['search'])['search']))
+            return redirect('explore');
+
+
+        if (request(['search']) && !is_null(request(['search'])['search'])) {
+            $users = User::whereNotIn('id', User::getBannedUserIds());
+            if (auth()->check())
+                $users = $users->whereNotIn('id', auth()->user()->allBlockedBy());
+            $users = $users->latest()
+                ->filter(request(['search']))->get();
+
+            $posts = Post::where('removed', false)->whereNotIn('user_id', User::getBannedUserIds());
+            if (auth()->check())
+                $posts = $posts->whereNotIn('user_id', auth()->user()->allBlockedBy());
+            $posts = $posts->latest()
+                ->filter(request(['search']))->get();
+
+            $notes = Note::where('removed', false)->whereNotIn('user_id', User::getBannedUserIds());
+            if (auth()->check())
+                $notes = $notes->whereNotIn('user_id', auth()->user()->allBlockedBy());
+            $notes = $notes->latest()
+                ->filter(request(['search']))->get();
+
+            $items = $notes->merge($posts)->sortByDesc('created_at');
+
+            return view('explore', [
+                'users' => $users,
+                'items' => $items
+            ]);
+        }
+
+
         $posts = Post::where('removed', false)
             ->whereNotIn('user_id', User::getBannedUserIds());
 
