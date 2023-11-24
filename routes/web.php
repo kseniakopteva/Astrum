@@ -226,7 +226,7 @@ Route::get('/mod/dashboard', function () {
 Route::get('/mod/dashboard/{type}', [ReportController::class, 'index'])->name('reports')->middleware('mod');
 
 Route::get('/mod/dashboard/report/{report}', function (Report $report) {
-    return view('report-show', [
+    return view('reports.show', [
         'report' => $report
     ]);
 })->name('report.show')->middleware('mod');

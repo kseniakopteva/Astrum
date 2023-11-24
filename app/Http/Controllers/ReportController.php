@@ -18,7 +18,7 @@ class ReportController extends Controller
     {
         return view('reports.index', [
             'type' => $type,
-            'reports' => Report::where('reported_type', $type)->orderBy('resolved', 'ASC')->orderBy('created_at', 'DESC')->get(),
+            'reports' => Report::where('reported_type', $type)->orderBy('resolved', 'ASC')->orderBy('created_at', 'DESC')->paginate(25),
         ]);
     }
 

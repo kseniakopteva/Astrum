@@ -9,5 +9,8 @@
             @endforeach
         </div>
 
+        <div class="mt-8">
+            {{ $reports->links() }}
+        </div>
     </x-page-panel>
 </x-main-layout>
