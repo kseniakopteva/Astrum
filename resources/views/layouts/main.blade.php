@@ -131,11 +131,11 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
     <script>
-        if ('{{ Request::path() }}' === '/') {
+        if ('{{ Request::segment(1) }}' === '/') {
             var item = localStorage.getItem('feed_view')
             if (item == null) item = 'list'
             console.log(item)
-        } else if ('{{ Request::path() }}' === 'explore') {
+        } else if ('{{ Request::segment(1) }}' === 'explore' || '{{ Request::segment(1) }}' === 'tags') {
             var item = localStorage.getItem('explore_view')
             if (item == null) item = 'grid'
             console.log(item)

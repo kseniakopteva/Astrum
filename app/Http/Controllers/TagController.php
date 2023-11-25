@@ -23,9 +23,9 @@ class TagController extends Controller
         $notes = $notes->latest()
             ->filter(request(['search']))->get();
 
-        if (request(['sort']) && in_array(request(['sort'])['sort'], ['all']))
-            $items = $notes->merge($posts)->sortByDesc('created_at')->paginate(25, null, $page);
-        elseif (request(['sort']) && in_array(request(['sort'])['sort'], ['notes']))
+        // if (request(['sort']) && in_array(request(['sort'])['sort'], ['all']))
+        $items = $notes->merge($posts)->sortByDesc('created_at')->paginate(25, null, $page);
+        if (request(['sort']) && in_array(request(['sort'])['sort'], ['notes']))
             $items = $notes->sortByDesc('created_at')->paginate(25, null, $page);
         elseif (request(['sort']) && in_array(request(['sort'])['sort'], ['posts']))
             $items = $posts->sortByDesc('created_at')->paginate(25, null, $page);
