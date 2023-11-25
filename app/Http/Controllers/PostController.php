@@ -9,6 +9,7 @@ use App\Models\PostFrame;
 use App\Models\PostLike;
 use App\Models\Tag;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -17,11 +18,11 @@ use Intervention\Image\Facades\Image;
 
 class PostController extends Controller
 {
-    public function explore()
+    public function explore($page = null)
     {
+        // dd(request());
         if (request(['search']) && is_null(request(['search'])['search']))
-            return redirect('explore');
-
+            return redirect('/explore?' . http_build_query(request()->except('search')));
 
         if (request(['search']) && !is_null(request(['search'])['search'])) {
             $users = User::whereNotIn('id', User::getBannedUserIds());
@@ -42,7 +43,7 @@ class PostController extends Controller
             $notes = $notes->latest()
                 ->filter(request(['search']))->get();
 
-            $items = $notes->merge($posts)->sortByDesc('created_at');
+            $items = $notes->merge($posts)->sortByDesc('created_at')->paginate(25, null, $page);
 
             return view('explore', [
                 'users' => $users,
@@ -50,21 +51,60 @@ class PostController extends Controller
             ]);
         }
 
+        if (!request(['sort']) || request(['sort'])['sort'] == 'all') {
 
-        $posts = Post::where('removed', false)
-            ->whereNotIn('user_id', User::getBannedUserIds());
+            $posts = Post::where('removed', false)->whereNotIn('user_id', User::getBannedUserIds());
+            if (auth()->check())
+                $posts = $posts->whereNotIn('user_id', auth()->user()->allBlockedBy());
+            $posts = $posts->latest()
+                ->filter(request(['search']))->get();
 
-        if (auth()->check())
-            $posts = $posts->whereNotIn('user_id', auth()->user()->allBlockedBy());
+            $notes = Note::where('removed', false)->whereNotIn('user_id', User::getBannedUserIds());
+            if (auth()->check())
+                $notes = $notes->whereNotIn('user_id', auth()->user()->allBlockedBy());
+            $notes = $notes->latest()
+                ->filter(request(['search']))->get();
 
-        $posts = $posts->latest()
-            ->filter(request(['search']))
-            ->paginate(30)
-            ->withQueryString();
+            $items = new Collection();
+            $items = $items->concat($posts)->concat($notes)->sortByDesc('created_at')->paginate(25, null, $page);
+            // dd($items);
+            return view('explore', [
+                'items' => $items
+            ]);
+        } else if (request(['sort'])['sort'] == 'posts') {
+            $posts = Post::where('removed', false)
+                ->whereNotIn('user_id', User::getBannedUserIds());
 
-        return view('explore', [
-            'posts' => $posts
-        ]);
+            if (auth()->check())
+                $posts = $posts->whereNotIn('user_id', auth()->user()->allBlockedBy());
+
+            $posts = $posts->latest()
+                ->filter(request(['search']))
+                ->paginate(30)
+                ->withQueryString();
+
+            return view('explore', [
+                'items' => $posts
+            ]);
+        } else if (request(['sort'])['sort'] == 'notes') {
+            $notes = Note::where('removed', false)
+                ->whereNotIn('user_id', User::getBannedUserIds());
+
+            if (auth()->check())
+                $notes = $notes->whereNotIn('user_id', auth()->user()->allBlockedBy());
+
+            $notes = $notes->latest()
+                ->filter(request(['search']))
+                ->paginate(30)
+                ->withQueryString();
+
+            return view('explore', [
+                'items' => $notes
+            ]);
+        } else if (request(['sort'])['sort'] == 'week') {
+        } else if (request(['sort'])['sort'] == 'month') {
+        } else if (request(['sort'])['sort'] == 'year') {
+        }
     }
 
     public function show(User $author, Post $post)

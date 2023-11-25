@@ -124,6 +124,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/explore', [PostController::class, 'explore'])->name('explore');
+Route::get('/explore/page/{page}', ['as' => 'explore-page', 'uses' => '\App\Http\Controllers\PostController@explore']);
 
 /* -------------------------------------------------------------------------- */
 /*                                  StarShop                                  */
