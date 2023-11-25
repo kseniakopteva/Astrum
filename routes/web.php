@@ -20,6 +20,7 @@ use App\Models\Note;
 use App\Models\Post;
 use App\Models\Report;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Route;
 
 /* -------------------------------------------------------------------------- */
@@ -84,7 +85,7 @@ Route::get('/u/{author:username}/posts/{post:slug}', [PostController::class, 'sh
 Route::get('/u/{author:username}/notes/{note:slug}#current', [NoteController::class, 'show'])->name('note.show');
 Route::get('/u/{author:username}/notes/{note:slug}', [NoteController::class, 'show']);
 
-Route::get('/', function () {
+Route::get('/', function ($page = null) {
     if (!auth()->check())
         return redirect()->route('explore')->with('error', 'Log in to access your feed!');
 
@@ -98,7 +99,8 @@ Route::get('/', function () {
     $posts = Post::whereIn('user_id', $userIds)->get();
     $notes = Note::whereIn('user_id', $userIds)->get();
 
-    $items = $notes->merge($posts)->sortByDesc('created_at');
+    $items = new Collection();
+    $items = $items->concat($posts)->concat($notes)->sortByDesc('created_at')->paginate(30, null, $page);
 
     return view('feed', [
         'items' => $items

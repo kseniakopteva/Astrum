@@ -131,23 +131,34 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
     <script>
-        var macy_instance = Macy({
-            container: '.masonry',
-            trueOrder: false,
-            waitForImages: true,
-            debug: true,
-            margin: 10,
-            columns: 4,
-            breakAt: {
-                1024: 3,
-                768: 2,
-                640: 1
-            }
-        });
+        if ('{{ Request::path() }}' === '/') {
+            var item = localStorage.getItem('feed_view')
+            if (item == null) item = 'list'
+            console.log(item)
+        } else if ('{{ Request::path() }}' === 'explore') {
+            var item = localStorage.getItem('explore_view')
+            if (item == null) item = 'grid'
+            console.log(item)
+        }
+        if (item !== 'list') {
+            var macy_instance = Macy({
+                container: '.masonry',
+                trueOrder: false,
+                waitForImages: true,
+                debug: true,
+                margin: 10,
+                columns: 4,
+                breakAt: {
+                    1024: 3,
+                    768: 2,
+                    640: 1
+                }
+            });
 
-        macy_instance.runOnImageLoad(function() {
-            macy_instance.recalculate(true);
-        }, true);
+            macy_instance.runOnImageLoad(function() {
+                macy_instance.recalculate(true);
+            }, true);
+        }
     </script>
 
     {{-- COOKIE SOLUTION --}}
