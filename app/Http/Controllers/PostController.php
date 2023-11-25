@@ -31,28 +31,31 @@ class PostController extends Controller
             $users = $users->latest()
                 ->filter(request(['search']))->get();
 
-            $posts = Post::where('removed', false)->whereNotIn('user_id', User::getBannedUserIds());
-            if (auth()->check())
-                $posts = $posts->whereNotIn('user_id', auth()->user()->allBlockedBy());
-            $posts = $posts->latest()
-                ->filter(request(['search']))->get();
+            //     $posts = Post::where('removed', false)->whereNotIn('user_id', User::getBannedUserIds());
+            //     if (auth()->check())
+            //         $posts = $posts->whereNotIn('user_id', auth()->user()->allBlockedBy());
+            //     $posts = $posts->latest()
+            //         ->filter(request(['search']))->get();
 
-            $notes = Note::where('removed', false)->whereNotIn('user_id', User::getBannedUserIds());
-            if (auth()->check())
-                $notes = $notes->whereNotIn('user_id', auth()->user()->allBlockedBy());
-            $notes = $notes->latest()
-                ->filter(request(['search']))->get();
+            //     $notes = Note::where('removed', false)->whereNotIn('user_id', User::getBannedUserIds());
+            //     if (auth()->check())
+            //         $notes = $notes->whereNotIn('user_id', auth()->user()->allBlockedBy());
+            //     $notes = $notes->latest()
+            //         ->filter(request(['search']))->get();
 
-            $items = $notes->merge($posts)->sortByDesc('created_at')->paginate(25, null, $page);
+            //     $items = $notes->merge($posts)->sortByDesc('created_at')->paginate(25, null, $page);
 
-            return view('explore', [
-                'users' => $users,
-                'items' => $items
-            ]);
+            //     return view('explore', [
+            //         'users' => $users,
+            //         'items' => $items
+            //     ]);
+        } else {
+            $users = null;
         }
 
         if (!request(['sort']) || request(['sort'])['sort'] == 'all') {
-
+            //
+            //
             $posts = Post::where('removed', false)->whereNotIn('user_id', User::getBannedUserIds());
             if (auth()->check())
                 $posts = $posts->whereNotIn('user_id', auth()->user()->allBlockedBy());
@@ -67,11 +70,16 @@ class PostController extends Controller
 
             $items = new Collection();
             $items = $items->concat($posts)->concat($notes)->sortByDesc('created_at')->paginate(25, null, $page);
-            // dd($items);
+
             return view('explore', [
-                'items' => $items
+                'items' => $items,
+                'users' => $users
             ]);
+            //
+            //
         } else if (request(['sort'])['sort'] == 'posts') {
+            //
+            //
             $posts = Post::where('removed', false)
                 ->whereNotIn('user_id', User::getBannedUserIds());
 
@@ -84,8 +92,11 @@ class PostController extends Controller
                 ->withQueryString();
 
             return view('explore', [
-                'items' => $posts
+                'items' => $posts,
+                'users' => $users
             ]);
+            //
+            //
         } else if (request(['sort'])['sort'] == 'notes') {
             $notes = Note::where('removed', false)
                 ->whereNotIn('user_id', User::getBannedUserIds());
@@ -99,12 +110,19 @@ class PostController extends Controller
                 ->withQueryString();
 
             return view('explore', [
-                'items' => $notes
+                'items' => $notes,
+                'users' => $users
             ]);
-        } else if (request(['sort'])['sort'] == 'week') {
-        } else if (request(['sort'])['sort'] == 'month') {
-        } else if (request(['sort'])['sort'] == 'year') {
         }
+        // else if (request(['sort'])['sort'] == 'week') {
+        //
+        //
+
+        //
+        //
+        // } else if (request(['sort'])['sort'] == 'month') {
+        // } else if (request(['sort'])['sort'] == 'year') {
+        // }
     }
 
     public function show(User $author, Post $post)

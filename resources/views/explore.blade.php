@@ -22,7 +22,7 @@
     <div class="wrapper">
         <div class="mb-8 mt-3 flex justify-between gap-10">
 
-            <form class="main-search-form flex justify-between gap-10 flex-grow" action="#" method="get">
+            <form class="main-search-form flex justify-between items-start gap-10 flex-grow" action="#" method="get">
                 <div class="relative flex-grow w-full">
                     <input
                         class="input border w-full border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md"
@@ -32,22 +32,20 @@
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
 
-                    @if (request(['search']) && !is_null(request(['search'])['search']))
-                        <a href="{{ route('explore', ['search' => request(['search'])['search']]) }}" class="float-right">
-                            Return to all posts</a>
+                    @if ((request(['search']) && !is_null(request(['search'])['search'])) || (request(['sort']) && request(['sort'])['sort'] !== 'all'))
+                        <a href="{{ route('explore', ['sort' => 'all']) }}" class="float-right">
+                            Return to all posts & notes</a>
                     @endif
                 </div>
-
-                {{-- Sort by time and type dropdown here --}}
 
                 <select name="sort" id="exploreSort" onchange="this.form.submit()"
                     class="cursor-pointer border border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
                     <option value="all" @if (request(['sort']) && request(['sort'])['sort'] == 'all') selected="selected" @endif>All Recent Posts & Notes</option>
                     <option value="posts" @if (request(['sort']) && request(['sort'])['sort'] == 'posts') selected="selected" @endif>All Recent Posts</option>
                     <option value="notes" @if (request(['sort']) && request(['sort'])['sort'] == 'notes') selected="selected" @endif>All Recent Notes</option>
-                    <option value="week" @if (request(['sort']) && request(['sort'])['sort'] == 'week') selected="selected" @endif>Best of this week</option>
+                    {{-- <option value="week" @if (request(['sort']) && request(['sort'])['sort'] == 'week') selected="selected" @endif>Best of this week</option>
                     <option value="month" @if (request(['sort']) && request(['sort'])['sort'] == 'month') selected="selected" @endif>Best of this month</option>
-                    <option value="year" @if (request(['sort']) && request(['sort'])['sort'] == 'year') selected="selected" @endif>Best of this year</option>
+                    <option value="year" @if (request(['sort']) && request(['sort'])['sort'] == 'year') selected="selected" @endif>Best of this year</option> --}}
                 </select>
             </form>
 
@@ -103,8 +101,9 @@
                     $heading = 'All Recent Posts & Notes';
                 }
             @endphp
-
-            <h1 class="medium-title mb-4">{{ $heading }}</h1>
+            @if (!(isset($tag) && $tag))
+                <h1 class="medium-title mb-4">{{ $heading }}</h1>
+            @endif
         @endif
 
         @if (count(request(['search'])) === 0 || is_null(request(['search'])['search']))
@@ -117,24 +116,6 @@
                         <span class="medium-title">searching "{{ request(['search'])['search'] }}"</span>
                     @endif
                 </div>
-                <div class="masonry">
-                    @foreach ($items as $item)
-                        @if ($item instanceof \App\Models\Post)
-                            <x-feed-post :post="$item"></x-feed-post>
-                        @elseif ($item instanceof \App\Models\Note)
-                            <x-feed-note :note="$item"></x-feed-note>
-                        @endif
-                    @endforeach
-                </div>
-            @else
-                {{-- <div class="masonry">
-                    @foreach ($posts as $post)
-                        <x-feed-post :post=$post></x-feed-post>
-                    @endforeach
-                </div>
-                <div class="mt-8">
-                    {{ $posts->links() }}
-                </div> --}}
             @endif
         @else
             @if (!(isset($tag) && $tag) && !is_null($users) && count($users) !== 0)
@@ -151,20 +132,13 @@
                 </div>
             @endif
 
-            @if (!is_null($items) && count($items) !== 0)
+            @if (request(['sort']) && request(['sort'])['sort'] == 'all')
                 <h2 class="small-title mb-2 mt-3">Posts & Notes</h2>
-                {{-- <div class="masonry">
-            @foreach ($items as $item)
-                @if ($item instanceof \App\Models\Post)
-                    <x-feed-post :post="$item"></x-feed-post>
-                @elseif ($item instanceof \App\Models\Note)
-                    <x-feed-note :note="$item"></x-feed-note>
-                @endif
-            @endforeach
-        </div> --}}
+            @elseif (request(['sort']) && request(['sort'])['sort'] == 'posts')
+                <h2 class="small-title mb-2 mt-3">Posts</h2>
+            @elseif (request(['sort']) && request(['sort'])['sort'] == 'notes')
+                <h2 class="small-title mb-2 mt-3">Notes</h2>
             @endif
-
-            {{-- <p class="text-xl my-4 text-center font-bold ">To see more results try making your search more precise!</p> --}}
 
         @endif
 
