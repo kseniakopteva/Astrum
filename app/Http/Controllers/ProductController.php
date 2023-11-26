@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 
@@ -29,7 +30,7 @@ class ProductController extends Controller
             'max_slots' => 'numeric|nullable',
             'description' => 'required|max:2000',
             'price' => 'required|numeric',
-            // 'currency' => 'required',
+            'currency' => 'required',
         ]);
 
         $attributes['user_id'] = auth()->user()->id;
@@ -74,6 +75,13 @@ class ProductController extends Controller
             'email' => 'required|email|max:100',
             'details' => 'required|max:2000',
         ]);
+
+        $bought_product = Product::find($request->product_id);
+        if ($bought_product->currency == 'stars') {
+            $u = User::find($request->buyer_id);
+            $u->stars -= $bought_product->price;
+            $u->save();
+        }
 
         $attributes['product_id'] = $request->product_id;
 

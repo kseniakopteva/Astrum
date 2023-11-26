@@ -73,11 +73,12 @@
                         class="block border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
                     <x-input-error :messages="$errors->get('price')" class="mt-2" />
 
-                    {{-- <x-input-label class="!inline-block" for="currency">Currency:</x-input-label>
-                            <select name="currency" id="currency" class="cursor-pointer my-2 border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
-                                <option value="stars" selected="selected">Stars ★</option>
-                                <option value="euro">Euro €</option>
-                            </select> --}}
+                    <x-input-label class="!inline-block" for="currency">Currency:</x-input-label>
+                    <select name="currency" id="currency"
+                        class="cursor-pointer my-2 border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
+                        <option value="stars" selected="selected">Stars ★</option>
+                        <option value="euro">Euro €</option>
+                    </select>
                 </div>
             </div>
 

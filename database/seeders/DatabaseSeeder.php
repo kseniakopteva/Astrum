@@ -85,7 +85,8 @@ class DatabaseSeeder extends Seeder
                     'slug' => 'sketch-commission_' . $u->id,
                     'type' => 'unlimited',
                     'max_slots' => 15,
-                    'price' => 25
+                    'price' => 100,
+                    'currency' => 'stars'
                 ],
                 [
                     'image' => '2.jpg',
@@ -93,7 +94,8 @@ class DatabaseSeeder extends Seeder
                     'slug' => 'lineart-commission_' . $u->id,
                     'type' => 'unlimited',
                     'max_slots' => 10,
-                    'price' => 40
+                    'price' => 40,
+                    'currency' => 'euro'
                 ],
                 [
                     'image' => '3.jpg',
@@ -101,7 +103,8 @@ class DatabaseSeeder extends Seeder
                     'slug' => 'painting-commission_' . $u->id,
                     'type' => 'unlimited',
                     'max_slots' => 5,
-                    'price' => 80
+                    'price' => 80,
+                    'currency' => 'euro'
                 ],
             ];
 
@@ -115,6 +118,7 @@ class DatabaseSeeder extends Seeder
                     'type' => $product['type'],
                     'max_slots' => $product['max_slots'],
                     'price' => $product['price'],
+                    'currency' => $product['currency']
                 ]);
             }
 

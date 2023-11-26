@@ -29,8 +29,14 @@ class OrderController extends Controller
             $order->confirmation = null;
             $order->update(['status' => $attr['status']]);
             $order->save();
+        } elseif ($attr['status'] == 'rejected') {
+            if ($order->product->currency == 'stars') {
+                $price = $order->product->price;
+                $order->buyer->stars += $price;
+                $order->buyer->save();
+                $order->update(['status' => $attr['status']]);
+            }
         } else {
-
             $order->update(['status' => $attr['status']]);
         }
         return back();
@@ -43,6 +49,10 @@ class OrderController extends Controller
             return back()->with('error', 'You can\'t do that.');
 
         $order->confirmation = true;
+        if ($order->product->currency == 'stars') {
+            $order->seller->stars += $order->product->price;
+            $order->seller->save();
+        }
         $order->save();
 
         return back();

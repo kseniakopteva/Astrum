@@ -33,11 +33,12 @@
         <div class="flex justify-between items-center">
             <div class="text-lg">{{ $product->name }}</div>
             <div class="text-xl">
-                {{ $product->price }} €
-                {{-- @if ($product->currency == 'euro')€
-                        @else
-                        <x-star-icon />
-                         @endif --}}
+                {{ $product->price }}
+                @if ($product->currency == 'euro')
+                    €
+                @else
+                    <x-star-icon />
+                @endif
             </div>
         </div>
         <div class="my-2">{{ $product->description }}</div>
