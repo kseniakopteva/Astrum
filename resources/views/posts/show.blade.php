@@ -39,6 +39,7 @@
                                 </x-slot>
                             </x-dropdown>
                         @endauth
+
                 </div>
                 <div class=" flex flex-col justify-between flex-grow">
                     <div>
@@ -58,7 +59,8 @@
                         @endif
                     </div>
 
-                    <div class="self-end justify-self-end">
+                    <div class="flex justify-between items-center">
+                        <p>{{ \Carbon\Carbon::parse($post->created_at)->format('D j F Y \a\t H:i') }}</p>
                         <x-likes route="post.like" :item="$post" :button="true"></x-likes>
                     </div>
                 </div>
