@@ -59,7 +59,7 @@
                                 ->where('resolved', 0)
                                 ->count();
                             
-                            $heading_if_open = '<span>' . $reported_type['title'] . '(' . $count . ')</span>';
+                            $heading_if_open = '<span>' . $reported_type['title'] . ' (' . $count . ')</span>';
                             if (
                                 $reported_type['arr']
                                     ->where('resolved', 0)
@@ -69,7 +69,7 @@
                                 $heading_if_open .= '<span>-</span>';
                             }
                             
-                            $heading_if_closed = '<span>' . $reported_type['title'] . '(' . $count . ')</span>';
+                            $heading_if_closed = '<span>' . $reported_type['title'] . ' (' . $count . ')</span>';
                             if ($count > 0) {
                                 $heading_if_closed .= '<span>+</span>';
                             } ?> x-html="open ? '{{ $heading_if_open }}' : '{{ $heading_if_closed }}' "
