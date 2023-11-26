@@ -1,5 +1,4 @@
 <x-profile-layout :user="$user" :followers="$followers" :following="$following">
-
     @push('preloads')
         @foreach ($posts as $post)
             <link rel="preload" href="{{ asset('images/posts/' . $post->image) }}" as="image">
@@ -45,9 +44,13 @@
                 @foreach ($notes as $note)
                     <x-feed-note :note=$note :user=$user></x-feed-note>
                 @endforeach
-                @if ($user->notes->count() > 20)
-                    <x-secondary-button>View all notes</x-secondary-button>
-                @endif
+                <div class="text-center pt-4">
+                    @if ($user->notes->count() > 20)
+                        <a href="{{ route('profile.notes', $user->username) }}"
+                            class="cursor-pointer inline-flex items-center px-4 py-2 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-500 rounded-md font-semibold text-xs text-neutral-700 dark:text-neutral-300 uppercase tracking-widest shadow-sm hover:bg-neutral-50 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-800 disabled:opacity-25 transition ease-in-out duration-150">
+                            View all notes</a>
+                    @endif
+                </div>
             </div>
         </div>
 </x-profile-layout>

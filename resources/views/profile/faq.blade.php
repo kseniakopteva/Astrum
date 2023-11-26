@@ -27,7 +27,7 @@
     </section>
 
 
-    <section class="max-w-3xl m-auto mb-8">
+    <section class="max-w-3xl m-auto">
         @foreach ($user->questions as $question)
             {{-- <article class="bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 rounded-lg p-4 pt-4 mb-4 break-inside-avoid"> --}}
             <x-panel :item="$question" :border="false">

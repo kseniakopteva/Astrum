@@ -45,14 +45,27 @@
         <div class="flex justify-between items-center">
             <div class="px-2 py-0.5 rounded-md @if (!is_null($user->colour)) bg-{{ $user->colour->lightcolor }}/30 dark:bg-{{ $user->colour->darkcolor }}/30 @else bg-lime-500/30 @endif">
                 @if ($product->type === 'unlimited')
-                    {{ $product->availableSlots() }} Slots available out of {{ $product->max_slots }}
+                    @if (!$product->max_slots)
+                        Infinite slots available
+                    @else
+                        {{ $product->availableSlots() }} slots available out of {{ $product->max_slots }}
+                    @endif
                 @else
                     One-time purchase
                 @endif
             </div>
 
             @auth
-                @if ($product->availableSlots() != 0)
+                {{--
+
+                Button is active if
+                1. Unlimited type AND max_slots is null
+                2. Unlimited type AND max_slots NOT null AND availableSlots NOT 0
+                3. Limited
+
+                --}}
+
+                @if (($product->type === 'unlimited' && !$product->max_slots) || ($product->type === 'unlimited' && $product->max_slots && $product->availableSlots() != 0) || $product->type == 'one-time')
                     <x-primary-button class="ml-auto" x-data="" type="button"
                         x-on:click.prevent="$dispatch('open-modal', 'buy-product-{{ $product->id }}')">{{ $buy }}</x-primary-button>
                 @else

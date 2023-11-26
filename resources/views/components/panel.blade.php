@@ -21,9 +21,9 @@
     if ($accent) {
         $class .= ' border-l-4';
         if (!is_null($user->colour)) {
-            $class .= ' border-l-' . $user->colour->lightcolor . ' dark:border-l-' . $user->colour->darkcolor;
+            $class .= ' border-' . $user->colour->lightcolor . ' dark:border-' . $user->colour->darkcolor;
         } else {
-            $class .= ' border-l-lime-600 dark:border-l-lime-700 ';
+            $class .= ' border-lime-600 dark:border-lime-700 ';
         }
     }
 

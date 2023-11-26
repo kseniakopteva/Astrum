@@ -1,7 +1,7 @@
 @props(['user', 'posts', 'followers', 'following'])
 
 <x-main-layout :user="$user">
-    <div class="max-w-7xl m-auto px-4">
+    <div class="max-w-7xl m-auto px-4 pb-16">
         <header class="mb-10 p-8 pb-4 bg-white backdrop-blur-md bg-opacity-70 dark:bg-opacity-90 dark:bg-neutral-800 rounded-b-md {{-- bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm --}}  max-w-4xl m-auto ">
             <div class="grid grid-cols-5">
 
