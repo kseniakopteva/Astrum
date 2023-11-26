@@ -70,6 +70,9 @@ Route::get('/profile/{author:username}/about', [ProfileController::class, 'about
 Route::get('/orders', [OrderController::class, 'index'])->name('orders')->middleware('creator');
 Route::post('/order/status/update', [OrderController::class, 'update'])->name('order.status')->middleware('creator');
 
+Route::post('/order/confirm', [OrderController::class, 'confirmComplete'])->name('order.confirm')->middleware('auth');
+Route::post('/order/reject', [OrderController::class, 'rejectComplete'])->name('order.reject')->middleware('auth');
+
 Route::post('/profile/{author:username}/faq', [FAQuestionController::class, 'store']);
 
 Route::post('/profile/about', [ProfileController::class, 'about_update'])->name('about.update');

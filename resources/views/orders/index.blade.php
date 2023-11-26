@@ -27,9 +27,9 @@
                         @foreach ($orders as $order)
                             <tr
                                 class="
-                                @if ($order->isPending()) bg-red-100 dark:bg-red-700/10
+                                @if ($order->isPending() || $order->isCompleteRejected()) bg-red-100 dark:bg-red-700/10
                                 @elseif ($order->inProcess()) bg-white dark:bg-neutral-800
-                                @elseif ($order->isComplete() || $order->isRejected()) opacity-30 @endif
+                                @elseif ($order->isCompleteDone() || $order->isRejected()) opacity-50 @endif
                         ">
                                 <th scope="row" class="px-6 py-4 text-neutral-900 dark:text-white">
                                     <x-colored-username-link size="small" :user="$order->buyer" />
@@ -47,14 +47,20 @@
                                     <form action="{{ route('order.status') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="order_id" value="{{ $order->id }}">
-                                        <select name="status" onchange="this.form.submit()"
-                                            class="cursor-pointer border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
-                                            <option value="pending" @if ($order->isPending()) selected="selected" @endif>Pending</option>
-                                            <option value="working" @if ($order->inProcess()) selected="selected" @endif>Working on it</option>
+                                        <select name="status" onchange="this.form.submit()" @if ($order->isCompleteDone() || $order->isRejected()) disabled class=" @else class="cursor-pointer @endif border-neutral-300
+                                            dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500
+                                            dark:focus:ring-lime-600 rounded-md">
+                                            <option value="pending" @if ($order->isPending() || $order->isCompleteRejected()) selected="selected" @endif>Pending</option>
+                                            <option value="in_process" @if ($order->inProcess()) selected="selected" @endif>Working on it</option>
                                             <option value="rejected" @if ($order->isRejected()) selected="selected" @endif>Rejected</option>
-                                            <option value="complete" @if ($order->isComplete()) selected="selected" @endif>Complete</option>
+                                            <option value="complete" @if ($order->isCompletePending() || $order->isCompleteDone()) selected="selected" @endif>Complete</option>
                                         </select>
                                     </form>
+                                    @if ($order->isCompletePending())
+                                        <p class="italic">(Waiting for confirmation...)</p>
+                                    @elseif ($order->isCompleteRejected())
+                                        <p class="italic">(Status 'complete' has been rejected!<br> Have you sent the product?..)</p>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -92,9 +98,9 @@
                         @foreach ($my_orders as $order)
                             <tr
                                 class="
-                                @if ($order->isPending()) bg-red-100 dark:bg-red-700/10
+                                @if ($order->isPending() || $order->isCompleteRejected()) bg-red-100 dark:bg-red-700/10
                                 @elseif ($order->inProcess()) bg-white dark:bg-neutral-800
-                                @elseif ($order->isComplete() || $order->isRejected()) opacity-30 @endif
+                                @elseif ($order->isCompleteDone() || $order->isRejected()) opacity-50 @endif
                             ">
                                 <th scope="row" class="px-6 py-4 text-neutral-900 dark:text-white">
                                     <x-colored-username-link size="small" :user="$order->seller" />
@@ -108,8 +114,25 @@
                                 <td class="px-6 py-4">
                                     {!! nl2br(e($order->details)) !!}
                                 </td>
-                                <td class="px-1 py-4">
-                                    {{ ucwords($order->status) }}
+                                <td class="px-1 py-4 ">
+                                    @if ($order->isCompletePending())
+                                        Have you received your product?
+                                        <form class="inline" action="{{ route('order.confirm') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="order_id" value={{ $order->id }}>
+                                            <button>Yes</button>
+                                        </form> / <form class="inline" action="{{ route('order.reject') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="order_id" value={{ $order->id }}>
+                                            <button>No</button>
+                                        </form>
+                                    @elseif ($order->isCompleteRejected())
+                                        Rejected Complete / Pending
+                                    @elseif ($order->status == 'in_process')
+                                        Working on it
+                                    @else
+                                        {{ ucwords($order->status) }}
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

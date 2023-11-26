@@ -30,13 +30,25 @@ class Order extends Model
     }
     public function inProcess()
     {
-        return $this->status === 'working';
+        return $this->status === 'in_process';
     }
     public function isRejected()
     {
         return $this->status === 'rejected';
     }
-    public function isComplete()
+    public function isCompleteDone()
+    {
+        return $this->status === 'complete' && $this->confirmation === 1;
+    }
+    public function isCompleteRejected()
+    {
+        return $this->status === 'complete' && $this->confirmation === 0;
+    }
+    public function isCompletePending()
+    {
+        return $this->status === 'complete' && is_null($this->confirmation);
+    }
+    public function isCompleteAny()
     {
         return $this->status === 'complete';
     }

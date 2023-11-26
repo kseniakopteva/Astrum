@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email');
             $table->text('details');
             $table->string('status')->default('pending');
+            $table->boolean('confirmation')->nullable();
             $table->timestamps();
         });
     }
