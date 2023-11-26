@@ -12,6 +12,9 @@ class TagController extends Controller
 {
     public function index(Tag $tag, $page = null)
     {
+        if (request(['search']) && is_null(request(['search'])['search']))
+            return redirect('/tags/' . $tag->slug . '?' . http_build_query(request()->except('search')));
+
         $posts = Post::where('removed', false)->whereNotIn('user_id', User::getBannedUserIds())->whereHas('tags', fn ($q) => $q->where('tag_id', $tag->id));
         if (auth()->check())
             $posts = $posts->whereNotIn('user_id', auth()->user()->allBlockedBy());

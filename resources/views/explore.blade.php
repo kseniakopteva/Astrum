@@ -21,7 +21,6 @@
 
     <div class="wrapper">
         <div class="mb-8 mt-3 flex justify-between items-start gap-10">
-
             <form class="main-search-form flex justify-between items-start gap-10 flex-grow" action="#" method="get">
                 <div class="relative flex-grow w-full">
                     <input
@@ -33,8 +32,16 @@
                     </button>
 
                     @if ((request(['search']) && !is_null(request(['search'])['search'])) || (request(['sort']) && request(['sort'])['sort'] !== 'all'))
+                        @if (isset($tag) && $tag)
+                            <a href="{{ url('/tags/' . $tag->slug . '?sort=all') }}" class="float-right">
+                                Return to all '{{ $tag->slug }}' posts and notes</a>
+                        @else
+                            <a href="{{ route('explore', ['sort' => 'all']) }}" class="float-right">
+                                Return to all posts & notes</a>
+                        @endif
+                    @elseif (isset($tag) && $tag)
                         <a href="{{ route('explore', ['sort' => 'all']) }}" class="float-right">
-                            Return to all posts & notes</a>
+                            Return to all posts and notes</a>
                     @endif
                 </div>
 
@@ -43,9 +50,6 @@
                     <option value="all" @if (request(['sort']) && request(['sort'])['sort'] == 'all') selected="selected" @endif>All Recent Posts & Notes</option>
                     <option value="posts" @if (request(['sort']) && request(['sort'])['sort'] == 'posts') selected="selected" @endif>All Recent Posts</option>
                     <option value="notes" @if (request(['sort']) && request(['sort'])['sort'] == 'notes') selected="selected" @endif>All Recent Notes</option>
-                    {{-- <option value="week" @if (request(['sort']) && request(['sort'])['sort'] == 'week') selected="selected" @endif>Best of this week</option>
-                    <option value="month" @if (request(['sort']) && request(['sort'])['sort'] == 'month') selected="selected" @endif>Best of this month</option>
-                    <option value="year" @if (request(['sort']) && request(['sort'])['sort'] == 'year') selected="selected" @endif>Best of this year</option> --}}
                 </select>
             </form>
 
@@ -76,9 +80,9 @@
 
         @if (count(array_filter(request(['search']))) !== 0)
             @if (!is_null(request(['search'])['search']) && !(isset($tag) && $tag))
-                <h1 class="medium-title">Search results for <strong class="font-bold">"{{ request(['search'])['search'] }}"</strong></h1>
+                <h1 class="medium-title mb-4">Search results for <strong class="font-bold">"{{ request(['search'])['search'] }}"</strong></h1>
             @else
-                <h1 class="medium-title">Search results for <strong class="font-bold">"{{ request(['search'])['search'] }}" in tag <span
+                <h1 class="medium-title mb-4">Search results for <strong class="font-bold">"{{ request(['search'])['search'] }}" in tag <span
                             class="px-2 py-0.5 bg-white/50 dark:bg-white/20 rounded-lg">{{ $tag->name }}</span></strong></h1>
             @endif
         @else
@@ -93,15 +97,6 @@
                             break;
                         case 'notes':
                             $heading = 'All Recent Notes';
-                            break;
-                        case 'week':
-                            $heading = 'Best Posts & Notes this week';
-                            break;
-                        case 'month':
-                            $heading = 'Best Posts & Notes this month';
-                            break;
-                        case 'year':
-                            $heading = 'Best Posts & Notes this year';
                             break;
 
                         default:
@@ -121,8 +116,21 @@
 
             @if (isset($tag) && $tag)
                 <div class="flex items-center mb-3 gap-3">
-                    <h2 class="medium-title">Posts and notes tagged <span class="px-2 py-0.5 bg-white/50 dark:bg-white/20 rounded-lg">{{ $tag->name }}</span>
-                    </h2>
+                    @php
+                        if (request(['sort']) && request(['sort'])['sort'] == 'all') {
+                            $title = 'Posts and notes';
+                        } elseif (request(['sort']) && request(['sort'])['sort'] == 'posts') {
+                            $title = 'Posts';
+                        } elseif (request(['sort']) && request(['sort'])['sort'] == 'notes') {
+                            $title = 'Notes';
+                        } else {
+                            $title = 'Posts and notes';
+                        }
+                    @endphp
+                    <h1 class="medium-title mb-4">
+                        {{ $title }} tagged
+                        <span class="px-2 py-0.5 bg-white/50 dark:bg-white/20 rounded-lg">{{ $tag->name }}</span>
+                    </h1>
                     @if (request(['search']))
                         <span class="medium-title">searching "{{ request(['search'])['search'] }}"</span>
                     @endif
