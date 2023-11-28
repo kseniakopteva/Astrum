@@ -188,13 +188,13 @@ class DatabaseSeeder extends Seeder
         for ($i = 1; $i <= 5; $i++) {
             Wallpaper::factory()->create(['image' => $i . '.jpg']);
         }
-        $wallpapers = Wallpaper::all();
-        // Populate the pivot table
-        Tag::all()->each(function ($tag) use ($wallpapers) {
-            $tag->wallpapers()->attach(
-                $wallpapers->random(rand(1, 5))->pluck('id')->toArray()
-            );
-        });
+        // $wallpapers = Wallpaper::all();
+        // // Populate the pivot table
+        // Tag::all()->each(function ($tag) use ($wallpapers) {
+        //     $tag->wallpapers()->attach(
+        //         $wallpapers->random(rand(1, 5))->pluck('id')->toArray()
+        //     );
+        // });
 
         /* -------------------------------------------------------------------------- */
         /*                           PROFILE PICTURE FRAMES                           */
@@ -203,13 +203,13 @@ class DatabaseSeeder extends Seeder
         for ($i = 1; $i <= 8; $i++) {
             ProfilePictureFrame::factory()->create(['image' => $i . '.png']);
         }
-        $ppf = ProfilePictureFrame::all();
-        // Populate the pivot table
-        Tag::all()->each(function ($tag) use ($ppf) {
-            $tag->profile_picture_frames()->attach(
-                $ppf->random(rand(1, 5))->pluck('id')->toArray()
-            );
-        });
+        // $ppf = ProfilePictureFrame::all();
+        // // Populate the pivot table
+        // Tag::all()->each(function ($tag) use ($ppf) {
+        //     $tag->profile_picture_frames()->attach(
+        //         $ppf->random(rand(1, 5))->pluck('id')->toArray()
+        //     );
+        // });
 
 
         /* -------------------------------------------------------------------------- */
@@ -230,12 +230,12 @@ class DatabaseSeeder extends Seeder
                 'percentage' => $frame['percentage'],
             ]);
         }
-        $pf = PostFrame::all();
-        // Populate the pivot table
-        Tag::all()->each(function ($tag) use ($pf) {
-            $tag->post_frames()->attach(
-                $pf->random(rand(1, 5))->pluck('id')->toArray()
-            );
-        });
+        // $pf = PostFrame::all();
+        // // Populate the pivot table
+        // Tag::all()->each(function ($tag) use ($pf) {
+        //     $tag->post_frames()->attach(
+        //         $pf->random(rand(1, 5))->pluck('id')->toArray()
+        //     );
+        // });
     }
 }

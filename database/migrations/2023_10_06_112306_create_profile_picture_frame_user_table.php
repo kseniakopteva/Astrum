@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('profile_picture_frame_user', function (Blueprint $table) {
             $table->id();
-            $table->integer('profile_picture_frame_id')->unsigned();
-            $table->integer('user_id')->unsigned();
+            $table->foreignId('profile_picture_frame_id')->constrained('profile_picture_frames')->unsigned();
+            $table->foreignId('user_id')->constrained('users')->unsigned();
             $table->timestamps();
         });
     }

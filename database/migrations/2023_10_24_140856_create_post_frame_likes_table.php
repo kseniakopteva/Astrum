@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('post_frame_likes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('post_frame_id');
-            $table->foreignId('user_id');
+            $table->foreignId('post_frame_id')->constrained('post_frames');
+            $table->foreignId('user_id')->constrained('users');
             $table->boolean('liked');
             $table->timestamps();
         });

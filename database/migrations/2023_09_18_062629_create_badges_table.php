@@ -18,6 +18,10 @@ return new class extends Migration
             $table->string('darkcolor');
             $table->timestamps();
         });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreign('badge_id')->references('id')->on('badges');
+        });
     }
 
     /**

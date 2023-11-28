@@ -61,10 +61,10 @@
                 <x-textarea class="h-auto" rows="4" id="description" class="block w-full" type="text" name="description" placeholder="Description" value="{{ old('description') }}" />
                 <x-input-error :messages="$errors->get('description')" class="mt-2" />
             </div>
-            <div class="flex-grow">
+            {{-- <div class="flex-grow">
                 <x-text-input class="h-auto" id="tags" class="block w-full" type="text" name="tags" placeholder="Tags (separate with comma)" value="{{ old('tags') }}" />
                 <x-input-error :messages="$errors->get('tags')" class="mt-2" />
-            </div>
+            </div> --}}
 
             <div>
                 <div class="flex items-center gap-3">

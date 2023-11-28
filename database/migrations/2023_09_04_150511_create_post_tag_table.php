@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('post_tag', function (Blueprint $table) {
             $table->id();
-            $table->integer('post_id')->unsigned();
-            $table->integer('tag_id')->unsigned();
+            $table->foreignId('post_id')->constrained('posts')->unsigned();
+            $table->foreignId('tag_id')->constrained('tags')->unsigned();
         });
     }
 

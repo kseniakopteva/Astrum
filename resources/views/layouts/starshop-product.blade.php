@@ -23,11 +23,11 @@
                     <p>{{ $item->description }}</p>
                 </div>
 
-                @if (!$item->tags->isEmpty())
+                {{-- @if (!$item->tags->isEmpty())
                     <div class="flex justify-between">
                         <x-tags :item="$item"></x-tags>
                     </div>
-                @endif
+                @endif --}}
             </div>
             @auth
                 <div class="text-right flex flex-col justify-between mt-2">

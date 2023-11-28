@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id'); //reportee ID
+            $table->foreignId('user_id')->constrained(); //reportee ID
             $table->unsignedBigInteger('reported_id'); //post/note/etc ID
             $table->string('reported_type'); // 'post'
             $table->text('reason');

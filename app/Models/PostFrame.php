@@ -19,10 +19,10 @@ class PostFrame extends Model
         return $this->belongsToMany(User::class, 'post_frame_likes')->where('liked', '=', '1');
     }
 
-    public function tags()
-    {
-        return $this->belongsToMany(Tag::class);
-    }
+    // public function tags()
+    // {
+    //     return $this->belongsToMany(Tag::class);
+    // }
 
     public function owners()
     {

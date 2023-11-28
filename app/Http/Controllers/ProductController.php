@@ -52,12 +52,12 @@ class ProductController extends Controller
         $u->stars -= $price;
         $u->save();
 
-        $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
-        foreach ($tags as $tag) {
-            Tag::firstOrCreate(['name' => $tag], ['slug' => str_replace(' ', '_', $tag)])->save();
-        }
-        $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
-        $new_product->tags()->sync($tags);
+        // $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
+        // foreach ($tags as $tag) {
+        //     Tag::firstOrCreate(['name' => $tag], ['slug' => str_replace(' ', '_', $tag)])->save();
+        // }
+        // $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
+        // $new_product->tags()->sync($tags);
 
         return redirect()->route('profile.shop', ['author' => auth()->user()->username])
             ->with('success', 'You have successfully added a product!');

@@ -9,10 +9,10 @@ class Product extends Model
 {
     use HasFactory;
 
-    public function tags()
-    {
-        return $this->belongsToMany(Tag::class);
-    }
+    // public function tags()
+    // {
+    //     return $this->belongsToMany(Tag::class);
+    // }
 
     public function author()
     {

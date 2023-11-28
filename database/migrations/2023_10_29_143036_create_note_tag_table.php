@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('note_tag', function (Blueprint $table) {
             $table->id();
-            $table->integer('note_id')->unsigned();
-            $table->integer('tag_id')->unsigned();
+            $table->foreignId('note_id')->constrained('notes')->unsigned();
+            $table->foreignId('tag_id')->constrained('tags')->unsigned();
         });
     }
 
