@@ -114,7 +114,7 @@ class User extends Authenticatable
 
     public function ownedProfilePictureFrames()
     {
-        return $this->belongsToMany(ProfilePictureFrame::class, 'user_profile_picture_frame');
+        return $this->belongsToMany(ProfilePictureFrame::class);
     }
     public function createdProfilePictureFrames()
     {

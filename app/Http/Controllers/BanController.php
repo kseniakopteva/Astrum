@@ -6,7 +6,9 @@ use App\Models\Ban;
 use App\Models\Block;
 use App\Models\Note;
 use App\Models\Post;
+use App\Models\PostComment;
 use App\Models\PostFrame;
+use App\Models\Product;
 use App\Models\ProfilePictureFrame;
 use App\Models\Report;
 use App\Models\User;
@@ -45,6 +47,8 @@ class BanController extends Controller
             // remove all posts, notes, comments, wallpapers, pf, ppf
             Post::where('user_id', $user->id)->update(['removed' => 1]);
             Note::where('user_id', $user->id)->update(['removed' => 1]);
+            PostComment::where('user_id', $user->id)->update(['removed' => 1]);
+            Product::where('user_id', $user->id)->update(['removed' => 1]);
             Wallpaper::where('user_id', $user->id)->update(['removed' => 1]);
             ProfilePictureFrame::where('user_id', $user->id)->update(['removed' => 1]);
             PostFrame::where('user_id', $user->id)->update(['removed' => 1]);

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('user_wallpaper', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('wallpaper_id')->constrained('wallpapers')->unsigned();
-            $table->foreignId('user_id')->constrained('users')->unsigned();
+            $table->foreignId('wallpaper_id'); //->constrained('wallpapers')->unsigned();
+            $table->foreignId('user_id'); //->constrained('users')->unsigned();
             $table->timestamps();
         });
     }
