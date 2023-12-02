@@ -67,7 +67,7 @@ Route::get('/profile/{author:username}/shop', [ProfileController::class, 'shop']
 Route::get('/profile/{author:username}/faq', [ProfileController::class, 'faq'])->name('profile.faq');
 Route::get('/profile/{author:username}/about', [ProfileController::class, 'about'])->name('profile.about');
 
-Route::get('/orders', [OrderController::class, 'index'])->name('orders')->middleware('creator');
+Route::get('/orders', [OrderController::class, 'index'])->name('orders')->middleware('auth');
 Route::post('/order/status/update', [OrderController::class, 'update'])->name('order.status')->middleware('creator');
 
 Route::post('/order/confirm', [OrderController::class, 'confirmComplete'])->name('order.confirm')->middleware('auth');

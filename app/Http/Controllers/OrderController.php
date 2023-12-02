@@ -52,6 +52,10 @@ class OrderController extends Controller
         if ($order->product->currency == 'stars') {
             $order->seller->stars += $order->product->price;
             $order->seller->save();
+        } else {
+            $reward = 100;
+            $order->seller->stars += $reward;
+            $order->seller->save();
         }
         $order->save();
 

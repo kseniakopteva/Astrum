@@ -25,7 +25,7 @@ class ProductController extends Controller
 
         $attributes = $request->validate([
             'name' => 'required|max:100',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif',
             'type' => 'required',
             'max_slots' => 'numeric|nullable',
             'description' => 'required|max:2000',
@@ -90,7 +90,7 @@ class ProductController extends Controller
 
         Order::create($attributes);
 
-        return redirect()->back()->with('success', 'Order submitted!');
+        return redirect()->back()->with('success', 'You have successfully submitted the order!');
     }
 
     public function destroy(Request $request)
@@ -102,6 +102,6 @@ class ProductController extends Controller
 
         unlink(public_path('images/products/' . $product->image));
         $product->delete();
-        return back()->with('success', 'Product deleted!');
+        return back()->with('success', 'You have deleted the product!');
     }
 }

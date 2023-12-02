@@ -41,7 +41,7 @@ class NoteController extends Controller
         $u = auth()->user();
         $price = 5;
         if ($u->stars < $price)
-            return back()->with('error', 'Not enough stars!');
+            return back()->with('error', 'You don\'t have enough money!');
 
         $new_note = Note::create($attributes);
         $u->stars -= $price;

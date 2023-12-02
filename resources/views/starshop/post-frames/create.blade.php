@@ -15,7 +15,7 @@
             <div>
                 <x-input-label for="width">Width</x-input-label>
                 <div class="flex items-center gap-5">
-                    <input type="number" name="width" id="width" value="{{ old('width') }}"
+                    <input type="number" name="width" required id="width" value="{{ old('width') }}"
                         class="block border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
                     <a target="_blank" href="{{ route('help') . '#post-frame-upload-guidelines' }}" class="question-icon-link">
                         <svg xmlns="http://www.w3.org/2000/svg" height="1.4em"
@@ -31,7 +31,7 @@
             <div>
                 <x-input-label for="percentage">Percentage of image for frame</x-input-label>
                 <div class="flex items-center gap-5">
-                    <input type="number" step="0.01" name="percentage" id="percentage" value="{{ old('percentage') }}"
+                    <input type="number" step="0.01" required name="percentage" id="percentage" value="{{ old('percentage') }}"
                         class="block border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
                     <a target="_blank" href="{{ route('help') . '#post-frame-upload-guidelines' }}" class="question-icon-link">
                         <svg xmlns="http://www.w3.org/2000/svg" height="1.4em"
@@ -53,7 +53,7 @@
             <div>
                 <x-input-label for="price">Price</x-input-label>
                 <div class="flex items-center gap-4">
-                    <input type="number" name="price" id="price" value="{{ old('price') }}"
+                    <input type="number" name="price" required id="price" value="{{ old('price') }}"
                         class="block border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
                     <span class="text-red-600 dark:text-red-300">
                         <x-price>You will have to pay this price to post</x-price>

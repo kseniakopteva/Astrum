@@ -26,7 +26,7 @@
             <div>
                 <x-input-label for="price">Price</x-input-label>
                 <div class="flex items-center gap-4">
-                    <input type="number" name="price" id="price" value="{{ old('price') }}"
+                    <input type="number" name="price" id="price" value="{{ old('price') }}" required
                         class="block border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
                     <span class="text-red-600 dark:text-red-300">
                         <x-price>You will have to pay this price to post</x-price>

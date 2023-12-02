@@ -43,7 +43,7 @@ class ProfilePictureFrameController extends Controller
 
         $attributes = $request->validate([
             'name' => 'required|max:100',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif',
             'description' => 'max:700',
             'price' => 'required|numeric|min:500|max:10000'
         ]);
@@ -69,12 +69,12 @@ class ProfilePictureFrameController extends Controller
         $u->stars -= $price;
         $u->save();
 
-        $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
-        foreach ($tags as $tag) {
-            Tag::firstOrCreate(['name' => $tag], ['slug' => str_replace(' ', '_', $tag)])->save();
-        }
-        $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
-        $profile_picture_frame->tags()->sync($tags);
+        // $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
+        // foreach ($tags as $tag) {
+        //     Tag::firstOrCreate(['name' => $tag], ['slug' => str_replace(' ', '_', $tag)])->save();
+        // }
+        // $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
+        // $profile_picture_frame->tags()->sync($tags);
 
         return redirect()->route('starshop.profile-picture-frames.show', ['profile_picture_frame' => $profile_picture_frame->slug])
             ->with('success', 'You have successfully created a profile picture frame!');

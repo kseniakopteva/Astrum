@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div class="flex-grow">
-                <x-textarea class="h-auto" rows="4" id="description" class="block w-full" type="text" name="description" placeholder="Description" value="{{ old('description') }}" />
+                <x-textarea class="h-auto" required rows="4" id="description" class="block w-full" type="text" name="description" placeholder="Description" value="{{ old('description') }}" />
                 <x-input-error :messages="$errors->get('description')" class="mt-2" />
             </div>
             {{-- <div class="flex-grow">
@@ -69,7 +69,7 @@
             <div>
                 <div class="flex items-center gap-3">
                     <x-input-label for="price">Price: </x-input-label>
-                    <input type="number" name="price" id="price" value="{{ old('price') }}"
+                    <input type="number" name="price" required id="price" value="{{ old('price') }}"
                         class="block border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 focus:border-lime-500 dark:focus:border-lime-600 focus:ring-lime-500 dark:focus:ring-lime-600 rounded-md">
                     <x-input-error :messages="$errors->get('price')" class="mt-2" />
 

@@ -21,7 +21,7 @@ class ProfileUpdateRequest extends FormRequest
             'email' => ['email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
             'bio' => ['max:400', 'string', 'nullable'],
             'badge_id' => [''],
-            'image' => ['image', 'mimes:jpeg,png,jpg,gif,svg'], //, 'max:2048'],
+            'image' => ['image', 'mimes:jpeg,png,jpg,gif'], //, 'max:2048'],
         ];
     }
 }

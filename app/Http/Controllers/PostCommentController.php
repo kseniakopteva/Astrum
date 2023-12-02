@@ -12,7 +12,7 @@ class PostCommentController extends Controller
     public function store(Post $post)
     {
         if (auth()->user()->isBanned())
-            return back()->with('success', 'You can\'t write comments because you are banned.');
+            return back()->with('error', 'You can\'t write comments because you are banned.');
 
         request()->validate([
             'body' => 'required|max:4000'
@@ -27,7 +27,17 @@ class PostCommentController extends Controller
             ]);
             $u->stars -= $price;
             $u->save();
+
+            if ($post->author->id !== $u->id) {
+                $post->author->stars += 3;
+                $post->author->save();
+            }
+
+            return back()
+                ->with('success', 'You have successfully created a comment!');
         }
+        return back()
+            ->with('error', 'You don\'t have enough money!');
 
 
         return back();

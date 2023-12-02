@@ -146,7 +146,7 @@ class PostController extends Controller
 
         $attributes = $request->validate([
             'title' => 'required|max:100',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif',
             'body' => 'max:4000',
             'alt' => 'max:200'
         ]);

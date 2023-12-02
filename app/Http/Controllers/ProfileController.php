@@ -94,7 +94,7 @@ class ProfileController extends Controller
 
         AboutLink::create($attr);
 
-        return redirect()->back()->with('success', 'Link created!');
+        return redirect()->back()->with('success', 'You have created a new link!');
     }
 
     public function about_destroy_link(Request $request)
@@ -104,7 +104,7 @@ class ProfileController extends Controller
 
         AboutLink::find($request->link_id)->delete();
 
-        return redirect()->back()->with('success', 'Link removed!');
+        return redirect()->back()->with('success', 'You have removed a link!');
     }
 
     public function about_update(Request $request)

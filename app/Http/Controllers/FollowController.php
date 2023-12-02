@@ -33,6 +33,6 @@ class FollowController extends Controller
         $userToUnfollow = User::findOrFail(request('id'));
         auth()->user()->unfollow($userToUnfollow);
 
-        return back()->with('success', 'You have unfollowed ' . $userToUnfollow->username . '.');
+        return back()->with('success', 'You have unfollowed ' . $userToUnfollow->username . '!');
     }
 }

@@ -41,7 +41,7 @@ class PostFrameController extends Controller
 
         $attributes = $request->validate([
             'name' => 'required|max:100',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif',
             'description' => 'max:700',
             'width' => 'required',
             'percentage' => 'required',
@@ -69,12 +69,12 @@ class PostFrameController extends Controller
         $u->stars -= $price;
         $u->save();
 
-        $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
-        foreach ($tags as $tag) {
-            Tag::firstOrCreate(['name' => $tag], ['slug' => str_replace(' ', '_', $tag)])->save();
-        }
-        $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
-        $post_frame->tags()->sync($tags);
+        // $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
+        // foreach ($tags as $tag) {
+        //     Tag::firstOrCreate(['name' => $tag], ['slug' => str_replace(' ', '_', $tag)])->save();
+        // }
+        // $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
+        // $post_frame->tags()->sync($tags);
 
         return redirect()->route('starshop.post-frames.show', ['post_frame' => $post_frame->slug])
             ->with('success', 'You have successfully created a post frame!');

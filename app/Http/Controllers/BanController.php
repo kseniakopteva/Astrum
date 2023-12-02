@@ -22,7 +22,7 @@ class BanController extends Controller
     {
         $user = User::find($request->user_id);
         if (!(auth()->check() && auth()->user()->isModOrMore()))
-            return redirect()->route('profile.index', $user->username)->with('error', 'You can\'t do that!');
+            return redirect()->route('profile.index', $user->username)->with('error', 'You need to be at least a moderator!');
 
         if (!is_null($user->getCurrentBan()))
             return redirect()->route('profile.index', $user->username)->with('error', 'This user is already banned.');
@@ -69,7 +69,7 @@ class BanController extends Controller
         $user = User::find($request->user_id);
 
         if (!(auth()->check() && auth()->user()->isModOrMore()))
-            return redirect()->route('profile.index', $user->username)->with('error', 'You can\'t do that!');
+            return redirect()->route('profile.index', $user->username)->with('error', 'You need to be at least a moderator!');
 
         $user->getCurrentBan()->delete();
 
@@ -99,7 +99,7 @@ class BanController extends Controller
             'blocked_id' => $blocked->id
         ]);
 
-        return redirect()->route('profile.index', $blocked->username)->with('success', 'User ' . $blocked->username . ' is blocked');
+        return redirect()->route('profile.index', $blocked->username)->with('success', 'User ' . $blocked->username . ' is blocked!');
     }
 
     public function block_destroy(Request $request)

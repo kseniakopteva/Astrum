@@ -8,12 +8,15 @@
             <img src="{{ asset('images/profile-pictures/' . auth()->user()->image) }}" alt="" width="40" height="40" class="rounded-full">
             <h2 class="ml-4">Join the discussion...</h2>
         </header>
-        <div x-show="open" class=" px-4 pb-4 -mt-4">
+        <div x-show="open" class="-mt-4">
             <div class="mt-6">
                 <x-textarea class="w-full" name="{{ $textarea_name }}" rows="5" placeholder="Write something polite and constructive here..." required></x-textarea>
                 <x-input-error :messages="$errors->get('{{ $textarea_name }}')"></x-input-error>
             </div>
-            <div class="flex justify-end"><x-primary-button>Post</x-primary-button></div>
+            <div class="flex justify-end gap-5 items-center">
+                <x-price>Cost to comment: 1</x-price>
+                <x-primary-button>Post</x-primary-button>
+            </div>
         </div>
     </form>
 </x-panel>

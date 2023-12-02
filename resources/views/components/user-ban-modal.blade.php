@@ -1,5 +1,12 @@
 @props(['user'])
 
+@if ($errors->getBag('default')->has('duration') || $errors->getBag('default')->has('reason'))
+    <div x-data="{ show: true }">
+        <?php $show = true; ?>
+    @else
+        <div x-data="{ show: false }">
+            <?php $show = false; ?>
+@endif
 <x-modal name="ban-{{ $user->id }}" focusable>
     <div class="p-6">
         <h2 class="text-lg font-medium text-red-500 dark:text-neutral-100 mb-4">
@@ -22,7 +29,7 @@
             </select>
 
             <x-input-label for="reason">Reason for ban:</x-input-label>
-            <x-textarea class="w-full mt-2" name="reason" id="reason"></x-textarea>
+            <x-textarea class="w-full mt-2" required name="reason" id="reason"></x-textarea>
 
             <x-danger-button class="mt-4">Ban</x-danger-button>
         </form>
