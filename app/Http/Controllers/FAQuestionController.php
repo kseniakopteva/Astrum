@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FAQuestion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FAQuestionController extends Controller
 {
@@ -23,5 +24,15 @@ class FAQuestionController extends Controller
 
         return back()
             ->with('success', 'You have successfully created a FAQ!');
+    }
+    public function destroy(Request $request)
+    {
+        $faq = FAQuestion::find($request->faq_id);
+        if (Auth::user()->id === $faq->author->id) {
+            $faq->delete();
+            return redirect('/profile/' . $faq->author->username . '/faq')->with('success', 'You have deleted the FAQ!');
+        } else {
+            return redirect()->route('explore');
+        }
     }
 }

@@ -24,7 +24,7 @@
                         <x-slot name="content">
                             @if (auth()->check() && $comment->author->id === auth()->user()->id)
                                 <form action="{{ route('post.comment.delete', ['comment' => $comment->id, 'post' => $comment->post->id]) }}" method="POST">
-                                    @csrf
+                                    @csrf @method('DELETE')
                                     <input type="hidden" name="id" value="{{ $comment->id }}">
                                     <button onclick="return confirm('Are you sure you want to delete this?')"
                                         class="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-red-400 hover:text-red-600">

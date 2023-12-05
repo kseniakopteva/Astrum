@@ -6,6 +6,8 @@ use App\Models\Post;
 use App\Models\PostComment;
 use App\Models\PostCommentLike;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostCommentController extends Controller
 {
@@ -68,5 +70,16 @@ class PostCommentController extends Controller
             }
         }
         return back();
+    }
+
+    public function destroy(Request $request)
+    {
+        $pc = PostComment::find($request->id);
+        if (Auth::user()->id === $pc->author->id) {
+            $pc->delete();
+            return back();
+        } else {
+            return redirect()->route('explore');
+        }
     }
 }

@@ -114,6 +114,10 @@ class PostFrameController extends Controller
 
         $user = auth()->user();
 
+        if ($user->role == 'user') {
+            return back();
+        }
+
         $pf = PostFrame::find($request->id);
 
         if ($user->stars < $pf->price) {

@@ -1,5 +1,5 @@
 <x-starshop-product-layout :item="$profile_picture_frame" type="profile-picture-frame">
-    <div class="border-b border-neutral-200 dark:border-neutral-700 pb-16 grid grid-cols-4">
+    <div class="border-b border-neutral-300 dark:border-neutral-700 pb-16 grid grid-cols-4">
         <img class="h-[calc(100vh-40rem)] m-auto col-span-3"
             src="{{ asset('images/profile-picture-frames/' . $profile_picture_frame->image) }}" alt="">
         {{-- Profile Image --}}

@@ -74,6 +74,7 @@ Route::post('/order/confirm', [OrderController::class, 'confirmComplete'])->name
 Route::post('/order/reject', [OrderController::class, 'rejectComplete'])->name('order.reject')->middleware('auth');
 
 Route::post('/profile/{author:username}/faq', [FAQuestionController::class, 'store']);
+Route::post('/profile/faq', [FAQuestionController::class, 'destroy'])->name('faq.delete');
 
 Route::post('/profile/about', [ProfileController::class, 'about_update'])->name('about.update');
 
@@ -112,7 +113,7 @@ Route::get('/', function ($page = null) {
 
 
 Route::post('/posts/{post}/comments', [PostCommentController::class, 'store'])->name('post.comment.store');
-Route::delete('/posts/{post}/comment/{comment}/delete', [PostCommentController::class, 'store'])->name('post.comment.delete');
+Route::delete('/posts/{post}/comment/{comment}/delete', [PostCommentController::class, 'destroy'])->name('post.comment.delete');
 Route::post('/posts/store', [PostController::class, 'store'])->name('post.store');
 Route::post('/notes/{note}/comments', [NoteController::class, 'store'])->name('note.comment.store');
 Route::post('/notes/store', [NoteController::class, 'store'])->name('note.store');

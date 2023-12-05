@@ -37,8 +37,8 @@ class PostComment extends Model
         else return null;
     }
 
-    public function reports(PostComment $pc)
+    public function reports()
     {
-        return Report::where('reported_type', 'post-comment')->where('reported_id', $pc->id)->latest()->get();
+        return Report::where('reported_type', 'post-comment')->where('reported_id', $this->id)->latest()->get();
     }
 }

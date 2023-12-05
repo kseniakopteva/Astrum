@@ -81,7 +81,9 @@
         @endif
 
         @foreach ($post->comments as $comment)
-            <x-comment :comment="$comment" />
+            @if (!$comment->removed)
+                <x-comment :comment="$comment" />
+            @endif
         @endforeach
     </section>
 

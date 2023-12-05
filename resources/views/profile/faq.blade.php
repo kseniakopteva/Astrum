@@ -30,7 +30,29 @@
     <section class="max-w-3xl m-auto">
         @foreach ($user->questions as $question)
             {{-- <article class="bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 rounded-lg p-4 pt-4 mb-4 break-inside-avoid"> --}}
-            <x-panel :item="$question" :border="false">
+            <x-panel :item="$question" :border="false" class="relative">
+
+
+                @if (auth()->check() && auth()->user()->id === $user->id)
+                    <x-dropdown align="right" width="52" absolute="true">
+                        <x-slot name="trigger">
+                            <x-secondary-button type="submit" class="ml-2 !px-2"><i class="fa-solid fa-ellipsis"></i></x-secondary-button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <form action="{{ route('faq.delete') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="faq_id" value="{{ $question->id }}">
+                                <button onclick="return confirm('Are you sure you want to delete this?')"
+                                    class="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-red-400 hover:text-red-600">
+                                    Delete Question
+                                </button>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
+                @endif
+
+
                 <h2
                     class="text-lg mb-4 border-b-2 pb-4 @if (!is_null($user->colour)) border-{{ $user->colour->lightcolor }} dark:border-{{ $user->colour->darkcolor }} text-{{ $user->colour->lightcolor }} dark:text-{{ $user->colour->darkcolor }} @else border-neutral-500 @endif">
                     {{ $question->question }}</h2>
