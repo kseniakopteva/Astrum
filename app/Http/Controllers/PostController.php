@@ -45,8 +45,7 @@ class PostController extends Controller
             $notes = Note::where('removed', false)->whereNotIn('user_id', User::getBannedUserIds());
             if (auth()->check())
                 $notes = $notes->whereNotIn('user_id', auth()->user()->allBlockedBy());
-            $notes = $notes->latest()
-                ->filter(request(['search']))->get();
+            $notes = $notes->latest()->filter(request(['search']))->get();
 
             // merging posts and notes
             $items = new Collection();
@@ -63,13 +62,14 @@ class PostController extends Controller
             if (auth()->check())
                 $posts = $posts->whereNotIn('user_id', auth()->user()->allBlockedBy());
 
-            $posts = $posts->latest()
-                ->filter(request(['search']))
-                ->paginate(30)
-                ->withQueryString();
+            $posts = $posts->latest()->filter(request(['search']))->get();
+
+            // creating new merged collection containing only posts for a custom pagination to work
+            $items = new Collection();
+            $items = $items->concat($posts)->sortByDesc('created_at')->paginate(30, null, $page);
 
             return view('explore', [
-                'items' => $posts,
+                'items' => $items,
                 'users' => $users
             ]);
         } else if (request(['sort'])['sort'] == 'notes') {
@@ -79,13 +79,14 @@ class PostController extends Controller
             if (auth()->check())
                 $notes = $notes->whereNotIn('user_id', auth()->user()->allBlockedBy());
 
-            $notes = $notes->latest()
-                ->filter(request(['search']))
-                ->paginate(30)
-                ->withQueryString();
+            $notes = $notes->latest()->filter(request(['search']))->get();
+
+            // creating new merged collection containing only notes for a custom pagination to work
+            $items = new Collection();
+            $items = $items->concat($notes)->sortByDesc('created_at')->paginate(30, null, $page);
 
             return view('explore', [
-                'items' => $notes,
+                'items' => $items,
                 'users' => $users
             ]);
         }
