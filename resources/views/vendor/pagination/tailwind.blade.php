@@ -1,23 +1,34 @@
 @if ($paginator->hasPages())
     <nav role="navigation" aria-label="{{ __('Pagination Navigation') }}" class="flex items-center justify-between">
         <div class="flex justify-between flex-1 sm:hidden">
+
+            <?php
+            if ((request(['sort']) && !is_null(request(['sort'])['sort'])) || (request(['search']) && !is_null(request(['search'])['search']))) {
+                $question = '?';
+            } else {
+                $question = '';
+            }
+            ?>
+
             @if ($paginator->onFirstPage())
                 <span
                     class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-neutral-500 bg-white dark:bg-neutral-800 dark:border-neutral-700 border border-neutral-300 cursor-default leading-5 rounded-md">
                     {!! __('pagination.previous') !!}
                 </span>
             @else
-                {{-- {{ dd(str_replace('?page=', '/page/', $paginator->previousPageUrl()) . '?' . \Illuminate\Support\Arr::query(['sort' => request(['sort'])['sort'] ?? 'all', 'search' => request(['search']) ? request(['search'])['search'] : null ])) }} --}}
+                {{-- {{ dd(str_replace('?page=', '/page/', $paginator->previousPageUrl()) . $question . \Illuminate\Support\Arr::query(['sort' => request(['sort'])['sort'] ?? null, 'search' => request(['search']) ? request(['search'])['search'] : null ])) }} --}}
                 {{-- <a href="{{ $paginator->previousPageUrl() }}" --}}
-                <a href="{{ str_replace('?page=', '/page/', $paginator->previousPageUrl()) . '?' . \Illuminate\Support\Arr::query(['sort' => request(['sort'])['sort'] ?? 'all', 'search' => request(['search']) ? request(['search'])['search'] : null]) }}"
+
+                <a href="{{ str_replace('?page=', '/page/', $paginator->previousPageUrl()) . $question . \Illuminate\Support\Arr::query(['sort' => request(['sort'])['sort'] ?? null, 'search' => request(['search']) ? request(['search'])['search'] : null]) }}"
                     class="relative inline-flex items-center px-4 py-2 text-sm font-medium dark:ring-neutral-600 dark:active:bg-neutral-600 text-neutral-700 bg-white dark:bg-neutral-800 dark:border-neutral-700 border border-neutral-300 leading-5 rounded-md hover:text-neutral-500 focus:outline-none focus:ring ring-neutral-300 focus:border-blue-300 active:bg-neutral-100 active:text-neutral-700 transition ease-in-out duration-150">
+
                     {!! __('pagination.previous') !!}
                 </a>
             @endif
 
             @if ($paginator->hasMorePages())
                 {{-- <a href="{{ $paginator->nextPageUrl() }}" --}}
-                <a href="{{ str_replace('?page=', '/page/', $paginator->nextPageUrl()) . '?' . \Illuminate\Support\Arr::query(['sort' => request(['sort'])['sort'] ?? 'all', 'search' => request(['search']) ? request(['search'])['search'] : null]) }}"
+                <a href="{{ str_replace('?page=', '/page/', $paginator->nextPageUrl()) . $question . \Illuminate\Support\Arr::query(['sort' => request(['sort'])['sort'] ?? null, 'search' => request(['search']) ? request(['search'])['search'] : null]) }}"
                     class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium dark:ring-neutral-600 dark:active:bg-neutral-600 text-neutral-700 bg-white dark:bg-neutral-800 dark:border-neutral-700 border border-neutral-300 leading-5 rounded-md hover:text-neutral-500 focus:outline-none focus:ring ring-neutral-300 focus:border-blue-300 active:bg-neutral-100 active:text-neutral-700 transition ease-in-out duration-150">
                     {!! __('pagination.next') !!}
                 </a>
@@ -62,7 +73,7 @@
                         </span>
                     @else
                         {{-- <a href="{{ $paginator->previousPageUrl() }}" rel="prev" --}}
-                        <a href="{{ str_replace('?page=', '/page/', $paginator->previousPageUrl()) . '?' . \Illuminate\Support\Arr::query(['sort' => request(['sort'])['sort'] ?? 'all', 'search' => request(['search']) ? request(['search'])['search'] : null]) }}"
+                        <a href="{{ str_replace('?page=', '/page/', $paginator->previousPageUrl()) . $question . \Illuminate\Support\Arr::query(['sort' => request(['sort'])['sort'] ?? null, 'search' => request(['search']) ? request(['search'])['search'] : null]) }}"
                             rel="prev"
                             class="relative inline-flex items-center px-2 py-2 text-sm font-medium dark:ring-neutral-600 dark:active:bg-neutral-600 text-neutral-500 bg-white dark:bg-neutral-800 dark:border-neutral-700 border border-neutral-300 rounded-l-md leading-5 hover:text-neutral-400 focus:z-10 focus:outline-none focus:ring ring-neutral-300 focus:border-blue-300 active:bg-neutral-100 active:text-neutral-500 transition ease-in-out duration-150"
                             aria-label="{{ __('pagination.previous') }}">
@@ -95,7 +106,7 @@
                                     </span>
                                 @else
                                     {{-- <a href="{{ $url }}" --}}
-                                    <a href="{{ str_replace('?page=', '/page/', $url) . '?' . \Illuminate\Support\Arr::query(['sort' => request(['sort'])['sort'] ?? 'all', 'search' => request(['search']) ? request(['search'])['search'] : null]) }}"
+                                    <a href="{{ str_replace('?page=', '/page/', $url) . $question . \Illuminate\Support\Arr::query(['sort' => request(['sort'])['sort'] ?? null, 'search' => request(['search']) ? request(['search'])['search'] : null]) }}"
                                         class="relative inline-flex items-center px-4 py-2 -ml-px text-sm dark:ring-neutral-600 dark:active:bg-neutral-600 font-medium text-neutral-700 bg-white dark:bg-neutral-800 dark:border-neutral-700 border border-neutral-300 leading-5 hover:text-neutral-500 focus:z-10 focus:outline-none focus:ring ring-neutral-300 focus:border-blue-300 active:bg-neutral-100 active:text-neutral-700 transition ease-in-out duration-150"
                                         aria-label="{{ __('Go to page :page', ['page' => $page]) }}">
                                         {{ $page }}
@@ -108,7 +119,7 @@
                     {{-- Next Page Link --}}
                     @if ($paginator->hasMorePages())
                         {{-- <a href="{{ $paginator->nextPageUrl() }}" rel="next" --}}
-                        <a href="{{ str_replace('?page=', '/page/', $paginator->nextPageUrl()) . '?' . \Illuminate\Support\Arr::query(['sort' => request(['sort'])['sort'] ?? 'all', 'search' => request(['search']) ? request(['search'])['search'] : null]) }}"
+                        <a href="{{ str_replace('?page=', '/page/', $paginator->nextPageUrl()) . $question . \Illuminate\Support\Arr::query(['sort' => request(['sort'])['sort'] ?? null, 'search' => request(['search']) ? request(['search'])['search'] : null]) }}"
                             rel="next"
                             class="relative inline-flex items-center px-2 py-2 -ml-px text-sm font-medium dark:ring-neutral-600 dark:active:bg-neutral-600 text-neutral-500 bg-white dark:bg-neutral-800 dark:border-neutral-700 border border-neutral-300 rounded-r-md leading-5 hover:text-neutral-400 focus:z-10 focus:outline-none focus:ring ring-neutral-300 focus:border-blue-300 active:bg-neutral-100 active:text-neutral-500 transition ease-in-out duration-150"
                             aria-label="{{ __('pagination.next') }}">

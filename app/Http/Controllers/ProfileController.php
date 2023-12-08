@@ -9,6 +9,7 @@ use App\Models\Note;
 use App\Models\Post;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,14 +53,19 @@ class ProfileController extends Controller
 
     public function shop(User $author, $page = null)
     {
+        $products = Product::where('user_id', $author->id)
+            ->orderBy('currency')
+            ->orderBy('price', 'ASC')->get();
+
+        $items = new Collection();
+        $items = $items->concat($products)->paginate(12, null, $page);
+
+
         return view('profile.shop', [
             'user' => $author,
             'followers' => $author->followers,
             'following' => $author->following,
-            'products' => Product::where('user_id', $author->id)
-                ->orderBy('currency')
-                ->orderBy('price', 'ASC')
-                ->get()
+            'products' => $items
         ]);
     }
 
