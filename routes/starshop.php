@@ -13,6 +13,13 @@ use App\Http\Controllers\ColourController;
 
 Route::get('/starshop', [StarshopController::class, 'redirect'])->name('starshop')->middleware('guest');
 
+/* --------------------------------- Create --------------------------------- */
+Route::middleware('creator')->group(function () {
+    Route::get('/starshop/wallpapers/create', [WallpaperController::class, 'create'])->name('starshop.wallpapers.create');
+    Route::get('/starshop/profile-picture-frames/create', [ProfilePictureFrameController::class, 'create'])->name('starshop.profile-picture-frames.create');
+    Route::get('/starshop/post-frames/create', [PostFrameController::class, 'create'])->name('starshop.post-frames.create');
+});
+
 Route::middleware('auth')->group(function () {
 
     /* ---------------------------------- Index --------------------------------- */
@@ -49,11 +56,4 @@ Route::middleware('auth')->group(function () {
     Route::post('/starshop/profile-picture-frames/buy', [ProfilePictureFrameController::class, 'buy'])->name('starshop.profile-picture-frames.buy');
     Route::post('/starshop/colours/buy', [ColourController::class, 'buy'])->name('starshop.colours.buy');
     Route::post('/starshop/post-frames/buy', [PostFrameController::class, 'buy'])->name('starshop.post-frames.buy');
-});
-
-/* --------------------------------- Create --------------------------------- */
-Route::middleware('creator')->group(function () {
-    Route::get('/starshop/wallpapers/create', [WallpaperController::class, 'create'])->name('starshop.wallpapers.create');
-    Route::get('/starshop/profile-picture-frames/create', [ProfilePictureFrameController::class, 'create'])->name('starshop.profile-picture-frames.create');
-    Route::get('/starshop/post-frames/create', [PostFrameController::class, 'create'])->name('starshop.post-frames.create');
 });

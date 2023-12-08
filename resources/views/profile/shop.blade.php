@@ -13,7 +13,7 @@
             <x-product :product="$product" :user="$user" />
         @endforeach
     </div>
-    <div class="mt-8">
+    {{-- <div class="mt-8">
         {{ $products->links() }}
-    </div>
+    </div> --}}
 </x-profile-layout>

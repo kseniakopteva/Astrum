@@ -25,11 +25,13 @@ class OrderController extends Controller
 
         $order = Order::find($request->order_id);
 
+        // if status was rejected 'complete' and it is changed, reset confirmation before changing status
         if ($order->status == 'complete' && !is_null($order->confirmation)) {
             $order->confirmation = null;
             $order->update(['status' => $attr['status']]);
             $order->save();
-        } elseif ($attr['status'] == 'rejected') {
+        } // if status is changed to 'rejected', return paid money to buyer
+        elseif ($attr['status'] == 'rejected') {
             if ($order->product->currency == 'stars') {
                 $price = $order->product->price;
                 $order->buyer->stars += $price;
@@ -45,14 +47,20 @@ class OrderController extends Controller
     function confirmComplete(Request $request)
     {
         $order = Order::find($request->order_id);
+
+        // if not auth or trying to confirm someone else's order
         if (!auth()->check() || $order->buyer->id !== auth()->user()->id)
             return back()->with('error', 'You can\'t do that.');
 
         $order->confirmation = true;
+
+        // if order is confirmed as complete, release payment to seller
+        // if order was in stars, give the price value
         if ($order->product->currency == 'stars') {
             $order->seller->stars += $order->product->price;
             $order->seller->save();
-        } else {
+        } // if order was in euro, give seller 100 stars as a reward
+        else {
             $reward = 100;
             $order->seller->stars += $reward;
             $order->seller->save();
@@ -65,6 +73,8 @@ class OrderController extends Controller
     function rejectComplete(Request $request)
     {
         $order = Order::find($request->order_id);
+
+        // if not auth or trying to reject someone else's order
         if (!auth()->check() || $order->buyer->id !== auth()->user()->id)
             return back()->with('error', 'You can\'t do that.');
 

@@ -50,15 +50,16 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function shop(User $author)
+    public function shop(User $author, $page = null)
     {
         return view('profile.shop', [
             'user' => $author,
             'followers' => $author->followers,
             'following' => $author->following,
             'products' => Product::where('user_id', $author->id)
-                // ->orderBy('currency')
-                ->orderBy('price', 'ASC')->paginate(12) //->get()
+                ->orderBy('currency')
+                ->orderBy('price', 'ASC')
+                ->get()
         ]);
     }
 

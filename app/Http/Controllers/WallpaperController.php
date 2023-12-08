@@ -14,12 +14,8 @@ class WallpaperController extends Controller
 {
     public function index()
     {
-        $banned_users = User::getBannedUserIds();
-
-        $w = Wallpaper::whereNotIn('user_id', $banned_users)->where('removed', false)->latest()->get();
-
         return view('starshop.wallpapers.index', [
-            'wallpapers' => $w
+            'wallpapers' => Wallpaper::whereNotIn('user_id', User::getBannedUserIds())->where('removed', false)->latest()->get()
         ]);
     }
 
@@ -46,8 +42,9 @@ class WallpaperController extends Controller
             'price' => 'required|numeric|min:800|max:10000'
         ]);
 
-        $u = auth()->user();
+        // price to make a wallpaper is the user's set price for it
         $price = $attributes['price'];
+        $u = auth()->user();
         if ($u->stars < $price) {
             return back()
                 ->with('error', 'You don\'t have enough money!');
@@ -56,23 +53,16 @@ class WallpaperController extends Controller
         $attributes['user_id'] = auth()->user()->id;
         $attributes['slug'] = PostController::make_slug($attributes['name']);
 
+        // saving image, making it 1920x1080
         $path = public_path('images\\wallpapers');
         $imageName = strtolower($request->user()->username) . '_' . time() . '.' . $request->image->extension();
         $attributes['image'] = $imageName;
         $request->image->move($path, $imageName);
-
         Image::make($path . '/' . $imageName)->fit(1920, 1080)->save($path . '/' . $imageName);
 
         $wallpaper = Wallpaper::create($attributes);
         $u->stars -= $price;
         $u->save();
-
-        // $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
-        // foreach ($tags as $tag) {
-        //     Tag::firstOrCreate(['name' => $tag], ['slug' => str_replace(' ', '_', $tag)])->save();
-        // }
-        // $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
-        // $wallpaper->tags()->sync($tags);
 
         return redirect()->route('starshop.wallpapers.show', ['wallpaper' => $wallpaper->slug])
             ->with('success', 'You have successfully created a wallpaper!');
@@ -89,9 +79,12 @@ class WallpaperController extends Controller
                 'wallpaper_id' => $wallpaper->id,
                 'user_id' => auth()->user()->id
             ]);
+
+            // remove the buyer's stars
             auth()->user()->stars -= $wallpaper->price;
             auth()->user()->save();
 
+            // add to seller's stars
             $wallpaper->author->stars += $wallpaper->price;
             $wallpaper->author->save();
 
@@ -106,6 +99,7 @@ class WallpaperController extends Controller
     {
         $wallpaper = Wallpaper::find($request->id);
         if (Auth::user()->id === $wallpaper->author->id) {
+            // before deleting the wallpaper, remove the image from the storage
             unlink(public_path('images/wallpapers/' . $wallpaper->image));
             $wallpaper->delete();
             return redirect('/starshop');
@@ -116,21 +110,22 @@ class WallpaperController extends Controller
 
     public function toggleLike(Wallpaper $wallpaper)
     {
-        // never liked
+        // if user has never liked the wallpaper, create new db row
         if (!WallpaperLike::where('user_id', auth()->id())->where('wallpaper_id', $wallpaper->id)->exists()) {
             WallpaperLike::create([
                 'user_id' => auth()->id(),
                 'wallpaper_id' => $wallpaper->id,
                 'liked' => 1
             ]);
-            // if it is not your own, give money to user
+            // if it is not this user's wallpaper, give money (2 stars) to the user
             if ($wallpaper->author->id !== auth()->user()->id) {
                 $wallpaper->author->stars += 2;
                 $wallpaper->author->save();
             }
-        } // record exists
+        } // if user has liked this wallpaper before (record exists)
         else {
             $wallpaperLike = WallpaperLike::where('user_id', auth()->id())->where('wallpaper_id', $wallpaper->id);
+            // check if the existing record says the wallpaper is liked or not, toggle it
             $isLiked = $wallpaper->isLiked($wallpaper);
             if (!$isLiked) {
                 $wallpaperLike->update(['liked' => 1]);

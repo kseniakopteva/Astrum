@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Block;
 use App\Models\Note;
 use App\Models\Post;
 use App\Models\PostFrame;
@@ -20,42 +19,23 @@ class PostController extends Controller
 {
     public function explore($page = null)
     {
-        // dd(request());
+        // if search exists in query, but it is null, redirect to the same url but without null search in it
         if (request(['search']) && is_null(request(['search'])['search']))
             return redirect('/explore?' . http_build_query(request()->except('search')));
 
+        // set the 'users' prop based on the search query
         if (request(['search']) && !is_null(request(['search'])['search'])) {
             $users = User::whereNotIn('id', User::getBannedUserIds());
             if (auth()->check())
                 $users = $users->whereNotIn('id', auth()->user()->allBlockedBy());
             $users = $users->latest()
                 ->filter(request(['search']))->get();
-
-            //     $posts = Post::where('removed', false)->whereNotIn('user_id', User::getBannedUserIds());
-            //     if (auth()->check())
-            //         $posts = $posts->whereNotIn('user_id', auth()->user()->allBlockedBy());
-            //     $posts = $posts->latest()
-            //         ->filter(request(['search']))->get();
-
-            //     $notes = Note::where('removed', false)->whereNotIn('user_id', User::getBannedUserIds());
-            //     if (auth()->check())
-            //         $notes = $notes->whereNotIn('user_id', auth()->user()->allBlockedBy());
-            //     $notes = $notes->latest()
-            //         ->filter(request(['search']))->get();
-
-            //     $items = $notes->merge($posts)->sortByDesc('created_at')->paginate(25, null, $page);
-
-            //     return view('explore', [
-            //         'users' => $users,
-            //         'items' => $items
-            //     ]);
         } else {
             $users = null;
         }
 
+        // return different 'items' prop based on the sort
         if (!request(['sort']) || request(['sort'])['sort'] == 'all') {
-            //
-            //
             $posts = Post::where('removed', false)->whereNotIn('user_id', User::getBannedUserIds());
             if (auth()->check())
                 $posts = $posts->whereNotIn('user_id', auth()->user()->allBlockedBy());
@@ -68,6 +48,7 @@ class PostController extends Controller
             $notes = $notes->latest()
                 ->filter(request(['search']))->get();
 
+            // merging posts and notes
             $items = new Collection();
             $items = $items->concat($posts)->concat($notes)->sortByDesc('created_at')->paginate(25, null, $page);
 
@@ -75,11 +56,7 @@ class PostController extends Controller
                 'items' => $items,
                 'users' => $users
             ]);
-            //
-            //
         } else if (request(['sort'])['sort'] == 'posts') {
-            //
-            //
             $posts = Post::where('removed', false)
                 ->whereNotIn('user_id', User::getBannedUserIds());
 
@@ -95,8 +72,6 @@ class PostController extends Controller
                 'items' => $posts,
                 'users' => $users
             ]);
-            //
-            //
         } else if (request(['sort'])['sort'] == 'notes') {
             $notes = Note::where('removed', false)
                 ->whereNotIn('user_id', User::getBannedUserIds());
@@ -114,15 +89,6 @@ class PostController extends Controller
                 'users' => $users
             ]);
         }
-        // else if (request(['sort'])['sort'] == 'week') {
-        //
-        //
-
-        //
-        //
-        // } else if (request(['sort'])['sort'] == 'month') {
-        // } else if (request(['sort'])['sort'] == 'year') {
-        // }
     }
 
     public function show(User $author, Post $post)
@@ -137,8 +103,9 @@ class PostController extends Controller
         if (auth()->user()->isBanned())
             return back()->with('error', 'You can\'t post because you are banned.');
 
-        $u = auth()->user();
+        // price to make a post is 10 stars
         $price = 10;
+        $u = auth()->user();
         if ($u->stars < $price) {
             return back()
                 ->with('error', 'You don\'t have enough money!');
@@ -151,38 +118,41 @@ class PostController extends Controller
             'alt' => 'max:200'
         ]);
 
-        if (!is_null($request->frame)) {
-            if ($request->frame[0] != 'n') {
-                // add a post frame of id to this post.
-                $pf = PostFrame::find($request->frame[0]);
+        // if user chose a post frame, add it
+        if (!is_null($request->frame) && $request->frame[0] != 'n') {
 
-                $existing = auth()->user()->ownedPostFrames()
-                    ->where('post_frame_id', $pf->id)
-                    ->where('post_frame_user.user_id', auth()->user()->id)->first();
-                $new_amount = $existing->pivot->amount - 1;
-                if ($new_amount != 0)
-                    auth()->user()->ownedPostFrames()->updateExistingPivot($pf->id, ['amount' => $new_amount]);
-                else
-                    auth()->user()->ownedPostFrames()->detach($pf->id);
+            $pf = PostFrame::find($request->frame[0]);
 
-                $attributes['post_frame_id'] = $request->frame[0];
-            }
+            // change the amount of this post frame
+            $existing = auth()->user()->ownedPostFrames()
+                ->where('post_frame_id', $pf->id)
+                ->where('post_frame_user.user_id', auth()->user()->id)->first();
+            $new_amount = $existing->pivot->amount - 1;
+
+            // if amount becomes 0, remove the db record altogether
+            if ($new_amount != 0)
+                auth()->user()->ownedPostFrames()->updateExistingPivot($pf->id, ['amount' => $new_amount]);
+            else
+                auth()->user()->ownedPostFrames()->detach($pf->id);
+
+            $attributes['post_frame_id'] = $request->frame[0];
         }
 
         $attributes['user_id'] = auth()->user()->id;
         $attributes['slug'] = $this->make_slug($attributes['title']);
         $attributes['excerpt'] = preg_replace('/(.*?[?!.](?=\s|$)).*/', '\\1',  $attributes['body']);
 
+        // saving image, resizing it without making it larger than it is, saving the aspect ratio
         $path = public_path('images\\posts');
         $imageName = strtolower($request->user()->username) . '_' . time() . '.' . $request->image->extension();
         $attributes['image'] = $imageName;
         $request->image->move($path, $imageName);
-
         $image = Image::make($path . '/' . $imageName)->resize(1000, null, function ($constraint) {
             $constraint->aspectRatio();
             $constraint->upsize();
         });
 
+        // if user chose a watermark, generate the according watermark on the existing image
         if (!is_null($request->watermark) && $request->watermark != 'none') {
             switch ($request->watermark) {
                 case 'bottom-right':
@@ -236,6 +206,7 @@ class PostController extends Controller
         $u->stars -= $price;
         $u->save();
 
+        // creating or using existing tags, syncing
         $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
         foreach ($tags as $tag) {
             Tag::firstOrCreate(['name' => $tag], ['slug' => str_replace(' ', '_', $tag)])->save();
@@ -251,6 +222,7 @@ class PostController extends Controller
     {
         $post = Post::find($request->id);
         if (Auth::user()->id === $post->author->id) {
+            // before deleting the post, remove the image from the storage
             unlink(public_path('images/posts/' . $post->image));
             $post->delete();
             return redirect('/profile');
@@ -259,27 +231,24 @@ class PostController extends Controller
         }
     }
 
-
-
-
-
     public function toggleLike(Post $post)
     {
-        // never liked
+        // if user has never liked the post, create new db row
         if (!PostLike::where('user_id', auth()->id())->where('post_id', $post->id)->exists()) {
             PostLike::create([
                 'user_id' => auth()->id(),
                 'post_id' => $post->id,
                 'liked' => 1
             ]);
-            // if it is not your own post, give money to user
+            // if it is not this user's post, give money (2 star) to the user
             if ($post->author->id !== auth()->user()->id) {
                 $post->author->stars += 2;
                 $post->author->save();
             }
-        } // record exists
+        } // if user has liked this post before (record exists)
         else {
             $postLike = PostLike::where('user_id', auth()->id())->where('post_id', $post->id);
+            // check if the existing record says the post is liked or not, toggle it
             $isLiked = $post->isLiked($post);
             if (!$isLiked) {
                 $postLike->update(['liked' => 1]);
@@ -287,31 +256,14 @@ class PostController extends Controller
                 $postLike->update(['liked' => 0]);
             }
         }
-        // return back();
+
+        // if post is in a feed, it will anchor to it on return
         return Redirect::to(URL::previous() . "#" . $post->slug);
     }
 
-
-
     static public function make_slug(string $title)
     {
-        $slug = strtolower(
-            implode(
-                '-',
-                array_slice(
-                    explode(
-                        '-',
-                        preg_replace(
-                            '/[^a-zA-Z0-9-]/',
-                            '-',
-                            $title
-                        )
-                    ),
-                    0,
-                    7
-                )
-            )
-        );
+        $slug = strtolower(implode('-', array_slice(explode('-', preg_replace('/[^a-zA-Z0-9-]/', '-', $title)), 0, 7)));
 
         if (strlen($slug) > 50) {
             $slug = substr($slug, 0, -50);

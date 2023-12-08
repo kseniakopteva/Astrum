@@ -20,11 +20,14 @@ class ColourController extends Controller
             return back();
 
         $colour = Colour::find($request->id);
+
+        // buy only if user has enough money
         if (auth()->user()->stars >= $colour->price) {
             auth()->user()->ownedColours()->attach([
                 'colour_id' => $colour->id,
                 'user_id' => auth()->user()->id
             ]);
+
             auth()->user()->stars -= $colour->price;
             auth()->user()->save();
             return back()

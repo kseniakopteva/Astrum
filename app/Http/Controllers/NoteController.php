@@ -13,7 +13,7 @@ class NoteController extends Controller
 {
     public function show(User $author, Note $note)
     {
-        return view('note', [
+        return view('notes.show', [
             'note' => $note,
             'ancestors' => $note->ancestors->reverse(),
             'user' => $author
@@ -29,6 +29,7 @@ class NoteController extends Controller
             'notebody' => 'max:600|required',
         ]);
 
+        // checking if note has a parent note
         if (!is_null($note)) {
             $attributes['parent_id'] = $note->id;
         } else {
@@ -38,8 +39,9 @@ class NoteController extends Controller
         $attributes['user_id'] = auth()->user()->id;
         $attributes['slug'] = time();
 
-        $u = auth()->user();
+        // price to post a note is 5 stars
         $price = 5;
+        $u = auth()->user();
         if ($u->stars < $price)
             return back()->with('error', 'You don\'t have enough money!');
 
@@ -47,6 +49,7 @@ class NoteController extends Controller
         $u->stars -= $price;
         $u->save();
 
+        // creating or using existing tags, syncing
         $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
         foreach ($tags as $tag) {
             Tag::firstOrCreate(['name' => $tag], ['slug' => str_replace(' ', '_', $tag)])->save();
@@ -62,6 +65,7 @@ class NoteController extends Controller
     {
         $note = Note::find($request->id);
         if (Auth::user()->id === $note->author->id) {
+            // notes are not fully removed to show 'Note deleted' in the thread if note has children
             $note->update(['removed' => 1]);
             return redirect('/profile');
         } else {
@@ -71,21 +75,22 @@ class NoteController extends Controller
 
     public function toggleLike(Note $note)
     {
-        // never liked
+        // if user has never liked the note, create new db row
         if (!NoteLike::where('user_id', auth()->id())->where('note_id', $note->id)->exists()) {
             NoteLike::create([
                 'user_id' => auth()->user()->id,
                 'note_id' => $note->id,
                 'liked' => 1
             ]);
-            // if it is not your own comment, give money to user
+            // if it is not this user's note, give money (1 star) to the user
             if ($note->author->id !== auth()->user()->id) {
                 $note->author->stars++;
                 $note->author->save();
             }
-        } // record exists
+        } // if user has liked this note before (record exists)
         else {
             $noteLike = NoteLike::where('user_id', auth()->id())->where('note_id', $note->id);
+            // check if the existing record says the note is liked or not, toggle it
             $isLiked = $note->isLiked($note);
             if (!$isLiked) {
                 $noteLike->update(['liked' => 1]);

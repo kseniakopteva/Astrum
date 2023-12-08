@@ -33,7 +33,6 @@ class BanController extends Controller
             'user_id' => 'required|exists:users,id'
         ]);
 
-
         $attributes['banned_by_id'] = auth()->user()->id;
 
         $now = Carbon::now()->timezone('Europe/Riga');
@@ -81,9 +80,9 @@ class BanController extends Controller
         $user = auth()->user();
         $blocked = User::find($request->user_id);
 
+        // error if not auth or if user tries to block themselves
         if (!auth()->check() || auth()->user()->id == $request->user_id)
             return redirect()->route('profile.index', $blocked->username)->with('error', 'You can\'t do that!');
-
 
         if ($blocked->isBlockedBy($user))
             return redirect()->route('profile.index', $blocked->username)->with('error', 'You have already blocked ' . $blocked->username . '!');

@@ -38,20 +38,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Merged Collection Paginator
-        // Collection::macro('paginate', function ($perPage, $total = null, $page = null, $pageName = 'page'): LengthAwarePaginator {
-        //     $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
-
-        //     return new LengthAwarePaginator(
-        //         $this->forPage($page, $perPage)->values(),
-        //         $total ?: $this->count(),
-        //         $perPage,
-        //         $page,
-        //         [
-        //             'path' => LengthAwarePaginator::resolveCurrentPath(),
-        //             'pageName' => $pageName,
-        //         ]
-        //     );
-        // });
         Collection::macro('paginate', function ($perPage, $total = null, $page = null, $pageName = 'page') {
             $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
 

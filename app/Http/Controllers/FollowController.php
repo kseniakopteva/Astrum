@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\FollowUnfollowRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class FollowController extends Controller
 {
     public function follow(FollowUnfollowRequest $request)
     {
-        // dd('Follow!');
         $userToFollow = User::findOrFail(request('id'));
         if ($userToFollow->id === auth()->user()->id)
             return back()->with('error', 'You can\'t follow yourself!');
@@ -20,6 +18,7 @@ class FollowController extends Controller
 
         auth()->user()->follow($userToFollow);
 
+        // if user reaches 30 followers, change his role to 'creator'
         if ($userToFollow->followers->count() == 30 && $userToFollow->role == 'user') {
             $userToFollow->role = 'creator';
             $userToFollow->save();

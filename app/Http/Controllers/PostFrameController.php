@@ -13,12 +13,8 @@ class PostFrameController extends Controller
 {
     public function index()
     {
-        $banned_users = User::getBannedUserIds();
-
-        $pf = PostFrame::whereNotIn('user_id', $banned_users)->where('removed', false)->get();
-
         return view('starshop.post-frames.index', [
-            'post_frames' => $pf
+            'post_frames' => PostFrame::whereNotIn('user_id', User::getBannedUserIds())->where('removed', false)->get()
         ]);
     }
 
@@ -43,13 +39,14 @@ class PostFrameController extends Controller
             'name' => 'required|max:100',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif',
             'description' => 'max:700',
-            'width' => 'required',
+            'width' => 'required|max:60',
             'percentage' => 'required',
             'price' => 'required|numeric|min:500|max:10000'
         ]);
 
-        $u = auth()->user();
+        // price to make a post frame is the user's set price for it
         $price = $attributes['price'];
+        $u = auth()->user();
         if ($u->stars < $price) {
             return back()
                 ->with('error', 'You don\'t have enough money!');
@@ -58,23 +55,16 @@ class PostFrameController extends Controller
         $attributes['user_id'] = auth()->user()->id;
         $attributes['slug'] = PostController::make_slug($attributes['name']);
 
+        // saving image, cropping it into a square and resizing to 500px
         $path = public_path('images\\post-frames');
         $imageName = strtolower($request->user()->username) . '_' . time() . '.' . $request->image->extension();
         $attributes['image'] = $imageName;
         $request->image->move($path, $imageName);
-
-        Image::make($path . '/' . $imageName)->fit(2000)->save($path . '/' . $imageName);
+        Image::make($path . '/' . $imageName)->fit(500)->save($path . '/' . $imageName);
 
         $post_frame = PostFrame::create($attributes);
         $u->stars -= $price;
         $u->save();
-
-        // $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
-        // foreach ($tags as $tag) {
-        //     Tag::firstOrCreate(['name' => $tag], ['slug' => str_replace(' ', '_', $tag)])->save();
-        // }
-        // $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
-        // $post_frame->tags()->sync($tags);
 
         return redirect()->route('starshop.post-frames.show', ['post_frame' => $post_frame->slug])
             ->with('success', 'You have successfully created a post frame!');
@@ -82,21 +72,22 @@ class PostFrameController extends Controller
 
     public function toggleLike(PostFrame $post_frame)
     {
-        // never liked
+        // if user has never liked the post frame, create new db row
         if (!PostFrameLike::where('user_id', auth()->id())->where('post_frame_id', $post_frame->id)->exists()) {
             PostFrameLike::create([
                 'user_id' => auth()->id(),
                 'post_frame_id' => $post_frame->id,
                 'liked' => 1
             ]);
-            // if it is not your own, give money to user
+            // if it is not this user's post, give money (1 star) to the user
             if ($post_frame->author->id !== auth()->user()->id) {
                 $post_frame->author->stars += 1;
                 $post_frame->author->save();
             }
-        } // record exists
+        } // if user has liked this post frame before (record exists)
         else {
             $postFrameLike = PostFrameLike::where('user_id', auth()->id())->where('post_frame_id', $post_frame->id);
+            // check if the existing record says the post frame is liked or not, toggle it
             $isLiked = $post_frame->isLiked($post_frame);
             if (!$isLiked) {
                 $postFrameLike->update(['liked' => 1]);
@@ -114,6 +105,7 @@ class PostFrameController extends Controller
 
         $user = auth()->user();
 
+        // users can't buy, only creators and more
         if ($user->role == 'user') {
             return back();
         }
@@ -125,6 +117,7 @@ class PostFrameController extends Controller
                 ->with('error', 'You don\'t have enough money!');
         }
 
+        // if user doesn't have this post frame, make a new db record
         if (!$user->ownedPostFrames()
             ->where('post_frame_id', $pf->id)
             ->where('post_frame_user.user_id', $user->id)
@@ -133,7 +126,8 @@ class PostFrameController extends Controller
             $user->ownedPostFrames()->attach([
                 'post_frame_id' => $pf->id
             ]);
-        } else {
+        } // else increase the amount of it
+        else {
             $existing = $user->ownedPostFrames()
                 ->where('post_frame_id', $pf->id)
                 ->where('post_frame_user.user_id', $user->id)->first();
@@ -142,9 +136,11 @@ class PostFrameController extends Controller
             $user->ownedPostFrames()->updateExistingPivot($pf->id, ['amount' => $new_amount]);
         }
 
+        // remove the buyer's stars
         $user->stars -= $pf->price;
         $user->save();
 
+        // add to seller's stars
         $pf->author->stars += $pf->price;
         $pf->author->save();
 
@@ -156,6 +152,7 @@ class PostFrameController extends Controller
     {
         $pf = PostFrame::find($request->id);
         if (auth()->user()->id === $pf->author->id) {
+            // before deleting the post frame, remove the image from the storage
             unlink(public_path('images/post-frames/' . $pf->image));
             $pf->delete();
             return redirect('/starshop');

@@ -28,6 +28,7 @@ class FAQuestionController extends Controller
     public function destroy(Request $request)
     {
         $faq = FAQuestion::find($request->faq_id);
+
         if (Auth::user()->id === $faq->author->id) {
             $faq->delete();
             return redirect('/profile/' . $faq->author->username . '/faq')->with('success', 'You have deleted the FAQ!');

@@ -16,8 +16,9 @@ class ProductController extends Controller
         if (auth()->user()->isBanned())
             return back()->with('error', 'You can\'t add a product because you are banned.');
 
-        $u = auth()->user();
+        // price to make a product is 10 stars
         $price = 10;
+        $u = auth()->user();
         if ($u->stars < $price) {
             return back()
                 ->with('error', 'You don\'t have enough money!');
@@ -36,28 +37,19 @@ class ProductController extends Controller
         $attributes['user_id'] = auth()->user()->id;
         $attributes['slug'] = PostController::make_slug($attributes['name']);
 
+        // saving image, resizing it without making it larger than it is, saving the aspect ratio
         $path = public_path('images\\products');
         $imageName = strtolower($request->user()->username) . '_' . time() . '.' . $request->image->extension();
         $attributes['image'] = $imageName;
         $request->image->move($path, $imageName);
-
-        $image = Image::make($path . '/' . $imageName)->resize(1000, null, function ($constraint) {
+        Image::make($path . '/' . $imageName)->resize(1000, null, function ($constraint) {
             $constraint->aspectRatio();
             $constraint->upsize();
         });
 
-        $image->save($path . '/' . $imageName);
-
-        $new_product = Product::create($attributes);
+        Product::create($attributes);
         $u->stars -= $price;
         $u->save();
-
-        // $tags = array_filter(array_map('trim', explode(',', $request['tags'])));
-        // foreach ($tags as $tag) {
-        //     Tag::firstOrCreate(['name' => $tag], ['slug' => str_replace(' ', '_', $tag)])->save();
-        // }
-        // $tags = Tag::whereIn('name', $tags)->get()->pluck('id');
-        // $new_product->tags()->sync($tags);
 
         return redirect()->route('profile.shop', ['author' => auth()->user()->username])
             ->with('success', 'You have successfully added a product!');
@@ -76,6 +68,7 @@ class ProductController extends Controller
             'details' => 'required|max:2000',
         ]);
 
+        // if bought product's currency is stars, remove the price amount from buyer's stars
         $bought_product = Product::find($request->product_id);
         if ($bought_product->currency == 'stars') {
             $u = User::find($request->buyer_id);
@@ -96,11 +89,15 @@ class ProductController extends Controller
     public function destroy(Request $request)
     {
         $product = Product::find($request->product_id);
+
+        // if trying to delete someone else's product
         if ($product->author->id !== auth()->user()->id) {
             return back()->with('error', 'You can\'t do that.');
         }
 
+        // before deleting the product, remove the image from the storage
         unlink(public_path('images/products/' . $product->image));
+
         $product->delete();
         return back()->with('success', 'You have deleted the product!');
     }

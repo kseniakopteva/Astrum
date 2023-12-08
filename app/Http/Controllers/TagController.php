@@ -12,6 +12,7 @@ class TagController extends Controller
 {
     public function index(Tag $tag, $page = null)
     {
+        // if search is in the query, but it is null, remove it
         if (request(['search']) && is_null(request(['search'])['search']))
             return redirect('/tags/' . $tag->slug . '?' . http_build_query(request()->except('search')));
 
@@ -23,15 +24,14 @@ class TagController extends Controller
         $notes = Note::where('removed', false)->whereNotIn('user_id', User::getBannedUserIds())->whereHas('tags', fn ($q) => $q->where('tag_id', $tag->id));
         if (auth()->check())
             $notes = $notes->whereNotIn('user_id', auth()->user()->allBlockedBy());
-        $notes = $notes->latest()
-            ->filter(request(['search']))->get();
+        $notes = $notes->latest()->filter(request(['search']))->get();
 
-        // if (request(['sort']) && in_array(request(['sort'])['sort'], ['all']))
-        $items = $notes->merge($posts)->sortByDesc('created_at')->paginate(25, null, $page);
-        if (request(['sort']) && in_array(request(['sort'])['sort'], ['notes']))
+        if (request(['sort']) && request(['sort'])['sort'] == 'notes')
             $items = $notes->sortByDesc('created_at')->paginate(25, null, $page);
-        elseif (request(['sort']) && in_array(request(['sort'])['sort'], ['posts']))
+        elseif (request(['sort']) && request(['sort'])['sort'] == 'posts')
             $items = $posts->sortByDesc('created_at')->paginate(25, null, $page);
+        else
+            $items = $notes->merge($posts)->sortByDesc('created_at')->paginate(25, null, $page);
 
         return view('explore', [
             'items' =>  $items,

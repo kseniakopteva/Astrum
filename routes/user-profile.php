@@ -54,6 +54,7 @@ Route::get('/profile/{author:username}', [ProfileController::class, 'index'])->n
 Route::get('/profile/{author:username}/posts', [ProfileController::class, 'posts'])->name('profile.posts');
 Route::get('/profile/{author:username}/notes', [ProfileController::class, 'notes'])->name('profile.notes');
 Route::get('/profile/{author:username}/shop', [ProfileController::class, 'shop'])->name('profile.shop');
+// Route::get('/profile/{author:username}/shop/page/{page}', [ProfileController::class, 'shop']);
 Route::get('/profile/{author:username}/faq', [ProfileController::class, 'faq'])->name('profile.faq');
 Route::get('/profile/{author:username}/about', [ProfileController::class, 'about'])->name('profile.about');
 

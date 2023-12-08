@@ -22,6 +22,7 @@ class ReportController extends Controller
         ]);
     }
 
+    // this method gets called from other report type specific methods
     public function store(Request $request, $type)
     {
         if (!auth()->check())
@@ -108,9 +109,11 @@ class ReportController extends Controller
         $reported = $class::find($report->reported_id);
 
         if (auth()->user()->isModOrMore()) {
+            // if reported item is deleted, delete report
             if (is_null($reported)) {
                 $report->delete();
-            } else {
+            } // otherwise resolve it
+            else {
                 $report->resolved = true;
                 $report->save();
             }
@@ -125,7 +128,9 @@ class ReportController extends Controller
         $report = Report::find($request->report_id);
         $class = $request->class;
         $item = $class::find($request->reported_id);
+
         if (auth()->user()->isModOrMore()) {
+            // remove item, resolve report
             $item->removed = true;
             $item->save();
             $report->resolved = true;
