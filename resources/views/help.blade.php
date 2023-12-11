@@ -23,6 +23,51 @@
         </x-help-section>
 
 
+        <x-help-section id="money-system">
+            <x-slot name="heading">Money System</x-slot>
+
+            <div class="space-y-3">
+                <p>The Astrum website uses a money currency called 'stars'. They are used to make a post, customize your profile, etc.
+                    So this guide will help you understand where it is used and how much do certain things cost!</p>
+                <p>First of all, how much is it to post stuff?</p>
+                <ul class="list-disc ml-6 marker:text-lime-700">
+                    <li>To create a <strong class="text-bold">post</strong> costs <x-price>10</x-price></li>
+                    <li>To create a <strong class="text-bold">note</strong> costs <x-price>5</x-price></li>
+                    <li>To create a <strong class="text-bold">post comment</strong> costs <x-price>1</x-price></li>
+                    <li>To create a <strong class="text-bold">product</strong> costs <x-price>10</x-price> <span class="text-lime-600">(creators only)</span></li>
+                    <li>To create a <strong class="text-bold">wallpaper</strong> costs <x-price>what price you set yourself</x-price> <span class="text-lime-600">(creators only)</span></li>
+                    <li>To create a <strong class="text-bold">profile picture frame</strong> costs <x-price>what price you set yourself</x-price> <span class="text-lime-600">(creators only)</span>
+                    </li>
+                    <li>To create a <strong class="text-bold">post frame</strong> costs <x-price>what price you set yourself</x-price> <span class="text-lime-600">(creators only)</span></li>
+                </ul>
+                <p>Okay, and how do I earn these stars to create?</p>
+                <ul class="list-disc ml-6 marker:text-lime-700">
+                    <li>When you receive a <strong class="text-bold">like</strong> on your <strong class="text-bold">post</strong> you get <x-price>2</x-price></li>
+                    <li>When you receive a <strong class="text-bold">like</strong> on your <strong class="text-bold">note</strong> you get <x-price>1</x-price></li>
+                    <li>When you receive a <strong class="text-bold">like</strong> on your <strong class="text-bold">post comment</strong> you get <x-price>1</x-price></li>
+                    <li>When you get a <strong class="text-bold">comment</strong> on your <strong class="text-bold">post</strong> you get <x-price>3</x-price></li>
+                    <li>When you get a <strong class="text-bold">comment</strong> on your <strong class="text-bold">note</strong> you get <x-price>2</x-price></li>
+                    <li>When you get a <strong class="text-bold">follower</strong> you get <x-price>3</x-price></li>
+                    <li>When someone <strong class="text-bold">buys your product</strong> and you <strong class="text-bold">fulfill their order</strong>, you get
+                        <x-price>the amount you set as a price</x-price> (if the product's currency was set as stars) or
+                        <x-price>100</x-price> (if product's currency was euro) <span class="text-lime-600">(creators only)</span>
+                    </li>
+
+                    <li>When someone <strong class="text-bold">likes</strong> your <strong class="text-bold"><a href="{{ route('starshop') }}" class="underline">Starshop</a> submission</strong>
+                        (wallpaper, profile
+                        picture frame, or post frame) you get
+                        <x-price>2</x-price> <span class="text-lime-600">(creators only)</span>
+                    </li>
+                    <li>When someone <strong class="text-bold">buys</strong> your <strong class="text-bold"><a href="{{ route('starshop') }}" class="underline">Starshop</a> submission</strong>
+                        (wallpaper, profile
+                        picture frame, or post frame) you get
+                        <x-price>the amount you set as a price</x-price> <span class="text-lime-600">(creators only)</span>
+                    </li>
+                </ul>
+                <p>And finally, you become a <span class="text-lime-600">creator</span> whe you reach <strong class="text-bold">30 followers</strong>!</p>
+            </div>
+        </x-help-section>
+
         <x-help-section id="post-frame-upload-guidelines">
             <x-slot name="heading">Post Frame Upload Guidelines</x-slot>
 

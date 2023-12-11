@@ -32,6 +32,13 @@ class NoteController extends Controller
         // checking if note has a parent note
         if (!is_null($note)) {
             $attributes['parent_id'] = $note->id;
+
+            // if note has a parent, it is considered a comment, and OP should get stars
+            // for the comment (if they are not the same person who commented)
+            if ($note->author->id !== auth()->user()->id) {
+                $note->author->stars += 2;
+                $note->author->save();
+            }
         } else {
             $attributes['parent_id'] = NULL;
         }

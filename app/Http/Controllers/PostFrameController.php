@@ -79,9 +79,9 @@ class PostFrameController extends Controller
                 'post_frame_id' => $post_frame->id,
                 'liked' => 1
             ]);
-            // if it is not this user's post, give money (1 star) to the user
+            // if it is not this user's post, give money (2 stars) to the user
             if ($post_frame->author->id !== auth()->user()->id) {
-                $post_frame->author->stars += 1;
+                $post_frame->author->stars += 2;
                 $post_frame->author->save();
             }
         } // if user has liked this post frame before (record exists)
