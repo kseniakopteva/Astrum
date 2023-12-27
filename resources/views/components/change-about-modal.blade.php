@@ -20,9 +20,9 @@
                         <x-input-error :messages="$errors->get('about')" class="mt-2" />
                     </div>
 
-                    <div class="pt-4 flex justify-between">
-                        <x-secondary-button type="reset">Clear</x-secondary-button>
-                        <x-primary-button class="w-48 justify-center overflow-hidden">Submit</x-primary-button>
+                    <div class="pt-4 flex justify-end">
+                        {{-- <x-secondary-button type="reset">Clear</x-secondary-button> --}}
+                        <x-primary-button class="w-48 justify-center overflow-hidden">Save</x-primary-button>
                     </div>
                 </form>
             </div>

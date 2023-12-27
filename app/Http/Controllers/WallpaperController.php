@@ -21,9 +21,11 @@ class WallpaperController extends Controller
 
     public function show(Wallpaper $wallpaper)
     {
-        return view('starshop.wallpapers.show', [
-            'wallpaper' => $wallpaper
-        ]);
+        if (!$wallpaper->removed)
+            return view('starshop.wallpapers.show', [
+                'wallpaper' => $wallpaper
+            ]);
+        else return redirect()->route('starshop');
     }
 
     public function create()

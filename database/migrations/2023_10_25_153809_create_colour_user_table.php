@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('colour_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('colour_id')->constrained('colours')->unsigned();
-            $table->foreignId('user_id')->constrained('users')->unsigned();
+            $table->foreignId('colour_id'); //->constrained('colours')->unsigned();
+            $table->foreignId('user_id'); //->constrained('users')->unsigned();
             $table->timestamps();
         });
     }

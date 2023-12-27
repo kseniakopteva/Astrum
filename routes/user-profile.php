@@ -75,3 +75,4 @@ Route::post('/profile/about/destroy/link', [ProfileController::class, 'about_des
 Route::post('/profile/shop/store', [ProductController::class, 'store'])->name('product.store');
 Route::post('/profile/shop/buy', [ProductController::class, 'buy'])->name('product.buy');
 Route::post('/profile/product/delete', [ProductController::class, 'destroy'])->name('product.delete');
+Route::post('/profile/product/active', [ProductController::class, 'makeActive'])->name('product.active');

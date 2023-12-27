@@ -41,8 +41,8 @@ class Wallpaper extends Model
         else return null;
     }
 
-    public function reports(Wallpaper $wp)
+    public function reports()
     {
-        return Report::where('reported_type', 'wallpaper')->where('reported_id', $wp->id)->latest()->get();
+        return Report::where('reported_type', 'wallpaper')->where('reported_id', $this->id)->latest()->get();
     }
 }

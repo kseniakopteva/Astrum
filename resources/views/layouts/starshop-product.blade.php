@@ -103,5 +103,5 @@
     </div>
 
 
-    <x-starshop-product-report-modal :item="$item" :type="$type" />
 </x-starshop-layout>
+<x-starshop-product-report-modal :item="$item" :type="$type" />

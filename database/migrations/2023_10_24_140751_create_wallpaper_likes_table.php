@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('wallpaper_likes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('wallpaper_id')->constrained('wallpapers');
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('wallpaper_id')->constrained('wallpapers')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->boolean('liked');
             $table->timestamps();
         });

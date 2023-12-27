@@ -6,6 +6,7 @@ use App\Models\Note;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class TagController extends Controller
@@ -30,8 +31,10 @@ class TagController extends Controller
             $items = $notes->sortByDesc('created_at')->paginate(25, null, $page);
         elseif (request(['sort']) && request(['sort'])['sort'] == 'posts')
             $items = $posts->sortByDesc('created_at')->paginate(25, null, $page);
-        else
-            $items = $notes->merge($posts)->sortByDesc('created_at')->paginate(25, null, $page);
+        else {
+            $items = new Collection();
+            $items = $items->concat($posts)->concat($notes)->sortByDesc('created_at')->paginate(25, null, $page);
+        }
 
         return view('explore', [
             'items' =>  $items,

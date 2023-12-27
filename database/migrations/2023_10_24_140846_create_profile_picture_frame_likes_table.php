@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('profile_picture_frame_likes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('profile_picture_frame_id')->constrained('profile_picture_frames');
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('profile_picture_frame_id')->constrained('profile_picture_frames')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->boolean('liked');
             $table->timestamps();
         });

@@ -31,7 +31,7 @@
             </div>
             <div class="pt-4 flex justify-between">
                 <x-secondary-button type="reset">Clear</x-secondary-button>
-                <x-primary-button class="w-48 justify-center overflow-hidden">Submit</x-primary-button>
+                <x-primary-button class="w-48 justify-center overflow-hidden">Create note</x-primary-button>
             </div>
         </form>
     </div>

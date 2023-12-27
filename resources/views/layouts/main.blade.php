@@ -140,7 +140,7 @@
             if (item == null) item = 'grid'
             console.log(item)
         }
-        if (item !== 'list') {
+        if (item === 'grid') {
             var macy_instance = Macy({
                 container: '.masonry',
                 trueOrder: false,

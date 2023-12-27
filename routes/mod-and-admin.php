@@ -5,6 +5,7 @@ use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Report;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 /* -------------------------------------------------------------------------- */
 /*                            Admin and Mod routes                            */
@@ -31,15 +32,16 @@ Route::middleware('mod')->group(function () {
         ]);
     })->name('report.show');
 
-    Route::post('/make/creator', function () {
-        if (auth()->user()?->role === 'admin') {
-            $userToMakeMod = User::findOrFail(request('id'));
+    Route::post('/make/creator', function (Request $request) {
+        if (auth()->user()?->role === 'admin' || auth()->user()?->role === 'mod') {
+            $userToMakeMod = User::findOrFail($request['id']);
             if ($userToMakeMod->role === 'user') {
                 $userToMakeMod->role = 'creator';
                 $userToMakeMod->save();
             }
+            return back()->with('success', 'User ' . $userToMakeMod->username . ' is now a creator!');
         }
-        return back()->with('success', 'User ' . $userToMakeMod->username . ' is now a creator!');
+        return back()->with('error', 'You can\'t do that!');
     })->name('make.creator');
 
     Route::post('/ban/user', [BanController::class, 'store'])->name('ban');

@@ -11,6 +11,10 @@
     <img class="cursor-pointer rounded-t-md h-56 w-full object-cover" src="{{ asset('images/products/' . $product->image) }}" alt="" x-data=""
         x-on:click.prevent="$dispatch('open-modal', 'image-{{ $product->id }}')">
 
+    @if (!$product->active)
+        <div class="inline-block absolute top-3 left-3 p-2 bg-red-200 rounded-md border border-red-400">Only you can see this product</div>
+    @endif
+
     @if (auth()->check() && auth()->user()->id === $user->id)
         <x-dropdown align="right" width="52" absolute="true">
             <x-slot name="trigger">
@@ -26,6 +30,17 @@
                         Delete Product
                     </button>
                 </form>
+
+                @if (!$product->active)
+                    <form action="{{ route('product.active') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <button
+                            class="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out">
+                            Make active again
+                        </button>
+                    </form>
+                @endif
             </x-slot>
         </x-dropdown>
     @endif
@@ -62,11 +77,14 @@
                 Button is active if
                 1. Unlimited type AND max_slots is null
                 2. Unlimited type AND max_slots NOT null AND availableSlots NOT 0
-                3. Limited
+                3. Limited AND active
 
                 --}}
 
-                @if (($product->type === 'unlimited' && !$product->max_slots) || ($product->type === 'unlimited' && $product->max_slots && $product->availableSlots() != 0) || $product->type == 'one-time')
+                @if (
+                    ($product->type === 'unlimited' && !$product->max_slots) ||
+                        ($product->type === 'unlimited' && $product->max_slots && $product->availableSlots() != 0) ||
+                        ($product->type == 'one-time' && $product->active))
                     <x-primary-button class="ml-auto" x-data="" type="button"
                         x-on:click.prevent="$dispatch('open-modal', 'buy-product-{{ $product->id }}')">{{ $buy }}</x-primary-button>
                 @else

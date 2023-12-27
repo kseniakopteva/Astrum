@@ -75,7 +75,6 @@
                      w-full items-center">
                     <div class="flex gap-8 items-center mb-2 justify-between">
                         @if (!auth()->check())
-                            {{-- <a href="/login" class="inline-flex items-center px-4 py-2 bg-lime-800 dark:bg-neutral-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-neutral-800 uppercase tracking-widest hover:bg-lime-700 dark:hover:bg-white focus:bg-lime-700 dark:focus:bg-white active:bg-lime-900 dark:active:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-800 transition ease-in-out duration-150">Follow</a> --}}
                             <form method="POST" action="{{ route('user.follow') }}">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $user->id }}">
@@ -147,7 +146,8 @@
                                                             Unban</button>
                                                     </form>
                                                 @endif
-                                                @admin
+                                                @if (auth()->check() &&
+                                                        auth()->user()->isModOrMore())
                                                     @if ($user->role == 'user')
                                                         <form method="POST" action="{{ route('make.creator') }}">
                                                             @csrf
@@ -156,7 +156,10 @@
                                                                 class="block w-full px-4 py-2 text-left text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-green-600">
                                                                 Make Creator</button>
                                                         </form>
-                                                    @elseif ($user->isCreator())
+                                                    @endif
+                                                @endif
+                                                @admin
+                                                    @if ($user->isCreator())
                                                         <form method="POST" action="{{ route('make.mod') }}">
                                                             @csrf
                                                             <input type="hidden" name="id" value="{{ $user->id }}">
@@ -172,19 +175,11 @@
                                                                 class="block w-full px-4 py-2 text-left text-sm dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-green-600">
                                                                 Remove Moderator</button>
                                                         </form>
-                                                        {{-- <form method="POST" action="{{ route('make.admin') }}">
-                                    @csrf
-                                    <input type="hidden" name="id" value="{{ $user->id }}">
-                                    <button type="submit" class="block w-full px-4 py-2 text-left text-sm dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800 transition duration-150 ease-in-out text-green-600">
-                                        Make Admin</button>
-                                    </form> --}}
                                                     @endif
                                                 @endadmin
                                             @endif
                                         </x-slot>
                                     </x-dropdown>
-
-
 
                                 </div>
                             @else
@@ -216,14 +211,6 @@
                 </section>
 
             </div>
-            {{-- Links Section --}}
-            {{-- @if ($user->isBanned() && auth()->user()->id !== $user->id)
-                <style>
-                    .profile-links a {
-                        pointer-events: none;
-                    }
-                </style>
-            @endif --}}
             <section
                 class="profile-links mt-6 flex justify-center pt-3 border-t border-neutral-300
                 @if (!is_null($user->colour)) border-{{ $user->colour->lightcolor }} dark:border-{{ $user->colour->darkcolor }} @endif">

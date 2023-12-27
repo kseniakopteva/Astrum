@@ -105,7 +105,7 @@ class BanController extends Controller
     {
         $user = User::find($request->user_id);
 
-        if (!(auth()->check() && auth()->user()->id != $request->user_id))
+        if (!auth()->check() || auth()->user()->id == $request->user_id)
             return redirect()->route('profile.index', $user->username)->with('error', 'You can\'t do that!');
 
         Block::where('user_id', auth()->user()->id)->where('blocked_id', $user->id)->delete();

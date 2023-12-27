@@ -10,7 +10,9 @@
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
         @foreach ($products as $product)
-            <x-product :product="$product" :user="$user" />
+            @if ($product->active || (auth()->check() && auth()->user()->id == $user->id))
+                <x-product :product="$product" :user="$user" />
+            @endif
         @endforeach
     </div>
     <div class="mt-8">

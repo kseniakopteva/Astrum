@@ -21,9 +21,11 @@ class ProfilePictureFrameController extends Controller
 
     public function show(ProfilePictureFrame $profile_picture_frame)
     {
-        return view('starshop.profile-picture-frames.show', [
-            'profile_picture_frame' => $profile_picture_frame
-        ]);
+        if (!$profile_picture_frame->removed)
+            return view('starshop.profile-picture-frames.show', [
+                'profile_picture_frame' => $profile_picture_frame
+            ]);
+        else return redirect()->route('starshop');
     }
 
     public function create()

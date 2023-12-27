@@ -18,7 +18,7 @@
                         <x-input-error :messages="$errors->get('answer')"></x-input-error>
 
                         <div class="flex justify-end">
-                            <x-primary-button>Post</x-primary-button>
+                            <x-primary-button>Create</x-primary-button>
                         </div>
                     </div>
                 </form>

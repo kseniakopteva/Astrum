@@ -17,6 +17,29 @@ use Intervention\Image\Facades\Image;
 
 class PostController extends Controller
 {
+    public function feed($page = null)
+    {
+        if (!auth()->check())
+            return redirect()->route('explore')->with('error', 'Log in to access your feed!');
+
+        // get all users, whom the current user is following, who are not banned, and add the current user if not banned
+        $userIds = auth()->user()->following()->whereNotIn('users.id', User::getBannedUserIds())->pluck('follows.following_id');
+        if (!auth()->user()->isBanned())
+            $userIds[] = auth()->user()->id;
+
+        // get posts and notes by these users
+        $posts = Post::whereIn('user_id', $userIds)->get();
+        $notes = Note::whereIn('user_id', $userIds)->get();
+
+        // merge posts and notes
+        $items = new Collection();
+        $items = $items->concat($posts)->concat($notes)->sortByDesc('created_at')->paginate(30, null, $page);
+
+        return view('feed', [
+            'items' => $items
+        ]);
+    }
+
     public function explore($page = null)
     {
         // if search exists in query, but it is null, redirect to the same url but without null search in it
@@ -94,9 +117,11 @@ class PostController extends Controller
 
     public function show(User $author, Post $post)
     {
-        return view('posts.show', [
-            'post' => $post
-        ]);
+        if (!$post->removed)
+            return view('posts.show', [
+                'post' => $post
+            ]);
+        else return redirect()->route('explore');
     }
 
     public function store(Request $request)
@@ -116,8 +141,11 @@ class PostController extends Controller
             'title' => 'required|max:100',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif',
             'body' => 'max:4000',
-            'alt' => 'max:200'
+            'alt' => 'max:200',
+            'tags' => 'max:500'
         ]);
+
+        unset($attributes['tags']);
 
         // if user chose a post frame, add it
         if (!is_null($request->frame) && $request->frame[0] != 'n') {

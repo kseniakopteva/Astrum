@@ -13,21 +13,32 @@ class NoteController extends Controller
 {
     public function show(User $author, Note $note)
     {
-        return view('notes.show', [
-            'note' => $note,
-            'ancestors' => $note->ancestors->reverse(),
-            'user' => $author
-        ]);
+        if (!$note->removed)
+            return view('notes.show', [
+                'note' => $note,
+                'ancestors' => $note->ancestors->reverse(),
+                'user' => $author
+            ]);
+        else return redirect()->route('star');
     }
 
-    public function store(Request $request, Note $note)
+    public function store(Request $request, Note $note = null)
     {
         if (auth()->user()->isBanned())
             return back()->with('error', 'You can\'t write notes because you are banned.');
 
         $attributes = $request->validate([
             'notebody' => 'max:600|required',
+            'tags' => 'max:500'
         ]);
+
+        unset($attributes['tags']);
+
+        // price to post a note is 5 stars
+        $price = 5;
+        $u = auth()->user();
+        if ($u->stars < $price)
+            return back()->with('error', 'You don\'t have enough money!');
 
         // checking if note has a parent note
         if (!is_null($note)) {
@@ -45,12 +56,6 @@ class NoteController extends Controller
 
         $attributes['user_id'] = auth()->user()->id;
         $attributes['slug'] = time();
-
-        // price to post a note is 5 stars
-        $price = 5;
-        $u = auth()->user();
-        if ($u->stars < $price)
-            return back()->with('error', 'You don\'t have enough money!');
 
         $new_note = Note::create($attributes);
         $u->stars -= $price;

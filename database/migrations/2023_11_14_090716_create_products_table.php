@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('currency');
             $table->unsignedInteger('max_slots')->nullable();
             $table->boolean('removed')->default(false);
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

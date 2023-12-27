@@ -186,17 +186,21 @@
         console.log(localStorage.getItem('explore_view'));
 
         if (localStorage.getItem('explore_view') === null || localStorage.getItem("explore_view") === 'grid') {
+
             gridIcon.style.display = 'block';
             listIcon.style.display = 'none';
             masonry.classList.add('masonry');
             masonry.classList.remove('max-w-xl');
             localStorage.setItem('explore_view', 'grid');
+
         } else if (localStorage.getItem("explore_view") === 'list') {
+
             gridIcon.style.display = 'none';
             listIcon.style.display = 'block';
             masonry.classList.add('max-w-xl');
             masonry.classList.remove('masonry');
             localStorage.setItem('explore_view', 'list');
+
         };
     }
 

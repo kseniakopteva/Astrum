@@ -72,6 +72,10 @@ class ProductController extends Controller
         $bought_product = Product::find($request->product_id);
         if ($bought_product->currency == 'stars') {
             $u = User::find($request->buyer_id);
+
+            if ($u->stars < $bought_product->price)
+                return back()->with('error', 'You don\'t have enough money!');
+
             $u->stars -= $bought_product->price;
             $u->save();
         }
@@ -100,5 +104,13 @@ class ProductController extends Controller
 
         $product->delete();
         return back()->with('success', 'You have deleted the product!');
+    }
+
+    public function makeActive(Request $request)
+    {
+        $product = Product::find($request->product_id);
+        $product->active = true;
+        $product->save();
+        return back();
     }
 }

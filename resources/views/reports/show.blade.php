@@ -95,6 +95,7 @@
                     <form action="{{ route('report.delete') }}" method="post">
                         @csrf @method('post')
                         <input type="hidden" name="report_id" value="{{ $report->id }}">
+                        <input type="hidden" name="type" value="{{ $report->reported_type }}">
                         <x-secondary-button type="submit" onclick="return confirm('Are you sure you want to dismiss this report?')">Dismiss</x-secondary-button>
                     </form>
                     @if ($report->reported_type != 'user')

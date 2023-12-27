@@ -20,9 +20,11 @@ class PostFrameController extends Controller
 
     public function show(PostFrame $post_frame)
     {
-        return view('starshop.post-frames.show', [
-            'post_frame' => $post_frame
-        ]);
+        if (!$post_frame->removed)
+            return view('starshop.post-frames.show', [
+                'post_frame' => $post_frame
+            ]);
+        else return redirect()->route('starshop');
     }
 
     public function create()
@@ -40,7 +42,7 @@ class PostFrameController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif',
             'description' => 'max:700',
             'width' => 'required|max:60',
-            'percentage' => 'required',
+            'percentage' => 'required|min:1|max:100',
             'price' => 'required|numeric|min:500|max:10000'
         ]);
 

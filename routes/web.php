@@ -4,34 +4,11 @@ use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\TagController;
-use App\Models\Note;
-use App\Models\Post;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Route;
 
 require __DIR__ . '/user-profile.php';
 
-Route::get('/', function ($page = null) {
-    if (!auth()->check())
-        return redirect()->route('explore')->with('error', 'Log in to access your feed!');
-
-    $banned_users = User::getBannedUserIds();
-
-    $userIds = auth()->user()->following()->whereNotIn('users.id', $banned_users)->pluck('follows.following_id');
-    if (!auth()->user()->isBanned())
-        $userIds[] = auth()->user()->id;
-
-    $posts = Post::whereIn('user_id', $userIds)->get();
-    $notes = Note::whereIn('user_id', $userIds)->get();
-
-    $items = new Collection();
-    $items = $items->concat($posts)->concat($notes)->sortByDesc('created_at')->paginate(30, null, $page);
-
-    return view('feed', [
-        'items' => $items
-    ]);
-})->name('feed');
+Route::get('/', [PostController::class, 'feed'])->name('feed');
 
 Route::get('/tags/{tag:slug}', [TagController::class, 'index']);
 

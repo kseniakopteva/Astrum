@@ -4,9 +4,16 @@
             @foreach ($ancestors as $n)
                 <article class="border border-neutral-200 bg-white dark:bg-neutral-800 dark:border-neutral-700 rounded-md shadow-sm p-4">
                     @if (!$n->removed)
-                        <div class="mb-4"><a href={{ route('note.show', ['author' => $n->author->username, 'note' => $n->slug]) }}>
+                        <div class="mb-4">
+                            <a href={{ route('note.show', ['author' => $n->author->username, 'note' => $n->slug]) }}>
                                 <p>{{ $n->notebody }}</p>
                             </a>
+
+                            @if (!$n->tags->isEmpty())
+                                <ul class="flex my-2">
+                                    <x-tags :item="$n"></x-tags>
+                                </ul>
+                            @endif
                         </div>
                         <div class="flex items-center justify-between">
                             <span> by <x-colored-username-link size="small" :user="$n->author"></x-colored-username-link>
@@ -79,7 +86,31 @@
         @endif
         <section class="space-y-4 max-w-3xl m-auto mt-6 mb-96">
             @if (auth()->check())
-                <x-comment-form route="note.comment.store" :item="$note" textarea_name="notebody"></x-comment-form>
+                {{-- <x-comment-form route="note.comment.store" :item="$note" textarea_name="notebody"></x-comment-form> --}}
+
+                <x-panel :item="null" :darker="true">
+                    <form action="{{ route('note.comment.store', $note->id) }}" method="post" x-data="{ open: false }">
+                        @csrf
+                        <header class="flex items-center cursor-pointer" x-on:click="open = ! open">
+                            <img src="{{ asset('images/profile-pictures/' . auth()->user()->image) }}" alt="" width="40" height="40" class="rounded-full">
+                            <h2 class="ml-4">Join the discussion...</h2>
+                        </header>
+                        <div x-show="open" class="-mt-4">
+                            <div class="mt-6">
+                                <x-textarea class="w-full" name="notebody" rows="5" placeholder="Write something polite and constructive here..." required></x-textarea>
+                                <x-input-error :messages="$errors->get('notebody')"></x-input-error>
+                            </div>
+                            <div class="flex-grow">
+                                <x-text-input class="h-auto" id="tags" class="block w-full" type="text" name="tags" placeholder="Tags (separate with comma)" value="{{ old('tags') }}" />
+                                <x-input-error :messages="$errors->get('tags')" class="mt-2" />
+                            </div>
+                            <div class="flex justify-end gap-5 items-center mt-3">
+                                <x-price>Cost to comment: 5</x-price>
+                                <x-primary-button>Create note</x-primary-button>
+                            </div>
+                        </div>
+                    </form>
+                </x-panel>
             @else
                 <p><a href="/register" class="underline">Register</a> or <a href="/login" class="underline">log in</a>
                     to leave a comment!</p>
@@ -105,6 +136,12 @@
                                 {{ $comment->notebody }}
                             </a>
                         </p>
+
+                        @if (!$comment->tags->isEmpty())
+                            <ul class="flex my-2">
+                                <x-tags :item="$comment"></x-tags>
+                            </ul>
+                        @endif
                     </div>
                 </article>
             @endforeach

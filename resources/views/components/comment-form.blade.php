@@ -15,7 +15,7 @@
             </div>
             <div class="flex justify-end gap-5 items-center">
                 <x-price>Cost to comment: 1</x-price>
-                <x-primary-button>Post</x-primary-button>
+                <x-primary-button>Create comment</x-primary-button>
             </div>
         </div>
     </form>

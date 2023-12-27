@@ -9,6 +9,7 @@ class OrderController extends Controller
 {
     public function index()
     {
+        // show 'pending' orders first, then 'in process', then 'complete' and 'rejected'
         return view('orders.index', [
             'orders' => Order::where('seller_id', auth()->user()->id)->orderByRaw('CASE WHEN status = "pending" THEN 1 WHEN status = "in_process" THEN 2 WHEN status = "complete" THEN 3 ELSE 4 END')
                 ->orderBy('created_at', 'DESC')->get(),
@@ -31,7 +32,7 @@ class OrderController extends Controller
             $order->update(['status' => $attr['status']]);
             $order->save();
         } // if status is changed to 'rejected', return paid money to buyer
-        elseif ($attr['status'] == 'rejected') {
+        if ($attr['status'] == 'rejected') {
             if ($order->product->currency == 'stars') {
                 $price = $order->product->price;
                 $order->buyer->stars += $price;
@@ -53,6 +54,10 @@ class OrderController extends Controller
             return back()->with('error', 'You can\'t do that.');
 
         $order->confirmation = true;
+
+        // if order is one-time, set the product inactive
+        $order->product->active = false;
+        $order->product->save();
 
         // if order is confirmed as complete, release payment to seller
         // if order was in stars, give the price value
