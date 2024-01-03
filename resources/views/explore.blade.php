@@ -183,8 +183,6 @@
         let listIcon = document.getElementById('list')
         let masonry = document.getElementById('masonry')
 
-        console.log(localStorage.getItem('explore_view'));
-
         if (localStorage.getItem('explore_view') === null || localStorage.getItem("explore_view") === 'grid') {
 
             gridIcon.style.display = 'block';
